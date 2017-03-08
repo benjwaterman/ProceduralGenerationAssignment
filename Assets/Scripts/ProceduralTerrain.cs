@@ -14,17 +14,18 @@ public class ProceduralTerrain : MonoBehaviour {
     public float TerrainLacunarity;
     public float TerrainHeightMultiplier = 1;
     public AnimationCurve TerrainHeightCurve;
+    [Range(1, 3)]
+    public int FlatSurfaceSearchRange = 1;
+    [Range(0000.1f, 0.05f)]
+    public float FlatSurfaceSensitivity = 0.0052f;
     public int X;
     public int Y;
     public Texture2D TerrainTexture;
+    public Vector2 TextureTileSize;
 
     [Header("Tree Options")]
     public int TreeSeed;
     public GameObject TreePrefab;
-    [Range(1, 3)]
-    public int FlatSurfaceSearchRange = 1;
-    [Range(0000.1f, 0.01f)]
-    public float FlatSurfaceSensitivity = 0.0052f;
     [Range(0, 1)]
     public float MaxTreeSpawnHeight = 0.5f;
     [Range(0, 1)]
@@ -32,7 +33,18 @@ public class ProceduralTerrain : MonoBehaviour {
     [Range(0, 1)]
     public float TreeSpawnDensity = 0.2f;
     [Range(0, 1)]
-    public float TreeSpawnThreshold= 0.2f;
+    public float TreeSpawnThreshold = 0.2f;
+
+    [Header("House Options")]
+    public GameObject HousePrefab;
+    [Range(0, 1)]
+    public float MaxHouseSpawnHeight = 0.5f;
+    [Range(0, 1)]
+    public float MinHouseSpawnHeight = 0.1f;
+    [Range(0, 1)]
+    public float HouseSpawnDensity = 0.2f;
+    public int RequiredSpaceX = 2;
+    public int RequiredSpaceZ = 2;
 
     [Header("Debug Options")]
     public Material HeightMat;
@@ -176,7 +188,7 @@ public class ProceduralTerrain : MonoBehaviour {
         splatPrototype[0] = new SplatPrototype();
         splatPrototype[0].texture = TerrainTexture;
         splatPrototype[0].tileOffset = new Vector2(0, 0);
-        splatPrototype[0].tileSize = new Vector2(5, 5);
+        splatPrototype[0].tileSize = TextureTileSize;
 
         //Apply textures
         terrainData.splatPrototypes = splatPrototype;
@@ -233,11 +245,15 @@ public class ProceduralTerrain : MonoBehaviour {
         }
     }
 
+    void GenerateHouses() {
+
+    }
+
     void GenerateTrees() {
 
         float[,] noiseMap = GenerateNoiseMap(TreeSeed); // new float[TerrainResolution, TerrainResolution];
 
-        int range = 1;
+        int range = 2;
 
         //Spawn based on density
         for (int x = 0 + range; x < TerrainResolution - range; x++) {
@@ -263,6 +279,14 @@ public class ProceduralTerrain : MonoBehaviour {
                     canPlace = false;
                 }
 
+                //Randomly decide whether tree can be placed
+                if(canPlace) {
+                    float number = Random.Range(0f, 1f);
+                    if(number > TreeSpawnDensity) {
+                        canPlace = false;
+                    }
+                }
+
                 //Check against min and max height
                 if (canPlace) {
                     //If its not within range, it cannot be placed here
@@ -272,7 +296,7 @@ public class ProceduralTerrain : MonoBehaviour {
                 }
 
                 if (canPlace) {
-                    //Update tree map saying there is a tree here
+                    //Update tree map to say there is a tree here
                     terrainTreeMap[x, y] = 1f;
 
                     //Subtract noise

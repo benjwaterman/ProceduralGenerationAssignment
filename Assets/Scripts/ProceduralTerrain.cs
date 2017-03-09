@@ -16,12 +16,12 @@ public class ProceduralTerrain : MonoBehaviour {
     public AnimationCurve TerrainHeightCurve;
     [Range(1, 3)]
     public int FlatSurfaceSearchRange = 1;
-    [Range(0000.1f, 0.05f)]
+    [Range(.00001f, 0.05f)]
     public float FlatSurfaceSensitivity = 0.0052f;
-    public int X;
-    public int Y;
     public Texture2D TerrainTexture;
     public Vector2 TextureTileSize;
+    public int X;
+    public int Y;
 
     [Header("Tree Options")]
     public int TreeSeed;
@@ -36,6 +36,7 @@ public class ProceduralTerrain : MonoBehaviour {
     public float TreeSpawnThreshold = 0.2f;
 
     [Header("House Options")]
+    public int HouseSeed;
     public GameObject HousePrefab;
     [Range(0, 1)]
     public float MaxHouseSpawnHeight = 0.5f;
@@ -43,12 +44,16 @@ public class ProceduralTerrain : MonoBehaviour {
     public float MinHouseSpawnHeight = 0.1f;
     [Range(0, 1)]
     public float HouseSpawnDensity = 0.2f;
-    public int RequiredSpaceX = 2;
-    public int RequiredSpaceZ = 2;
+    [Range(0, 1)]
+    public float HouseSpawnThreshold = 0.2f;
+    public int HouseRequiredSpaceX = 2;
+    public int HouseRequiredSpaceZ = 2;
 
     [Header("Debug Options")]
     public Material HeightMat;
     public Material PlacableMat;
+    public Material TreeMat;
+    public Material HouseMat;
 
     Terrain terrain;
     GameObject terrainGameObject;
@@ -56,6 +61,7 @@ public class ProceduralTerrain : MonoBehaviour {
 
     float[,] terrainHeightMap = new float[TerrainResolution, TerrainResolution];
     float[,] terrainTreeMap = new float[TerrainResolution, TerrainResolution];
+    float[,] terrainHouseMap = new float[TerrainResolution, TerrainResolution];
 
     bool[,] placableArea = new bool[TerrainResolution, TerrainResolution];
 
@@ -65,10 +71,13 @@ public class ProceduralTerrain : MonoBehaviour {
 
         GenerateTerrain();
         CalculateFlatTerrain();
+        GenerateHouses();
         GenerateTrees();
 
         AssignTexture(terrainHeightMap, HeightMat);
-        AssignTexture(terrainTreeMap, PlacableMat);
+        AssignTexture(placableArea, PlacableMat);
+        AssignTexture(terrainTreeMap, TreeMat);
+        AssignTexture(terrainHouseMap, HouseMat);
     }
 
     void Update() {
@@ -207,6 +216,7 @@ public class ProceduralTerrain : MonoBehaviour {
         terrain.Flush();
     }
 
+    //Calculate where in the world objects can be placed
     void CalculateFlatTerrain() {
 
         int range = FlatSurfaceSearchRange;
@@ -247,11 +257,90 @@ public class ProceduralTerrain : MonoBehaviour {
 
     void GenerateHouses() {
 
+        GameObject houseParentObject = new GameObject("Houses");
+
+        float[,] noiseMap = GenerateNoiseMap(HouseSeed);
+
+        //Largest as to not go out of array range
+        int range = Mathf.Max(HouseRequiredSpaceX, HouseRequiredSpaceZ); ;
+
+        //Spawn based on density
+        for (int x = 0 + range; x < TerrainResolution - range; x++) {
+            for (int y = 0 + range; y < TerrainResolution - range; y++) {
+                float terrainHeight = terrainHeightMap[x, y];
+
+                bool canPlace = true;//placableArea[x, y] && placableArea[x + 1, y] && placableArea[x, y + 1] && placableArea[x + 1, y + 1];
+
+                //Check around this point to check there is room
+                for (int i = 0; i <= HouseRequiredSpaceX; i++) {
+                    for (int j = 0; j <= HouseRequiredSpaceZ; j++) {
+                        //If canPlace = false, no point checking other areas
+                        if(canPlace) {
+
+                            if(placableArea[x + i, y + j]) {
+                                canPlace = true;
+                            }
+                            else {
+                                canPlace = false;
+                            }
+                        }
+                    }
+                }
+
+                //Randomly decide whether tree can be placed
+                if (canPlace) {
+                    float number = Random.Range(0f, 1f);
+                    if (number > HouseSpawnDensity) {
+                        canPlace = false;
+                    }
+                }
+
+                //Check against min and max height
+                if (canPlace) {
+                    //If its not within range, it cannot be placed here
+                    if (!(terrainHeight >= MinHouseSpawnHeight && terrainHeight <= MaxHouseSpawnHeight)) {
+                        canPlace = false;
+                    }
+                }
+
+                if (canPlace) {
+                    //Update house map
+                    terrainHouseMap[x, y] = 1f;
+
+                    //Subtract noise
+                    terrainHouseMap[x, y] = Mathf.Clamp01(terrainHouseMap[x, y] - noiseMap[x, y]);
+
+                    //If greater than density
+                    if (terrainHouseMap[x, y] >= HouseSpawnThreshold) {
+
+                        //Inverse needed 
+                        float xToPlace = ((float)y / (float)TerrainResolution) * (float)TerrainSize;
+                        float yToPlace = terrainHeightMap[x, y] * (float)TerrainHeight;
+                        float zToPlace = ((float)x / (float)TerrainResolution) * (float)TerrainSize;
+
+                        //This area is no longer placable
+                        for (int i = 0; i <= HouseRequiredSpaceX; i++) {
+                            for (int j = 0; j <= HouseRequiredSpaceZ; j++) {
+                                placableArea[x + i, y + j] = false;
+                            }
+                        }
+
+                        Instantiate(HousePrefab, new Vector3(xToPlace, yToPlace, zToPlace), Quaternion.identity, houseParentObject.transform);
+                    }
+                    //Else there is no house here
+                    else {
+                        terrainHouseMap[x, y] = 0;
+                    }
+                }
+            }
+        }
     }
 
     void GenerateTrees() {
 
-        float[,] noiseMap = GenerateNoiseMap(TreeSeed); // new float[TerrainResolution, TerrainResolution];
+        GameObject treeParentObject = new GameObject("Trees");
+
+        float[,] noiseMap = GenerateNoiseMap(TreeSeed); 
 
         int range = 2;
 
@@ -303,13 +392,21 @@ public class ProceduralTerrain : MonoBehaviour {
                     terrainTreeMap[x, y] = Mathf.Clamp01(terrainTreeMap[x, y] - noiseMap[x, y]);
 
                     //If greater than density
-                    if (terrainTreeMap[x, y] <= TreeSpawnThreshold) {
+                    if (terrainTreeMap[x, y] >= TreeSpawnThreshold) {
+
                         //Inverse needed 
                         float xToPlace = ((float)y / (float)TerrainResolution) * (float)TerrainSize;
                         float yToPlace = terrainHeightMap[x, y] * (float)TerrainHeight;
                         float zToPlace = ((float)x / (float)TerrainResolution) * (float)TerrainSize;
 
-                        Instantiate(TreePrefab, new Vector3(xToPlace, yToPlace, zToPlace), Quaternion.identity);
+                        //This area is no longer placable
+                        placableArea[x, y] = false;
+
+                        Instantiate(TreePrefab, new Vector3(xToPlace, yToPlace, zToPlace), Quaternion.identity, treeParentObject.transform);
+                    }
+                    //Else there is no tree here
+                    else {
+                        terrainTreeMap[x, y] = 0f;
                     }
                 }
             }
@@ -382,5 +479,19 @@ public class ProceduralTerrain : MonoBehaviour {
         texture.wrapMode = TextureWrapMode.Clamp;
         texture.SetPixels(pixels);
         texture.Apply();
+    }
+
+    //Converts bool array into float array for assign texture function
+    void AssignTexture(bool[,] bNoiseValues, Material material) {
+        float[,] fNoiseValues = new float[bNoiseValues.GetLength(0), bNoiseValues.GetLength(1)];
+
+        for (int i = 0; i < fNoiseValues.GetLength(0); i++) {
+            for (int j = 0; j < fNoiseValues.GetLength(1); j++) {
+                //If true equal 1, if not equal 0
+                fNoiseValues[i, j] = bNoiseValues[i, j] ? 1f : 0f;
+            }
+        }
+
+        AssignTexture(fNoiseValues, material);
     }
 }

@@ -39,6 +39,8 @@ public class ProceduralTerrain : MonoBehaviour {
     public float TreeSpawnDensity = 0.2f;
     [Range(0, 1)]
     public float TreeSpawnThreshold = 0.2f;
+    public int TreeRequiredSpaceX = 1;
+    public int TreeRequiredSpaceZ = 1;
 
     [Header("House Options")]
     public int HouseSeed;
@@ -53,6 +55,16 @@ public class ProceduralTerrain : MonoBehaviour {
     public float HouseSpawnThreshold = 0.2f;
     public int HouseRequiredSpaceX = 2;
     public int HouseRequiredSpaceZ = 2;
+
+    [Header("Grass Options")]
+    public int GrassSeed;
+    public Texture2D GrassTexture;
+    public Color GrassColour;
+    public Color GrassColourDry;
+    [Range(0, 1)]
+    public float GrassSpawnDensity = 0.1f;
+    [Range(0, 1)]
+    public float GrassSpawnThreshold = 0.5f;
 
     [Header("Debug Options")]
     public Material HeightMat;
@@ -85,6 +97,7 @@ public class ProceduralTerrain : MonoBehaviour {
         CalculateFlatTerrain();
         GenerateHouses();
         GenerateTrees();
+        GenerateGrass(GrassTexture);
 
         AssignTexture(terrainHeightMap, HeightMat);
         AssignTexture(placableArea, PlacableMat);
@@ -92,14 +105,10 @@ public class ProceduralTerrain : MonoBehaviour {
         AssignTexture(terrainHouseMap, HouseMat);
     }
 
-    void Update() {
-
-    }
-
-    public float[,] GenerateNoiseMap(int seed) {
+    public float[,] GenerateNoiseMap(int seed, int res = TerrainResolution) {
 
         //Store temp heightmap data
-        float[,] noiseMap = new float[TerrainResolution, TerrainResolution];
+        float[,] noiseMap = new float[res, res];
 
         //Get a random modifier based on seed
         System.Random rand = new System.Random(seed);
@@ -119,8 +128,8 @@ public class ProceduralTerrain : MonoBehaviour {
         }
 
         //Generate the noisemap
-        for (int x = 0; x < TerrainResolution; x++) {
-            for (int y = 0; y < TerrainResolution; y++) {
+        for (int x = 0; x < res; x++) {
+            for (int y = 0; y < res; y++) {
 
                 amplitude = 1;
                 frequency = 1;
@@ -270,213 +279,53 @@ public class ProceduralTerrain : MonoBehaviour {
     void GenerateHouses() {
 
         ObjectGenerator.GenerateObjects(ObjectType.House, out terrainHouseMap, HousePrefabs, HouseSeed, new Vector2(HouseRequiredSpaceX, HouseRequiredSpaceZ), MinHouseSpawnHeight, MaxHouseSpawnHeight, HouseSpawnDensity, HouseSpawnThreshold);
-
-        /*
-        GameObject houseParentObject = new GameObject("Houses");
-
-        float[,] noiseMap = GenerateNoiseMap(HouseSeed);
-
-        //Largest as to not go out of array range
-        int range = Mathf.Max(HouseRequiredSpaceX, HouseRequiredSpaceZ); ;
-
-        //Spawn based on density
-        for (int x = 0 + range; x < TerrainResolution - range; x++) {
-            for (int y = 0 + range; y < TerrainResolution - range; y++) {
-                float terrainHeight = terrainHeightMap[x, y];
-
-                bool canPlace = true;//placableArea[x, y] && placableArea[x + 1, y] && placableArea[x, y + 1] && placableArea[x + 1, y + 1];
-
-                //Check around this point to check there is room
-                for (int i = 0; i <= HouseRequiredSpaceX; i++) {
-                    for (int j = 0; j <= HouseRequiredSpaceZ; j++) {
-                        //If canPlace = false, no point checking other areas
-                        if (canPlace) {
-
-                            if (placableArea[x + i, y + j]) {
-                                canPlace = true;
-                            }
-                            else {
-                                canPlace = false;
-                            }
-                        }
-                    }
-                }
-
-                //Randomly decide whether tree can be placed
-                if (canPlace) {
-                    float number = Random.Range(0f, 1f);
-                    if (number > HouseSpawnDensity) {
-                        canPlace = false;
-                    }
-                }
-
-                //Check against min and max height
-                if (canPlace) {
-                    //If its not within range, it cannot be placed here
-                    if (!(terrainHeight >= MinHouseSpawnHeight && terrainHeight <= MaxHouseSpawnHeight)) {
-                        canPlace = false;
-                    }
-                }
-
-                if (canPlace) {
-                    //Update house map
-                    terrainHouseMap[x, y] = 1f;
-
-                    //Subtract noise
-                    terrainHouseMap[x, y] = Mathf.Clamp01(terrainHouseMap[x, y] - noiseMap[x, y]);
-
-                    //If greater than density
-                    if (terrainHouseMap[x, y] >= HouseSpawnThreshold) {
-
-                        //Inverse needed 
-                        float xToPlace = ((float)y / (float)TerrainResolution) * (float)TerrainSize;
-                        float yToPlace = terrainHeightMap[x, y] * (float)TerrainHeight;
-                        float zToPlace = ((float)x / (float)TerrainResolution) * (float)TerrainSize;
-
-                        //This area is no longer placable
-                        for (int i = 0; i <= HouseRequiredSpaceX; i++) {
-                            for (int j = 0; j <= HouseRequiredSpaceZ; j++) {
-                                placableArea[x + i, y + j] = false;
-                            }
-                        }
-
-                        Instantiate(HousePrefab, new Vector3(xToPlace, yToPlace, zToPlace), Quaternion.identity, houseParentObject.transform);
-                    }
-                    //Else there is no house here
-                    else {
-                        terrainHouseMap[x, y] = 0;
-                    }
-                }
-            }
-        } */
     }
 
     void GenerateTrees() {
 
-        ObjectGenerator.GenerateObjects(ObjectType.Tree, out terrainTreeMap, TreePrefabs, TreeSeed, Vector2.one, MinTreeSpawnHeight, MaxTreeSpawnHeight, TreeSpawnDensity, TreeSpawnThreshold);
-        /*
-        GameObject treeParentObject = new GameObject("Trees");
+        ObjectGenerator.GenerateObjects(ObjectType.Tree, out terrainTreeMap, TreePrefabs, TreeSeed, new Vector2(TreeRequiredSpaceX, TreeRequiredSpaceZ), MinTreeSpawnHeight, MaxTreeSpawnHeight, TreeSpawnDensity, TreeSpawnThreshold);
+    }
 
-        float[,] noiseMap = GenerateNoiseMap(TreeSeed);
+    //Generate grass using unitys terrain detail
+    void GenerateGrass(Texture2D grassTexture) {
 
-        int range = 2;
+        //Set detail texture
+        DetailPrototype[] detailPrototype = new DetailPrototype[1];
+        detailPrototype[0] = new DetailPrototype();
+        detailPrototype[0].prototypeTexture = grassTexture;
+        //Set grass colour
+        detailPrototype[0].healthyColor = GrassColour;
+        detailPrototype[0].dryColor = GrassColourDry;
+        detailPrototype[0].renderMode = DetailRenderMode.GrassBillboard;
+        terrainData.detailPrototypes = detailPrototype;
 
-        //Spawn based on density
-        for (int x = 0 + range; x < TerrainResolution - range; x++) {
-            for (int y = 0 + range; y < TerrainResolution - range; y++) {
-                float terrainHeight = terrainHeightMap[x, y];
+        const int grassResolution = TerrainResolution * 2;
+        const int patchDetail = 16;
+    
+        //Set detail and resolution
+        terrain.terrainData.SetDetailResolution(grassResolution, patchDetail);
+        //Set distance details can be seen for
+        terrain.detailObjectDistance = 250;
 
-                bool canPlace = placableArea[x, y];
-                int numberOfTreesInRange = 0;
+        int[,] grassMap =  new int[grassResolution, grassResolution];
+        float[,] fGrassMap = GenerateNoiseMap(GrassSeed, grassResolution);
 
-                //Average the number of trees currently in range
-                for (int i = -range; i <= range; i++) {
-                    for (int j = -range; j <= range; j++) {
-                        //If tree in spot
-                        if (terrainTreeMap[x + i, y + j] > 0) {
-                            numberOfTreesInRange++;
-                        }
-                    }
+        int incremement = (int)(1 / GrassSpawnDensity);
+
+        for (int i = 0; i < grassResolution; i+= incremement) {
+            for (int j = 0; j < grassResolution; j+= incremement) {
+                //float height = terrain.terrainData.GetHeight(i, j);
+                if(fGrassMap[i, j] > GrassSpawnThreshold) {
+                    grassMap[i, j] = 6;
                 }
-
-                //Check if avg amount of trees in range is greater than tree density
-                float avgTreesInRange = numberOfTreesInRange / (range * range);
-                if (avgTreesInRange > TreeSpawnDensity) {
-                    canPlace = false;
-                }
-
-                //Randomly decide whether tree can be placed
-                if (canPlace) {
-                    float number = Random.Range(0f, 1f);
-                    if (number > TreeSpawnDensity) {
-                        canPlace = false;
-                    }
-                }
-
-                //Check against min and max height
-                if (canPlace) {
-                    //If its not within range, it cannot be placed here
-                    if (!(terrainHeight >= MinTreeSpawnHeight && terrainHeight <= MaxTreeSpawnHeight)) {
-                        canPlace = false;
-                    }
-                }
-
-                if (canPlace) {
-                    //Update tree map to say there is a tree here
-                    terrainTreeMap[x, y] = 1f;
-
-                    //Subtract noise
-                    terrainTreeMap[x, y] = Mathf.Clamp01(terrainTreeMap[x, y] - noiseMap[x, y]);
-
-                    //If greater than density
-                    if (terrainTreeMap[x, y] >= TreeSpawnThreshold) {
-
-                        //Inverse needed 
-                        float xToPlace = ((float)y / (float)TerrainResolution) * (float)TerrainSize;
-                        float yToPlace = terrainHeightMap[x, y] * (float)TerrainHeight;
-                        float zToPlace = ((float)x / (float)TerrainResolution) * (float)TerrainSize;
-
-                        //This area is no longer placable
-                        placableArea[x, y] = false;
-
-                        Instantiate(TreePrefab, new Vector3(xToPlace, yToPlace, zToPlace), Quaternion.identity, treeParentObject.transform);
-                    }
-                    //Else there is no tree here
-                    else {
-                        terrainTreeMap[x, y] = 0f;
-                    }
+                else {
+                    grassMap[i, j] = 0;
                 }
             }
-        } */
+        }
 
-        /*
-        int range = 5;
-
-        for (int x = range; x < TerrainResolution - range; x++) {
-            for (int y = range; y < TerrainResolution - range; y++) {
-                float terrainHeight = terrainHeightMap[x, y];
-
-                bool canPlace = placableArea[x, y];
-                int numberOfTreesInRange = 0;
-
-                //Average the number of trees currently in range
-                for (int i = -range; i <= range; i++) {
-                    for (int j = -range; j <= range; j++) {
-                        //If tree in spot
-                        if (terrainTreeMap[x + i, y + j] > 0) {
-                            numberOfTreesInRange++;
-                        }
-                    }
-                }
-
-                //Check if avg amount of trees in range is greater than tree density
-                float avgTreesInRange = numberOfTreesInRange / (range * range);
-                if(avgTreesInRange > TreeSpawnDensity) {
-                    canPlace = false;
-                }
-
-                //Check against min and max height
-                if (canPlace) {
-                    //If its not within range, it cannot be placed here
-                    if(!(terrainHeight >= MinTreeSpawnHeight && terrainHeight <= MaxTreeSpawnHeight)) {
-                        canPlace = false;
-                    }
-                }
-
-                if (canPlace) {
-                    //Update tree map saying there is a tree here
-                    terrainTreeMap[x, y] = 1f;
-
-                    //Inverse needed 
-                    float xToPlace = ((float)y / (float)TerrainResolution) * (float)TerrainSize;
-                    float yToPlace = terrainHeightMap[x, y] * (float)TerrainHeight;
-                    float zToPlace = ((float)x / (float)TerrainResolution) * (float)TerrainSize;
-
-                    Instantiate(TreePrefab, new Vector3(xToPlace, yToPlace, zToPlace), Quaternion.identity);
-                }
-            }
-        } 
-        */
+        terrain.terrainData.SetDetailLayer(0, 0, 0, grassMap);
+        terrain.Flush();
     }
 
     //Display map on a texture for debugging

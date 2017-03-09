@@ -86,10 +86,14 @@ public class ObjectGenerator : ScriptableObject {
                     //If greater than density
                     if (map[x, y] >= threshold) {
 
-                        //Inverse needed 
+                        //Need to invert as terrain is created inverted 
                         float xToPlace = ((float)y / (float)ProceduralTerrain.TerrainResolution) * (float)ProceduralTerrain.Current.TerrainSize;
                         float yToPlace = ProceduralTerrain.Current.terrainHeightMap[x, y] * (float)ProceduralTerrain.Current.TerrainHeight;
                         float zToPlace = ((float)x / (float)ProceduralTerrain.TerrainResolution) * (float)ProceduralTerrain.Current.TerrainSize;
+
+                        //Move object to be placed in centre of area just checked
+                        xToPlace += requiredSpaceX / 2;
+                        zToPlace += requiredSpaceZ / 2;
 
                         //This area is no longer placable
                         for (int i = 0; i <= requiredSpaceX; i++) {

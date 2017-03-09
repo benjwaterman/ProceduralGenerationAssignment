@@ -870,19 +870,20 @@ MonoBehaviour:
     m_RotationOrder: 0
   FlatSurfaceSearchRange: 2
   FlatSurfaceSensitivity: 0.005
-  X: 0
-  Y: 0
   TerrainTexture: {fileID: 2800000, guid: ab5ea6ee9fe8c4648a7d64d94634948b, type: 3}
   TextureTileSize: {x: 10, y: 10}
+  X: 0
+  Y: 0
   TreeSeed: 25454
-  TreePrefab: {fileID: 1335568235768912, guid: f1aca987ece3ad44f9a35c46149b940b, type: 2}
+  TreePrefabs:
+  - {fileID: 1335568235768912, guid: f1aca987ece3ad44f9a35c46149b940b, type: 2}
   MaxTreeSpawnHeight: 0.897
   MinTreeSpawnHeight: 0
   TreeSpawnDensity: 0.14
   TreeSpawnThreshold: 0.201
   HouseSeed: 1048
-  HousePrefab: {fileID: 1119037097548236, guid: 0b947306e55736945b7eb639c8984df4,
-    type: 2}
+  HousePrefabs:
+  - {fileID: 1119037097548236, guid: 0b947306e55736945b7eb639c8984df4, type: 2}
   MaxHouseSpawnHeight: 1
   MinHouseSpawnHeight: 0.1
   HouseSpawnDensity: 0.342

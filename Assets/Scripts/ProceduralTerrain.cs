@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ObjectType { Tree, House };
+
 public class ProceduralTerrain : MonoBehaviour {
+
+    public static ProceduralTerrain Current;
+
     [Header("Terrain Options")]
     public const int TerrainResolution = 513;
     public int TerrainSize = 1000;
@@ -25,7 +30,7 @@ public class ProceduralTerrain : MonoBehaviour {
 
     [Header("Tree Options")]
     public int TreeSeed;
-    public GameObject TreePrefab;
+    public GameObject[] TreePrefabs;
     [Range(0, 1)]
     public float MaxTreeSpawnHeight = 0.5f;
     [Range(0, 1)]
@@ -37,7 +42,7 @@ public class ProceduralTerrain : MonoBehaviour {
 
     [Header("House Options")]
     public int HouseSeed;
-    public GameObject HousePrefab;
+    public GameObject[] HousePrefabs;
     [Range(0, 1)]
     public float MaxHouseSpawnHeight = 0.5f;
     [Range(0, 1)]
@@ -59,11 +64,18 @@ public class ProceduralTerrain : MonoBehaviour {
     GameObject terrainGameObject;
     TerrainData terrainData;
 
-    float[,] terrainHeightMap = new float[TerrainResolution, TerrainResolution];
-    float[,] terrainTreeMap = new float[TerrainResolution, TerrainResolution];
-    float[,] terrainHouseMap = new float[TerrainResolution, TerrainResolution];
+    [System.NonSerialized]
+    public float[,] terrainHeightMap = new float[TerrainResolution, TerrainResolution];
+    [System.NonSerialized]
+    public float[,] terrainTreeMap = new float[TerrainResolution, TerrainResolution];
+    [System.NonSerialized]
+    public float[,] terrainHouseMap = new float[TerrainResolution, TerrainResolution];
+    [System.NonSerialized]
+    public bool[,] placableArea = new bool[TerrainResolution, TerrainResolution];
 
-    bool[,] placableArea = new bool[TerrainResolution, TerrainResolution];
+    void Awake() {
+        Current = this;
+    }
 
     void Start() {
 
@@ -84,7 +96,7 @@ public class ProceduralTerrain : MonoBehaviour {
 
     }
 
-    float[,] GenerateNoiseMap(int seed) {
+    public float[,] GenerateNoiseMap(int seed) {
 
         //Store temp heightmap data
         float[,] noiseMap = new float[TerrainResolution, TerrainResolution];
@@ -257,6 +269,9 @@ public class ProceduralTerrain : MonoBehaviour {
 
     void GenerateHouses() {
 
+        ObjectGenerator.GenerateObjects(ObjectType.House, out terrainHouseMap, HousePrefabs, HouseSeed, new Vector2(HouseRequiredSpaceX, HouseRequiredSpaceZ), MinHouseSpawnHeight, MaxHouseSpawnHeight, HouseSpawnDensity, HouseSpawnThreshold);
+
+        /*
         GameObject houseParentObject = new GameObject("Houses");
 
         float[,] noiseMap = GenerateNoiseMap(HouseSeed);
@@ -275,9 +290,9 @@ public class ProceduralTerrain : MonoBehaviour {
                 for (int i = 0; i <= HouseRequiredSpaceX; i++) {
                     for (int j = 0; j <= HouseRequiredSpaceZ; j++) {
                         //If canPlace = false, no point checking other areas
-                        if(canPlace) {
+                        if (canPlace) {
 
-                            if(placableArea[x + i, y + j]) {
+                            if (placableArea[x + i, y + j]) {
                                 canPlace = true;
                             }
                             else {
@@ -333,14 +348,16 @@ public class ProceduralTerrain : MonoBehaviour {
                     }
                 }
             }
-        }
+        } */
     }
 
     void GenerateTrees() {
 
+        ObjectGenerator.GenerateObjects(ObjectType.Tree, out terrainTreeMap, TreePrefabs, TreeSeed, Vector2.one, MinTreeSpawnHeight, MaxTreeSpawnHeight, TreeSpawnDensity, TreeSpawnThreshold);
+        /*
         GameObject treeParentObject = new GameObject("Trees");
 
-        float[,] noiseMap = GenerateNoiseMap(TreeSeed); 
+        float[,] noiseMap = GenerateNoiseMap(TreeSeed);
 
         int range = 2;
 
@@ -369,9 +386,9 @@ public class ProceduralTerrain : MonoBehaviour {
                 }
 
                 //Randomly decide whether tree can be placed
-                if(canPlace) {
+                if (canPlace) {
                     float number = Random.Range(0f, 1f);
-                    if(number > TreeSpawnDensity) {
+                    if (number > TreeSpawnDensity) {
                         canPlace = false;
                     }
                 }
@@ -410,7 +427,7 @@ public class ProceduralTerrain : MonoBehaviour {
                     }
                 }
             }
-        }
+        } */
 
         /*
         int range = 5;

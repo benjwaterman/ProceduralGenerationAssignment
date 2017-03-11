@@ -8,71 +8,19 @@ public class ProceduralTerrain : MonoBehaviour {
 
     public static ProceduralTerrain Current;
 
-    [Header("Terrain Options")]
     public const int TerrainResolution = 513;
-    public int TerrainSize = 1000;
-    public int TerrainHeight = 20;
-    public int TerrainSeed = 0;
-    public float TerrainScale = 1;
-    public int TerrainOctaves;
-    public float TerrainPersistance;
-    public float TerrainLacunarity;
-    public float TerrainHeightMultiplier = 1;
-    public AnimationCurve TerrainHeightCurve;
-    public Texture2D TerrainTexture;
-    public Vector2 TextureTileSize;
-    public int X;
-    public int Y;
+
+    [Header("Terrain Options")]
+    public MapData TerrainMapData;
 
     [Header("Tree Options")]
-    public int TreeSeed;
-    public ObjectData[] TreeDataArray;
-    [Range(1, 3)]
-    public int TreeFlatSurfaceSearchRange = 1;
-    [Range(.00001f, 0.05f)]
-    public float TreeFlatSurfaceSensitivity = 0.0052f;
-    [Range(0, 1)]
-    public float MaxTreeSpawnHeight = 0.5f;
-    [Range(0, 1)]
-    public float MinTreeSpawnHeight = 0.1f;
-    [Range(0, 1)]
-    public float TreeSpawnDensity = 0.2f;
-    [Range(0, 1)]
-    public float TreeSpawnThreshold = 0.2f;
+    public TreeData TerrainTreeData;
 
     [Header("House Options")]
-    public int HouseSeed;
-    public ObjectData[] HouseDataArray;
-    [Range(1, 3)]
-    public int HouseFlatSurfaceSearchRange = 1;
-    [Range(.00001f, 0.05f)]
-    public float HouseFlatSurfaceSensitivity = 0.0052f;
-    [Range(0, 1)]
-    public float MaxHouseSpawnHeight = 0.5f;
-    [Range(0, 1)]
-    public float MinHouseSpawnHeight = 0.1f;
-    [Range(0, 1)]
-    public float HouseSpawnDensity = 0.2f;
-    [Range(0, 1)]
-    public float HouseSpawnThreshold = 0.2f;
+    public HouseData TerrainHouseData;
 
     [Header("Grass Options")]
-    public int GrassSeed;
-    public Texture2D GrassTexture;
-    public Color GrassColour;
-    public Color GrassColourDry;
-    [Range(1, 3)]
-    public int GrassFlatSurfaceSearchRange = 1;
-    [Range(.00001f, 0.05f)]
-    public float GrassFlatSurfaceSensitivity = 0.0052f;
-    [Range(0, 1)]
-    public float MaxGrassSpawnHeight = 0.5f;
-    [Range(0, 1)]
-    public float MinGrassSpawnHeight = 0.1f;
-    [Range(0, 1)]
-    public float GrassSpawnDensity = 0.1f;
-    [Range(0, 1)]
-    public float GrassSpawnThreshold = 0.5f;
+    public GrassData TerrainGrassData;
 
     [Header("Debug Options")]
     public bool RandomSeeds = false;
@@ -102,10 +50,10 @@ public class ProceduralTerrain : MonoBehaviour {
 
         if (RandomSeeds) {
             System.Random rand = new System.Random();
-            GrassSeed = rand.Next();
-            HouseSeed = rand.Next();
-            TerrainSeed = rand.Next();
-            TreeSeed = rand.Next();
+            TerrainGrassData.GrassNoiseData.Seed = rand.Next();
+            TerrainHouseData.ObjectNoiseData.Seed = rand.Next();
+            TerrainMapData.TerrainNoiseData.Seed = rand.Next();
+            TerrainTreeData.ObjectNoiseData.Seed = rand.Next();
         }
 
         //Create heightmap
@@ -116,7 +64,7 @@ public class ProceduralTerrain : MonoBehaviour {
         //Generate features
         GenerateHouses();
         GenerateTrees();
-        GenerateGrass(GrassTexture);
+        GenerateGrass(TerrainGrassData.GrassTexture);
 
         //For display purposes
         defaultPlacableMap = CalculateFlatTerrain();
@@ -127,67 +75,10 @@ public class ProceduralTerrain : MonoBehaviour {
         AssignTexture(terrainHouseMap, HouseMat);
     }
 
-    public float[,] GenerateNoiseMap(int seed, int res = TerrainResolution) {
-
-        //Store temp heightmap data
-        float[,] noiseMap = new float[res, res];
-
-        //Get a random modifier based on seed
-        System.Random rand = new System.Random(seed);
-        Vector2[] octaveOffsets = new Vector2[TerrainOctaves];
-
-        float maxheight = 0;
-        float amplitude = 1;
-        float frequency = 1;
-
-        for (int i = 0; i < TerrainOctaves; i++) {
-            int randX = rand.Next(-100000, 100000) + X;
-            int randY = rand.Next(-100000, 100000) - Y;
-            octaveOffsets[i] = new Vector2(randX, randY);
-
-            maxheight += amplitude;
-            amplitude *= TerrainPersistance;
-        }
-
-        //Generate the noisemap
-        for (int x = 0; x < res; x++) {
-            for (int y = 0; y < res; y++) {
-
-                amplitude = 1;
-                frequency = 1;
-
-                float heightValue = 0;
-
-                for (int i = 0; i < TerrainOctaves; i++) {
-
-                    float xCoord = (x - octaveOffsets[i].x) / TerrainScale * frequency;
-                    float yCoord = (y - octaveOffsets[i].y) / TerrainScale * frequency;
-
-                    float perlinValue = Mathf.PerlinNoise(xCoord, yCoord);
-                    //Set height to perlin value
-                    heightValue += perlinValue * amplitude;
-
-                    amplitude *= TerrainPersistance;
-                    frequency *= TerrainLacunarity;
-                }
-
-                //Assign value
-                noiseMap[x, y] = heightValue;
-            }
-        }
-
-        return noiseMap;
-    }
-
     float[,] CalculateHeightMap() {
 
         //Store temp heightmap data
-        float[,] heightMap = GenerateNoiseMap(TerrainSeed);
-
-        //Ensure scale is not 0
-        if (TerrainScale <= 0) {
-            TerrainScale = 0.00001f;
-        }
+        float[,] heightMap = NoiseGenerator.GenerateNoiseMap(TerrainMapData.TerrainNoiseData);
 
         //Store max and min values of height map to normalise
         float maxLocalHeight = float.MinValue;
@@ -216,7 +107,7 @@ public class ProceduralTerrain : MonoBehaviour {
         for (int x = 0; x < TerrainResolution; x++) {
             for (int y = 0; y < TerrainResolution; y++) {
                 heightMap[x, y] = Mathf.InverseLerp(minLocalHeight, maxLocalHeight, heightMap[x, y]);
-                heightMap[x, y] = TerrainHeightCurve.Evaluate(heightMap[x, y]) * TerrainHeightMultiplier;
+                heightMap[x, y] = TerrainMapData.TerrainHeightCurve.Evaluate(heightMap[x, y]) * TerrainMapData.TerrainHeightMultiplier;
             }
         }
 
@@ -233,14 +124,28 @@ public class ProceduralTerrain : MonoBehaviour {
         terrainData.SetHeights(0, 0, terrainHeightMap);
 
         //Terrain size and max height
-        terrainData.size = new Vector3(TerrainSize, TerrainHeight, TerrainSize);
+        terrainData.size = new Vector3(TerrainMapData.TerrainSize, TerrainMapData.TerrainHeight, TerrainMapData.TerrainSize);
+
+        //Create texture from TerrainTexture and tint colour
+        Texture2D tintedTexture = new Texture2D(TerrainMapData.TerrainTexture.width, TerrainMapData.TerrainTexture.height);
+        Color[] pixels = TerrainMapData.TerrainTexture.GetPixels();
+        for (int i = 0; i < pixels.Length; i++) {
+            pixels[i].r = pixels[i].r - (1.0f - TerrainMapData.TerrainTint.r);
+            pixels[i].g = pixels[i].g - (1.0f - TerrainMapData.TerrainTint.g);
+            pixels[i].b = pixels[i].b - (1.0f - TerrainMapData.TerrainTint.b);
+        }
+        tintedTexture.SetPixels(pixels);
+        tintedTexture.Apply();
 
         //Set textures
         SplatPrototype[] splatPrototype = new SplatPrototype[1];
         splatPrototype[0] = new SplatPrototype();
-        splatPrototype[0].texture = TerrainTexture;
+        splatPrototype[0].texture = tintedTexture;
+        if (TerrainMapData.TerrainTextureNormal != null) {
+            splatPrototype[0].normalMap = TerrainMapData.TerrainTextureNormal;
+        }
         splatPrototype[0].tileOffset = new Vector2(0, 0);
-        splatPrototype[0].tileSize = TextureTileSize;
+        splatPrototype[0].tileSize = TerrainMapData.TextureTileSize;
 
         //Apply textures
         terrainData.splatPrototypes = splatPrototype;
@@ -300,12 +205,12 @@ public class ProceduralTerrain : MonoBehaviour {
 
     void GenerateHouses() {
 
-        ObjectGenerator.GenerateObjects(ObjectType.House, out terrainHouseMap, HouseDataArray, HouseSeed, HouseFlatSurfaceSearchRange, HouseFlatSurfaceSensitivity, MinHouseSpawnHeight, MaxHouseSpawnHeight, HouseSpawnDensity, HouseSpawnThreshold);
+        ObjectGenerator.GenerateObjects(ObjectType.House, out terrainHouseMap, TerrainTreeData);
     }
 
     void GenerateTrees() {
 
-        ObjectGenerator.GenerateObjects(ObjectType.Tree, out terrainTreeMap, TreeDataArray, TreeSeed, TreeFlatSurfaceSearchRange, TreeFlatSurfaceSensitivity, MinTreeSpawnHeight, MaxTreeSpawnHeight, TreeSpawnDensity, TreeSpawnThreshold);
+        ObjectGenerator.GenerateObjects(ObjectType.Tree, out terrainTreeMap, TerrainHouseData);
     }
 
     //Generate grass using unitys terrain detail
@@ -316,8 +221,8 @@ public class ProceduralTerrain : MonoBehaviour {
         detailPrototype[0] = new DetailPrototype();
         detailPrototype[0].prototypeTexture = grassTexture;
         //Set grass colour
-        detailPrototype[0].healthyColor = GrassColour;
-        detailPrototype[0].dryColor = GrassColourDry;
+        detailPrototype[0].healthyColor = TerrainGrassData.GrassColour;
+        detailPrototype[0].dryColor = TerrainGrassData.GrassColourDry;
         detailPrototype[0].renderMode = DetailRenderMode.GrassBillboard;
         terrainData.detailPrototypes = detailPrototype;
 
@@ -330,17 +235,18 @@ public class ProceduralTerrain : MonoBehaviour {
         terrain.detailObjectDistance = 250;
 
         int[,] grassMap = new int[grassResolution, grassResolution];
-        float[,] fGrassMap = GenerateNoiseMap(GrassSeed, grassResolution);
+        //NOT GENERATING PROPERLY
+        float[,] fGrassMap = NoiseGenerator.GenerateNoiseMap(TerrainGrassData.GrassNoiseData, grassResolution);
 
-        int incremement = (int)(1 / GrassSpawnDensity);
+        int incremement = (int)(1 / TerrainGrassData.GrassSpawnDensity);
 
         for (int i = 0; i < grassResolution; i += incremement) {
             for (int j = 0; j < grassResolution; j += incremement) {
 
-                float terrainHeight = terrain.terrainData.GetHeight((int)(j/2), (int)(i/2)) / (float)TerrainHeight;
+                float terrainHeight = terrain.terrainData.GetHeight((int)(j/2), (int)(i/2)) / (float)TerrainMapData.TerrainHeight;
 
-                //Compare against gnerated noise
-                if (fGrassMap[i, j] > GrassSpawnThreshold) {
+                //Compare against generated noise
+                if (fGrassMap[i, j] >= TerrainGrassData.GrassSpawnThreshold) {
                     grassMap[i, j] = 6;
                 }
                 else {
@@ -348,7 +254,7 @@ public class ProceduralTerrain : MonoBehaviour {
                 }
 
                 //If grass is not within min and max height
-                if (!(terrainHeight >= MinGrassSpawnHeight && terrainHeight <= MaxGrassSpawnHeight)) {
+                if (!(terrainHeight >= TerrainGrassData.MinGrassSpawnHeight && terrainHeight <= TerrainGrassData.MaxGrassSpawnHeight)) {
                     grassMap[i, j] = 0;
                 }
             }
@@ -393,7 +299,7 @@ public class ProceduralTerrain : MonoBehaviour {
 }
 
 [System.Serializable]
-public class ObjectData {
+public class PrefabData {
     public GameObject ObjectPrefab;
     public int RequiredSpaceX;
     public int RequiredSpaceZ;

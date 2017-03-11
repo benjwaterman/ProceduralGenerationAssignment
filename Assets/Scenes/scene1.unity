@@ -590,6 +590,14 @@ Prefab:
       propertyPath: m_Volume
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
+      propertyPath: m_WalkSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
+      propertyPath: m_RunSpeed
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
   m_IsPrefabParent: 0
@@ -698,7 +706,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1973384716}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 406.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 379728007}
@@ -818,102 +826,97 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bee7966ebb3f17459e82fd8e374580f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TerrainSize: 1000
-  TerrainHeight: 200
-  TerrainSeed: 653
-  TerrainScale: 50
-  TerrainOctaves: 10
-  TerrainPersistance: 0.4
-  TerrainLacunarity: 1.8
-  TerrainHeightMultiplier: 1
-  TerrainHeightCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: -0.001497006
-      value: 0.49999994
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.4914445
-      value: 0.5307967
-      inSlope: 0.12713376
-      outSlope: 0.12713376
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.6422636
-      value: 0.57319623
-      inSlope: 0.35733497
-      outSlope: 0.35733497
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.7697224
-      value: 0.39075294
-      inSlope: -3.5325596
-      outSlope: -3.5325596
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.79776263
-      value: 0.015693314
-      inSlope: -0.24636446
-      outSlope: -0.24636446
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.9915781
-      value: -0.007254103
-      inSlope: -0.3447587
-      outSlope: -0.3447587
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  TerrainTexture: {fileID: 2800000, guid: ab5ea6ee9fe8c4648a7d64d94634948b, type: 3}
-  TextureTileSize: {x: 10, y: 10}
-  X: 0
-  Y: 0
-  TreeSeed: 25454
-  TreeDataArray:
-  - ObjectPrefab: {fileID: 1087268384718678, guid: 0a9738a5d8f0f8644bce46531c3ed531,
-      type: 2}
-    RequiredSpaceX: 2
-    RequiredSpaceZ: 2
-  - ObjectPrefab: {fileID: 1372037706243210, guid: 300f7fa3c881a0443b62a0fdefa524be,
-      type: 2}
-    RequiredSpaceX: 2
-    RequiredSpaceZ: 2
-  - ObjectPrefab: {fileID: 1449437383806908, guid: fec08aa4faf50954da303b312170199e,
-      type: 2}
-    RequiredSpaceX: 10
-    RequiredSpaceZ: 10
-  TreeFlatSurfaceSearchRange: 1
-  TreeFlatSurfaceSensitivity: 0.0296
-  MaxTreeSpawnHeight: 0.897
-  MinTreeSpawnHeight: 0.365
-  TreeSpawnDensity: 0.029
-  TreeSpawnThreshold: 0.415
-  HouseSeed: 1048
-  HouseDataArray:
-  - ObjectPrefab: {fileID: 1119037097548236, guid: 0b947306e55736945b7eb639c8984df4,
-      type: 2}
-    RequiredSpaceX: 8
-    RequiredSpaceZ: 8
-  HouseFlatSurfaceSearchRange: 2
-  HouseFlatSurfaceSensitivity: 0.0108
-  MaxHouseSpawnHeight: 1
-  MinHouseSpawnHeight: 0.314
-  HouseSpawnDensity: 0.791
-  HouseSpawnThreshold: 0.458
-  GrassSeed: 762
-  GrassTexture: {fileID: 2800000, guid: 81f3257313134f247a651cd7feabbe92, type: 3}
-  GrassColour: {r: 0.2588666, g: 0.0790982, b: 0.97794116, a: 0}
-  GrassColourDry: {r: 0.31171393, g: 0.2757353, b: 0.75, a: 0}
-  GrassFlatSurfaceSearchRange: 1
-  GrassFlatSurfaceSensitivity: 0.0052
-  MaxGrassSpawnHeight: 0.54
-  MinGrassSpawnHeight: 0.2
-  GrassSpawnDensity: 0.7
-  GrassSpawnThreshold: 0.5
+  TerrainMapData:
+    TerrainSize: 1000
+    TerrainHeight: 200
+    TerrainNoiseData:
+      Seed: 0
+      Octaves: 10
+      Persistance: 0.4
+      Lacunarity: 1.8
+      Scale: 500
+      X: 0
+      Y: 0
+    TerrainHeightMultiplier: 1
+    TerrainHeightCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    TerrainTexture: {fileID: 2800000, guid: 879f51f5b47b18843986e6555b981bf1, type: 3}
+    TerrainTextureNormal: {fileID: 0}
+    TerrainTint: {r: 0.7519031, g: 0.28081748, b: 0.7794118, a: 1}
+    TextureTileSize: {x: 5, y: 5}
+  TerrainTreeData:
+    FlatSurfaceSearchRange: 1
+    FlatSurfaceSensitivity: 0.0052
+    MaxSpawnHeight: 1
+    MinSpawnHeight: 0
+    SpawnDensity: 0.021
+    SpawnThreshold: 0.483
+    ObjectNoiseData:
+      Seed: 0
+      Octaves: 0
+      Persistance: 0
+      Lacunarity: 0
+      Scale: 1
+      X: 0
+      Y: 0
+    PrefabArray:
+    - ObjectPrefab: {fileID: 100002, guid: bb8704cfe64e58f41ae474b1a50e8fec, type: 3}
+      RequiredSpaceX: 2
+      RequiredSpaceZ: 2
+  TerrainHouseData:
+    FlatSurfaceSearchRange: 1
+    FlatSurfaceSensitivity: 0.0052
+    MaxSpawnHeight: 0.5
+    MinSpawnHeight: 0
+    SpawnDensity: 0.072
+    SpawnThreshold: 0.517
+    ObjectNoiseData:
+      Seed: 0
+      Octaves: 0
+      Persistance: 0
+      Lacunarity: 0
+      Scale: 1
+      X: 0
+      Y: 0
+    PrefabArray:
+    - ObjectPrefab: {fileID: 1119037097548236, guid: 0b947306e55736945b7eb639c8984df4,
+        type: 2}
+      RequiredSpaceX: 4
+      RequiredSpaceZ: 4
+  TerrainGrassData:
+    GrassTexture: {fileID: 2800000, guid: ca51f88bf52a3574fbe10a8745326b2f, type: 3}
+    GrassColour: {r: 0.25882354, g: 0.078431375, b: 0.97647065, a: 1}
+    GrassColourDry: {r: 0.30980393, g: 0.27450982, b: 0.7490196, a: 1}
+    GrassFlatSurfaceSearchRange: 1
+    GrassFlatSurfaceSensitivity: 0.0052
+    MaxGrassSpawnHeight: 1
+    MinGrassSpawnHeight: 0
+    GrassSpawnDensity: 0.7
+    GrassSpawnThreshold: 0
+    GrassNoiseData:
+      Seed: 0
+      Octaves: 0
+      Persistance: 0
+      Lacunarity: 0
+      Scale: 1
+      X: 0
+      Y: 0
   RandomSeeds: 1
   HeightMat: {fileID: 2100000, guid: 55f742d8eeda09741b7c0e747c50a02a, type: 2}
   PlacableMat: {fileID: 2100000, guid: dfb4cce416dbb9b4ea4a125cb4db810d, type: 2}

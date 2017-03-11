@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class ObjectGenerator : ScriptableObject {
 
-    public static void GenerateObjects(ObjectType objectType, out float[,] map, ObjectData[] objectDataArray, int seed = 0, int flatSearchRange = 1, float flatSens = 0.0052f, float minSpawnHeight = 0f, float maxSpawnHeight = 1f, float density = 0.5f, float threshold = 0.5f) {
+    public static void GenerateObjects(ObjectType objectType, out float[,] map, ObjectData objectData) {
 
         map = new float[ProceduralTerrain.TerrainResolution, ProceduralTerrain.TerrainResolution];
-        float[,] noiseMap = ProceduralTerrain.Current.GenerateNoiseMap(seed);
+        int seed = objectData.ObjectNoiseData.Seed;
+        int flatSearchRange = objectData.FlatSurfaceSearchRange;
+        float flatSens = objectData.FlatSurfaceSensitivity;
+        PrefabData[] prefabDataArray = objectData.PrefabArray;
+        float density = objectData.SpawnDensity;
+        float minSpawnHeight = objectData.MinSpawnHeight;
+        float maxSpawnHeight = objectData.MaxSpawnHeight;
+        float threshold = objectData.SpawnThreshold;
+
+        float[,] noiseMap = NoiseGenerator.GenerateNoiseMap(objectData.ObjectNoiseData);
         bool[,] placableMap = ProceduralTerrain.CalculateFlatTerrain(flatSearchRange, flatSens);
 
         GameObject parentObject;
@@ -25,7 +34,7 @@ public class ObjectGenerator : ScriptableObject {
                 break;
         }
 
-        foreach (ObjectData objData in objectDataArray) {
+        foreach (PrefabData objData in prefabDataArray) {
             int requiredSpaceX = objData.RequiredSpaceX;
             int requiredSpaceZ = objData.RequiredSpaceZ;
 
@@ -62,7 +71,7 @@ public class ObjectGenerator : ScriptableObject {
                     if (canPlace) {
                         float number = Random.Range(0f, 1f);
                         //Reduce chance so each object within array has equal chance of being spawned 
-                        number /= objectDataArray.Length;
+                        number /= prefabDataArray.Length;
 
                         if (number > density) {
                             canPlace = false;
@@ -84,13 +93,13 @@ public class ObjectGenerator : ScriptableObject {
                         //Subtract noise
                         map[x, y] = Mathf.Clamp01(map[x, y] - noiseMap[x, y]);
 
-                        //If greater than density
+                        //If greater than threshold
                         if (map[x, y] >= threshold) {
 
                             //Need to invert as terrain is created inverted 
-                            float xToPlace = ((float)y / (float)ProceduralTerrain.TerrainResolution) * (float)ProceduralTerrain.Current.TerrainSize;
-                            float yToPlace = ProceduralTerrain.Current.terrainHeightMap[x, y] * (float)ProceduralTerrain.Current.TerrainHeight;
-                            float zToPlace = ((float)x / (float)ProceduralTerrain.TerrainResolution) * (float)ProceduralTerrain.Current.TerrainSize;
+                            float xToPlace = ((float)y / (float)ProceduralTerrain.TerrainResolution) * (float)ProceduralTerrain.Current.TerrainMapData.TerrainSize;
+                            float yToPlace = ProceduralTerrain.Current.terrainHeightMap[x, y] * (float)ProceduralTerrain.Current.TerrainMapData.TerrainHeight;
+                            float zToPlace = ((float)x / (float)ProceduralTerrain.TerrainResolution) * (float)ProceduralTerrain.Current.TerrainMapData.TerrainSize;
 
                             //Move object to be placed in centre of area just checked
                             xToPlace += requiredSpaceX / 2;
@@ -103,7 +112,8 @@ public class ObjectGenerator : ScriptableObject {
                                 }
                             }
 
-                            Instantiate(objData.ObjectPrefab, new Vector3(xToPlace, yToPlace, zToPlace), Quaternion.identity, parentObject.transform);
+                            Quaternion randomRotation = Quaternion.Euler(0, rand.Next(0, 360), 0);
+                            Instantiate(objData.ObjectPrefab, new Vector3(xToPlace, yToPlace, zToPlace), randomRotation, parentObject.transform);
                         }
                         //Else there is no house here
                         else {

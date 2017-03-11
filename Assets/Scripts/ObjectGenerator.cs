@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ObjectGenerator : ScriptableObject {
 
-    public static void GenerateObjects(ObjectType objectType, out float[,] map, ObjectData objectData) {
+    public static void GenerateObjects(ObjectType objectType, ObjectData objectData, ChunkData chunkData) {
 
-        map = new float[ProceduralTerrain.TerrainResolution, ProceduralTerrain.TerrainResolution];
+        float[,] map = new float[ProceduralTerrain.TerrainResolution, ProceduralTerrain.TerrainResolution];
         int seed = objectData.ObjectNoiseData.Seed;
         int flatSearchRange = objectData.FlatSurfaceSearchRange;
         float flatSens = objectData.FlatSurfaceSensitivity;
@@ -15,9 +15,10 @@ public class ObjectGenerator : ScriptableObject {
         float minSpawnHeight = objectData.MinSpawnHeight;
         float maxSpawnHeight = objectData.MaxSpawnHeight;
         float threshold = objectData.SpawnThreshold;
+        Vector2 position = chunkData.position;
 
-        float[,] noiseMap = NoiseGenerator.GenerateNoiseMap(objectData.ObjectNoiseData);
-        bool[,] placableMap = ProceduralTerrain.CalculateFlatTerrain(flatSearchRange, flatSens);
+        float[,] noiseMap = NoiseGenerator.GenerateNoiseMap(objectData.ObjectNoiseData, ProceduralTerrain.TerrainResolution, position);
+        bool[,] placableMap = ProceduralTerrain.CalculateFlatTerrain(chunkData.terrainHeightMap, flatSearchRange, flatSens);
 
         GameObject parentObject;
         switch (objectType) {
@@ -47,7 +48,7 @@ public class ObjectGenerator : ScriptableObject {
             //Spawn based on density
             for (int x = 0 + range; x < ProceduralTerrain.TerrainResolution - range; x++) {
                 for (int y = 0 + range; y < ProceduralTerrain.TerrainResolution - range; y++) {
-                    float terrainHeight = ProceduralTerrain.Current.terrainHeightMap[x, y];
+                    float terrainHeight = chunkData.terrainHeightMap[x, y];
 
                     bool canPlace = true;
 
@@ -98,7 +99,7 @@ public class ObjectGenerator : ScriptableObject {
 
                             //Need to invert as terrain is created inverted 
                             float xToPlace = ((float)y / (float)ProceduralTerrain.TerrainResolution) * (float)ProceduralTerrain.Current.TerrainMapData.TerrainSize;
-                            float yToPlace = ProceduralTerrain.Current.terrainHeightMap[x, y] * (float)ProceduralTerrain.Current.TerrainMapData.TerrainHeight;
+                            float yToPlace = chunkData.terrainHeightMap[x, y] * (float)ProceduralTerrain.Current.TerrainMapData.TerrainHeight;
                             float zToPlace = ((float)x / (float)ProceduralTerrain.TerrainResolution) * (float)ProceduralTerrain.Current.TerrainMapData.TerrainSize;
 
                             //Move object to be placed in centre of area just checked
@@ -113,7 +114,7 @@ public class ObjectGenerator : ScriptableObject {
                             }
 
                             Quaternion randomRotation = Quaternion.Euler(0, rand.Next(0, 360), 0);
-                            Instantiate(objData.ObjectPrefab, new Vector3(xToPlace, yToPlace, zToPlace), randomRotation, parentObject.transform);
+                            Instantiate(objData.ObjectPrefab, new Vector3(xToPlace + chunkData.position.x, yToPlace, zToPlace + chunkData.position.y), randomRotation, parentObject.transform);
                         }
                         //Else there is no house here
                         else {

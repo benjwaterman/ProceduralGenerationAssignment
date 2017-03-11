@@ -592,7 +592,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_WalkSpeed
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_RunSpeed
@@ -834,7 +834,7 @@ MonoBehaviour:
       Octaves: 10
       Persistance: 0.4
       Lacunarity: 1.8
-      Scale: 500
+      Scale: 250
       X: 0
       Y: 0
     TerrainHeightMultiplier: 1
@@ -858,7 +858,7 @@ MonoBehaviour:
       m_RotationOrder: 0
     TerrainTexture: {fileID: 2800000, guid: 879f51f5b47b18843986e6555b981bf1, type: 3}
     TerrainTextureNormal: {fileID: 0}
-    TerrainTint: {r: 0.7519031, g: 0.28081748, b: 0.7794118, a: 1}
+    TerrainTint: {r: 0.30980393, g: 0.27450982, b: 0.7490196, a: 1}
     TextureTileSize: {x: 5, y: 5}
   TerrainTreeData:
     FlatSurfaceSearchRange: 1
@@ -866,13 +866,13 @@ MonoBehaviour:
     MaxSpawnHeight: 1
     MinSpawnHeight: 0
     SpawnDensity: 0.021
-    SpawnThreshold: 0.483
+    SpawnThreshold: 0.112
     ObjectNoiseData:
       Seed: 0
-      Octaves: 0
-      Persistance: 0
-      Lacunarity: 0
-      Scale: 1
+      Octaves: 10
+      Persistance: 0.4
+      Lacunarity: 1.8
+      Scale: 50
       X: 0
       Y: 0
     PrefabArray:
@@ -888,10 +888,10 @@ MonoBehaviour:
     SpawnThreshold: 0.517
     ObjectNoiseData:
       Seed: 0
-      Octaves: 0
-      Persistance: 0
-      Lacunarity: 0
-      Scale: 1
+      Octaves: 10
+      Persistance: 0.4
+      Lacunarity: 1.8
+      Scale: 50
       X: 0
       Y: 0
     PrefabArray:
@@ -908,13 +908,13 @@ MonoBehaviour:
     MaxGrassSpawnHeight: 1
     MinGrassSpawnHeight: 0
     GrassSpawnDensity: 0.7
-    GrassSpawnThreshold: 0
+    GrassSpawnThreshold: 0.534
     GrassNoiseData:
       Seed: 0
-      Octaves: 0
-      Persistance: 0
-      Lacunarity: 0
-      Scale: 1
+      Octaves: 10
+      Persistance: 0.4
+      Lacunarity: 1.8
+      Scale: 50
       X: 0
       Y: 0
   RandomSeeds: 1

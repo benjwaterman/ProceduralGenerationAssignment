@@ -20,4 +20,6 @@ public class MapData {
     public float TerrainPersistance() { return TerrainNoiseData.Persistance; }
     public float TerrainLacunarity() { return TerrainNoiseData.Lacunarity; }
     public float TerrainScale() { return TerrainNoiseData.Scale; }
+
+
 }

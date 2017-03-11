@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class NoiseGenerator  {
 
-    public static float[,] GenerateNoiseMap(NoiseData noiseData, int res = ProceduralTerrain.TerrainResolution) {
+    public static float[,] GenerateNoiseMap(NoiseData noiseData, int res = ProceduralTerrain.TerrainResolution, Vector2 position = default(Vector2)) {
 
         int seed = noiseData.Seed;
         float scale = noiseData.Scale;
         int octaves = noiseData.Octaves;
         float persistance = noiseData.Persistance;
         float lacunarity = noiseData.Lacunarity;
-        Vector2 position = new Vector2(noiseData.X, noiseData.Y); 
 
         //Store temp heightmap data
         float[,] noiseMap = new float[res, res];

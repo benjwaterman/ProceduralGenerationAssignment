@@ -20,3 +20,10 @@ public class ObjectData {
     public NoiseData ObjectNoiseData;
     public PrefabData[] PrefabArray;
 }
+
+[System.Serializable]
+public class PrefabData {
+    public GameObject ObjectPrefab;
+    public int RequiredSpaceX;
+    public int RequiredSpaceZ;
+}

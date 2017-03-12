@@ -23,12 +23,9 @@ public class NoiseGenerator  {
         float amplitude = 1;
         float frequency = 1;
 
-        int X = (int)position.x;
-        int Y = (int)position.y;
-
         for (int i = 0; i < octaves; i++) {
-            int randX = rand.Next(-100000, 100000) + X;
-            int randY = rand.Next(-100000, 100000) - Y;
+            float randX = rand.Next(-100000, 100000) + position.y;
+            float randY = rand.Next(-100000, 100000) - position.x;
             octaveOffsets[i] = new Vector2(randX, randY);
 
             maxheight += amplitude;

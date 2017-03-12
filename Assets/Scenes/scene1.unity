@@ -598,6 +598,10 @@ Prefab:
       propertyPath: m_RunSpeed
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 2000000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
+      propertyPath: far clip plane
+      value: 5000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
   m_IsPrefabParent: 0
@@ -835,23 +839,51 @@ MonoBehaviour:
       Persistance: 0.4
       Lacunarity: 1.8
       Scale: 250
-      X: 0
-      Y: 0
     TerrainHeightMultiplier: 1
     TerrainHeightCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
-        time: 0
-        value: 0
+        time: -0.01805132
+        value: 0.059671864
         inSlope: 0
         outSlope: 0
         tangentMode: 0
       - serializedVersion: 2
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
+        time: 0.07176356
+        value: 0.2576108
+        inSlope: 0.035464764
+        outSlope: 0.035464764
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.6122821
+        value: 0.37005302
+        inSlope: 0.16409247
+        outSlope: 0.16409247
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.72130567
+        value: 0.46882546
+        inSlope: 0.022477755
+        outSlope: 0.022477755
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.81090623
+        value: 0.61976737
+        inSlope: 0.19308026
+        outSlope: 0.19308026
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.906262
+        value: 0.804749
+        inSlope: -0.033729997
+        outSlope: -0.033729997
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1.0249269
+        value: 1.089736
+        inSlope: 1.6012788
+        outSlope: 1.6012788
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -864,7 +896,7 @@ MonoBehaviour:
     FlatSurfaceSearchRange: 1
     FlatSurfaceSensitivity: 0.0052
     MaxSpawnHeight: 1
-    MinSpawnHeight: 0
+    MinSpawnHeight: 0.178
     SpawnDensity: 0.021
     SpawnThreshold: 0.112
     ObjectNoiseData:
@@ -873,17 +905,16 @@ MonoBehaviour:
       Persistance: 0.4
       Lacunarity: 1.8
       Scale: 50
-      X: 0
-      Y: 0
     PrefabArray:
-    - ObjectPrefab: {fileID: 100002, guid: bb8704cfe64e58f41ae474b1a50e8fec, type: 3}
+    - ObjectPrefab: {fileID: 1599545083580978, guid: 33110235ab3d8bb468971719528c8264,
+        type: 2}
       RequiredSpaceX: 2
       RequiredSpaceZ: 2
   TerrainHouseData:
     FlatSurfaceSearchRange: 1
     FlatSurfaceSensitivity: 0.0052
     MaxSpawnHeight: 0.5
-    MinSpawnHeight: 0
+    MinSpawnHeight: 0.166
     SpawnDensity: 0.072
     SpawnThreshold: 0.517
     ObjectNoiseData:
@@ -892,8 +923,6 @@ MonoBehaviour:
       Persistance: 0.4
       Lacunarity: 1.8
       Scale: 50
-      X: 0
-      Y: 0
     PrefabArray:
     - ObjectPrefab: {fileID: 1119037097548236, guid: 0b947306e55736945b7eb639c8984df4,
         type: 2}
@@ -908,15 +937,13 @@ MonoBehaviour:
     MaxGrassSpawnHeight: 1
     MinGrassSpawnHeight: 0
     GrassSpawnDensity: 0.7
-    GrassSpawnThreshold: 0.534
+    GrassSpawnThreshold: 0
     GrassNoiseData:
       Seed: 0
       Octaves: 10
       Persistance: 0.4
       Lacunarity: 1.8
       Scale: 50
-      X: 0
-      Y: 0
   RandomSeeds: 1
   HeightMat: {fileID: 2100000, guid: 55f742d8eeda09741b7c0e747c50a02a, type: 2}
   PlacableMat: {fileID: 2100000, guid: dfb4cce416dbb9b4ea4a125cb4db810d, type: 2}

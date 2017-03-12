@@ -9,6 +9,7 @@ public class ProceduralTerrain : MonoBehaviour {
     public static ProceduralTerrain Current;
 
     public const int TerrainResolution = 513;
+    public const int NumberOfChunks = 2;
 
     [Header("Terrain Options")]
     public MapData TerrainMapData;
@@ -37,6 +38,8 @@ public class ProceduralTerrain : MonoBehaviour {
     //public float[,] terrainHouseMap = new float[TerrainResolution, TerrainResolution];
 
     public bool[,] defaultPlacableMap;
+
+    Terrain[,] terrains = new Terrain[NumberOfChunks, NumberOfChunks];
 
     void Awake() {
         Current = this;
@@ -70,14 +73,93 @@ public class ProceduralTerrain : MonoBehaviour {
         //AssignTexture(terrainTreeMap, TreeMat);
         //AssignTexture(terrainHouseMap, HouseMat);
 
-        ChunkData chunk = new ChunkData(Vector2.zero);
-        ChunkData chunk2 = new ChunkData(new Vector2(1000, 0));
+        //Create chunks
+        for (int i = 0; i < NumberOfChunks; i++) {
+            for (int j = 0; j < NumberOfChunks; j++) {
+                ChunkData chunk = new ChunkData(new Vector2(TerrainMapData.TerrainSize * i, TerrainMapData.TerrainSize * j));
+                //Assign terrain
+                terrains[i, j] = chunk.terrain;
+            }
+        }
+
+        //Assign terrain neighbours
+        for (int i = 0; i < terrains.GetLength(0); i++) {
+            for (int j = 0; j < terrains.GetLength(1); j++) {
+                Terrain left = (i - 1 >= 0) ? terrains[i - 1, j] : null;
+                Terrain right = (i + 1 < terrains.GetLength(0)) ? terrains[i + 1, j] : null;
+                Terrain top = (j + 1 < terrains.GetLength(1)) ? terrains[i, j + 1] : null;
+                Terrain bottom = (j - 1 > 0) ? terrains[i, j - 1]: null;
+
+                terrains[i, j].SetNeighbors(left, top, right, bottom);
+            }
+        }
     }
 
     public static float[,] CalculateHeightMap(ChunkData chunkData) {
 
+        Vector2 noiseOffset = new Vector2(chunkData.position.x / ProceduralTerrain.Current.TerrainMapData.TerrainSize * ProceduralTerrain.TerrainResolution, chunkData.position.y / ProceduralTerrain.Current.TerrainMapData.TerrainSize * ProceduralTerrain.TerrainResolution);
+
         //Store temp heightmap data
-        float[,] heightMap = NoiseGenerator.GenerateNoiseMap(ProceduralTerrain.Current.TerrainMapData.TerrainNoiseData, ProceduralTerrain.TerrainResolution, chunkData.position);
+        float[,] tempHeightMap = NoiseGenerator.GenerateNoiseMap(ProceduralTerrain.Current.TerrainMapData.TerrainNoiseData, ProceduralTerrain.TerrainResolution + 2, noiseOffset);
+
+        //To avoid seams between terrain, edge vertices have to be = to edge + 1
+        float[,] heightMap = new float[ProceduralTerrain.TerrainResolution, ProceduralTerrain.TerrainResolution];
+
+        //Start at 1 and end at length-1 so not to go out of index
+        for (int x = 1; x < tempHeightMap.GetLength(0) - 1; x++) {
+            for (int y = 1; y < tempHeightMap.GetLength(1) - 1; y++) {
+
+                bool hasAssignedValue = false;
+                float tempHeight = 0;
+
+                //When i == 1 or j == 1 we are at the edge
+                if (x == 1) {
+                    //Assign edge value to average between two points
+                    tempHeight += tempHeightMap[x - 1, y];// + tempHeightMap[x, y]) / 2;
+                    hasAssignedValue = true;
+                }
+
+                if (y == 1) {
+                    tempHeight += tempHeightMap[x, y - 1];// + tempHeightMap[x, y]) / 2;
+
+                    //If already assigned, means its a corner
+                    if (hasAssignedValue) {
+                        tempHeight /= 2;
+                    }
+
+                    hasAssignedValue = true;
+                }
+
+                if (x == tempHeightMap.GetLength(0) - 1) {
+                    tempHeight += tempHeightMap[x + 1, y];/// + tempHeightMap[x, y]) / 2;
+
+                    if (hasAssignedValue) {
+                        tempHeight /= 2;
+                    }
+
+                    hasAssignedValue = true;
+                }
+
+                if (y == tempHeightMap.GetLength(1) - 1) {
+                    tempHeight += tempHeightMap[x, y + 1];// + tempHeightMap[x, y]) / 2;
+
+                    if (hasAssignedValue) {
+                        tempHeight /= 2;
+                    }
+
+                    hasAssignedValue = true;
+                }
+
+                if (!hasAssignedValue) {
+                    tempHeight = tempHeightMap[x, y];
+                }
+
+                //If within range
+                if (x >= 1 && y >= 1 && x <= tempHeightMap.GetLength(0) - 1 && y <= tempHeightMap.GetLength(1) - 1) {
+                    heightMap[x - 1, y - 1] = tempHeight;
+                }
+            }
+        }
 
         //Store max and min values of height map to normalise
         float maxLocalHeight = float.MinValue;
@@ -101,6 +183,9 @@ public class ProceduralTerrain : MonoBehaviour {
                 heightMap[x, y] = heightValue;
             }
         }
+
+        maxLocalHeight = 1.1f;
+        minLocalHeight = 0.4f;
 
         //Normalise heightmap and apply height curve
         for (int x = 0; x < TerrainResolution; x++) {
@@ -158,7 +243,7 @@ public class ProceduralTerrain : MonoBehaviour {
         GameObject terrainGameObject = Terrain.CreateTerrainGameObject(terrainData);
 
         //Set position 
-        terrainGameObject.transform.position = new Vector3(chunkData.position.x, 0, chunkData.position.y);
+        terrainGameObject.transform.position = new Vector3(chunkData.position.x, 0, -chunkData.position.y);
 
         terrain = terrainGameObject.GetComponent<Terrain>();
         terrain.heightmapPixelError = 8;
@@ -249,14 +334,14 @@ public class ProceduralTerrain : MonoBehaviour {
         terrain.detailObjectDistance = 250;
 
         int[,] grassMap = new int[grassResolution, grassResolution];
-        float[,] fGrassMap = NoiseGenerator.GenerateNoiseMap(TerrainGrassData.GrassNoiseData, grassResolution);
+        float[,] fGrassMap = NoiseGenerator.GenerateNoiseMap(TerrainGrassData.GrassNoiseData, grassResolution, chunkData.position);
 
         int incremement = (int)(1 / TerrainGrassData.GrassSpawnDensity);
 
         for (int i = 0; i < grassResolution; i += incremement) {
             for (int j = 0; j < grassResolution; j += incremement) {
 
-                float terrainHeight = terrain.terrainData.GetHeight((int)(j/2), (int)(i/2)) / (float)ProceduralTerrain.Current.TerrainMapData.TerrainHeight;
+                float terrainHeight = terrain.terrainData.GetHeight((int)(j / 2), (int)(i / 2)) / (float)ProceduralTerrain.Current.TerrainMapData.TerrainHeight;
 
                 //Compare against generated noise
                 if (fGrassMap[i, j] >= TerrainGrassData.GrassSpawnThreshold) {

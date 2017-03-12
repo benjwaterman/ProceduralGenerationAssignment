@@ -114,7 +114,7 @@ public class ObjectGenerator : ScriptableObject {
                             }
 
                             Quaternion randomRotation = Quaternion.Euler(0, rand.Next(0, 360), 0);
-                            Instantiate(objData.ObjectPrefab, new Vector3(xToPlace + chunkData.position.x, yToPlace, zToPlace + chunkData.position.y), randomRotation, parentObject.transform);
+                            Instantiate(objData.ObjectPrefab, new Vector3(xToPlace + chunkData.position.x, yToPlace, zToPlace - chunkData.position.y), randomRotation, parentObject.transform);
                         }
                         //Else there is no house here
                         else {

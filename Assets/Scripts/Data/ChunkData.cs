@@ -20,6 +20,7 @@ public class ChunkData {
         ProceduralTerrain.GenerateHouses(this);
         ProceduralTerrain.GenerateTrees(this);
         ProceduralTerrain.GenerateGrass(this);
+        SplatMapGenerator.GenerateSplatMap(this);
     }
 
     public void AssignTerrainData(TerrainData terrainData) {

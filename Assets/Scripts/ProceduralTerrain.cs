@@ -9,7 +9,7 @@ public class ProceduralTerrain : MonoBehaviour {
     public static ProceduralTerrain Current;
 
     public const int TerrainResolution = 513;
-    public const int NumberOfChunks = 2;
+    public const int NumberOfChunks = 1;
 
     [Header("Terrain Options")]
     public MapData TerrainMapData;
@@ -184,8 +184,10 @@ public class ProceduralTerrain : MonoBehaviour {
             }
         }
 
-        maxLocalHeight = 1.1f;
-        minLocalHeight = 0.4f;
+        if (ProceduralTerrain.NumberOfChunks != 1) {
+            maxLocalHeight = 1.3f;
+            minLocalHeight = 0.4f;
+        }
 
         //Normalise heightmap and apply height curve
         for (int x = 0; x < TerrainResolution; x++) {
@@ -203,7 +205,8 @@ public class ProceduralTerrain : MonoBehaviour {
         TerrainData terrainData = new TerrainData();
         Terrain terrain = new Terrain();
         float[,] terrainHeightMap = chunkData.terrainHeightMap;
-        MapData TerrainMapData = ProceduralTerrain.Current.TerrainMapData;
+        MapData terrainMapData = ProceduralTerrain.Current.TerrainMapData;
+        TextureData[] terrainTextures = ProceduralTerrain.Current.TerrainMapData.TerrainTextures;
 
         terrainData = new TerrainData();
         //Resolution
@@ -213,30 +216,39 @@ public class ProceduralTerrain : MonoBehaviour {
         terrainData.SetHeights(0, 0, terrainHeightMap);
 
         //Terrain size and max height
-        terrainData.size = new Vector3(TerrainMapData.TerrainSize, TerrainMapData.TerrainHeight, TerrainMapData.TerrainSize);
+        terrainData.size = new Vector3(terrainMapData.TerrainSize, terrainMapData.TerrainHeight, terrainMapData.TerrainSize);
 
-        //Create texture from TerrainTexture and tint colour
-        Texture2D tintedTexture = new Texture2D(TerrainMapData.TerrainTexture.width, TerrainMapData.TerrainTexture.height);
-        Color[] pixels = TerrainMapData.TerrainTexture.GetPixels();
-        for (int i = 0; i < pixels.Length; i++) {
-            pixels[i].r = pixels[i].r - (1.0f - TerrainMapData.TerrainTint.r);
-            pixels[i].g = pixels[i].g - (1.0f - TerrainMapData.TerrainTint.g);
-            pixels[i].b = pixels[i].b - (1.0f - TerrainMapData.TerrainTint.b);
+        //Loop through textures 
+        int textureIndex = 0;
+        SplatPrototype[] splatPrototype = new SplatPrototype[terrainTextures.Length];
+        foreach (TextureData textureData in terrainTextures) {
+            //Create texture from TerrainTexture and tint colour
+            Texture2D tintedTexture = new Texture2D(textureData.Texture.width, textureData.Texture.height);
+            Color[] pixels = textureData.Texture.GetPixels();
+            for (int i = 0; i < pixels.Length; i++) {
+                pixels[i].r = pixels[i].r - (1.0f - textureData.TextureTint.r);
+                pixels[i].g = pixels[i].g - (1.0f - textureData.TextureTint.g);
+                pixels[i].b = pixels[i].b - (1.0f - textureData.TextureTint.b);
+            }
+            //Set and apply pixels
+            tintedTexture.SetPixels(pixels);
+            tintedTexture.Apply();
+
+            //Create textures for terrain
+            splatPrototype[textureIndex] = new SplatPrototype();
+            splatPrototype[textureIndex].texture = tintedTexture;
+            //If there is a normal map
+            if (textureData.TextureNormal != null) {
+                splatPrototype[textureIndex].normalMap = textureData.TextureNormal;
+            }
+            splatPrototype[textureIndex].tileOffset = new Vector2(0, 0);
+            splatPrototype[textureIndex].tileSize = textureData.TextureTileSize;
+
+            //Increment index 
+            textureIndex++;
         }
-        tintedTexture.SetPixels(pixels);
-        tintedTexture.Apply();
 
-        //Set textures
-        SplatPrototype[] splatPrototype = new SplatPrototype[1];
-        splatPrototype[0] = new SplatPrototype();
-        splatPrototype[0].texture = tintedTexture;
-        if (TerrainMapData.TerrainTextureNormal != null) {
-            splatPrototype[0].normalMap = TerrainMapData.TerrainTextureNormal;
-        }
-        splatPrototype[0].tileOffset = new Vector2(0, 0);
-        splatPrototype[0].tileSize = TerrainMapData.TextureTileSize;
-
-        //Apply textures
+        //Apply textures to terrain
         terrainData.splatPrototypes = splatPrototype;
 
         //Create object

@@ -10,16 +10,21 @@ public class MapData {
     public NoiseData TerrainNoiseData;
     public float TerrainHeightMultiplier = 1;
     public AnimationCurve TerrainHeightCurve;
-    public Texture2D TerrainTexture;
-    public Texture2D TerrainTextureNormal;
-    public Color TerrainTint = Color.white;
-    public Vector2 TextureTileSize;
+    public TextureData[] TerrainTextures;
+    public float Texture1ConstantWeight = 0.5f;
+    public float TextureSteepnessScaleFactor = 5;
 
     public int TerrainSeed() { return TerrainNoiseData.Seed; }
     public int TerrainOctaves() { return TerrainNoiseData.Octaves; }
     public float TerrainPersistance() { return TerrainNoiseData.Persistance; }
     public float TerrainLacunarity() { return TerrainNoiseData.Lacunarity; }
     public float TerrainScale() { return TerrainNoiseData.Scale; }
+}
 
-
+[System.Serializable]
+public struct TextureData {
+    public Texture2D Texture;
+    public Texture2D TextureNormal;
+    public Vector2 TextureTileSize;
+    public Color TextureTint;
 }

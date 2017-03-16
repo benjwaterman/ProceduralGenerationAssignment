@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class MapData {
+[CreateAssetMenu()]
+public class MapData : ScriptableObject {
 
     public int TerrainSize = 1000;
     public int TerrainHeight = 20;
@@ -11,6 +11,7 @@ public class MapData {
     public float TerrainHeightMultiplier = 1;
     public AnimationCurve TerrainHeightCurve;
     public TextureData[] TerrainTextures;
+    [Header("Other Properties")]
     public float TextureBlendAmount = 0.1f;
     public float Texture1ConstantWeight = 0.5f;
     public float TextureSteepnessScaleFactor = 5;

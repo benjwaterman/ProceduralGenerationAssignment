@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c709f68df5f7647be52d5dc7fc01f5, type: 3}
+  m_Name: DefaultHouseData
+  m_EditorClassIdentifier: 
+  FlatSurfaceSearchRange: 1
+  FlatSurfaceSensitivity: 0.0052
+  MaxSpawnHeight: 0.5
+  MinSpawnHeight: 0.1
+  SpawnDensity: 0.2
+  SpawnThreshold: 0.055
+  ObjectNoiseData: {fileID: 11400000, guid: 78d76c952478fd9449cab6d4d90ec8c2, type: 2}
+  PrefabArray:
+  - ObjectPrefab: {fileID: 1499104740475294, guid: fef0d92e68d640f4e85473b4be7e34e5,
+      type: 2}
+    RequiredSpaceX: 4
+    RequiredSpaceZ: 4
+    ActualSizeX: 4
+    ActualSizeZ: 4

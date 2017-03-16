@@ -1,30 +1,20 @@
 fileFormatVersion: 2
-guid: ddf734d8b384be242b60b731fa4dd796
-timeCreated: 1489671008
+guid: 774ad52aed3e31d4d9578bf502444918
+timeCreated: 1489669452
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: Leaves
-    100002: Leaves.001
-    100004: Leaves.002
-    100006: //RootNode
+    100002: //RootNode
     400000: Leaves
-    400002: Leaves.001
-    400004: Leaves.002
-    400006: //RootNode
+    400002: //RootNode
     2300000: Leaves
-    2300002: Leaves.001
-    2300004: Leaves.002
-    2300006: //RootNode
+    2300002: //RootNode
     3300000: Leaves
-    3300002: Leaves.001
-    3300004: Leaves.002
-    3300006: //RootNode
-    4300000: Tree5
-    4300002: Leaves.002
-    4300004: Leaves.001
-    4300006: Leaves
+    3300002: //RootNode
+    4300000: Tree3
+    4300002: Leaves
   materials:
     importMaterials: 1
     materialName: 0

@@ -61,12 +61,21 @@ public class ObjectGenerator : ScriptableObject {
             //Required for chosing of prefab to spawn
             System.Random rand = new System.Random();
 
+            //If an area has already been tested, dont check it again for this object
+            bool[,] hasAttempedPlace = new bool[ProceduralTerrain.TerrainResolution, ProceduralTerrain.TerrainResolution];
+
             //Spawn based on density
             for (int x = 0 + range; x < ProceduralTerrain.TerrainResolution - range; x++) {
                 for (int y = 0 + range; y < ProceduralTerrain.TerrainResolution - range; y++) {
                     float terrainHeight = chunkData.terrainHeightMap[x, y];
 
                     bool canPlace = true;
+
+                    //If an attempt to place an object here has been made
+                    if(hasAttempedPlace[x,y]) {
+                        //Next area
+                        continue;
+                    }
 
                     //Check around this point to check it is flat
                     for (int i = 0; i <= requiredSpaceX; i++) {
@@ -119,7 +128,7 @@ public class ObjectGenerator : ScriptableObject {
                     }
 
                     if (canPlace) {
-                        //Update house map
+                        //Update map
                         map[x, y] = 1f;
 
                         //Subtract noise
@@ -167,10 +176,20 @@ public class ObjectGenerator : ScriptableObject {
                             Quaternion randomRotation = Quaternion.Euler(0, rand.Next(0, 360), 0);
                             Instantiate(objData.ObjectPrefab, new Vector3(xToPlace + chunkData.position.x, yToPlace, zToPlace - chunkData.position.y), randomRotation, parentObject.transform);
                         }
-                        //Else there is no house here
+                        //Else there is nothing here
                         else {
                             map[x, y] = 0;
                         }
+                    }
+
+                    //If can't place, mark this area as having been attemped for this object
+                    else {
+                        hasAttempedPlace[x, y] = true;
+                        //for (int i = 0; i <= requiredSpaceX; i++) {
+                        //    for (int j = 0; j <= requiredSpaceZ; j++) {
+                                
+                        //    }
+                        //}
                     }
                 }
             }

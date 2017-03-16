@@ -11,19 +11,19 @@ public class ProceduralTerrain : MonoBehaviour {
     public const int TerrainResolution = 513;
     public const int NumberOfChunks = 1;
 
-    [Header("Terrain Options")]
+    [Header("Terrain")]
     public MapData TerrainMapData;
 
-    [Header("Tree Options")]
-    public TreeData TerrainTreeData;
+    [Header("Trees")]
+    public TreeData[] TerrainTreeDataArray;
 
-    [Header("House Options")]
+    [Header("Houses")]
     public HouseData TerrainHouseData;
 
-    [Header("Detail Options")]
+    [Header("Details")]
     public DetailData TerrainDetailData;
 
-    [Header("Grass Options")]
+    [Header("Grass")]
     public GrassData TerrainGrassData;
 
     [Header("Debug Options")]
@@ -55,7 +55,9 @@ public class ProceduralTerrain : MonoBehaviour {
             TerrainGrassData.GrassNoiseData.Seed = rand.Next();
             TerrainHouseData.ObjectNoiseData.Seed = rand.Next();
             TerrainMapData.TerrainNoiseData.Seed = rand.Next();
-            TerrainTreeData.ObjectNoiseData.Seed = rand.Next();
+            foreach (TreeData TerrainTreeData in TerrainTreeDataArray) {
+                TerrainTreeData.ObjectNoiseData.Seed = rand.Next();
+            }
         }
 
         //Create heightmap
@@ -319,7 +321,9 @@ public class ProceduralTerrain : MonoBehaviour {
 
     public static void GenerateTrees(ChunkData chunkData) {
 
-        ObjectGenerator.GenerateObjects(ObjectType.Tree, ProceduralTerrain.Current.TerrainTreeData, chunkData);
+        foreach (TreeData TerrainTreeData in ProceduralTerrain.Current.TerrainTreeDataArray) {
+            ObjectGenerator.GenerateObjects(ObjectType.Tree, TerrainTreeData, chunkData);
+        }
     }
 
     public static void GenerateDetails(ChunkData chunkData) {

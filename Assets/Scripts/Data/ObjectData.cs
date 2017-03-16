@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectData {
+public class ObjectData : ScriptableObject {
 
     [Range(1, 3)]
     public int FlatSurfaceSearchRange = 1;

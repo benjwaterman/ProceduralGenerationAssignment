@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class NoiseData {
+[CreateAssetMenu()]
+public class NoiseData : ScriptableObject {
 
     public int Seed = 0;
     [Range(1, 10)]

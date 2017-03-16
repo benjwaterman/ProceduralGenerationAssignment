@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ObjectType { Tree, House };
+public enum ObjectType { Tree, House, Detail };
 
 public class ProceduralTerrain : MonoBehaviour {
 
@@ -19,6 +19,9 @@ public class ProceduralTerrain : MonoBehaviour {
 
     [Header("House Options")]
     public HouseData TerrainHouseData;
+
+    [Header("Detail Options")]
+    public DetailData TerrainDetailData;
 
     [Header("Grass Options")]
     public GrassData TerrainGrassData;
@@ -311,12 +314,16 @@ public class ProceduralTerrain : MonoBehaviour {
 
     public static void GenerateHouses(ChunkData chunkData) {
 
-        ObjectGenerator.GenerateObjects(ObjectType.House, ProceduralTerrain.Current.TerrainTreeData, chunkData);
+        ObjectGenerator.GenerateObjects(ObjectType.House, ProceduralTerrain.Current.TerrainHouseData, chunkData);
     }
 
     public static void GenerateTrees(ChunkData chunkData) {
 
-        ObjectGenerator.GenerateObjects(ObjectType.Tree, ProceduralTerrain.Current.TerrainHouseData, chunkData);
+        ObjectGenerator.GenerateObjects(ObjectType.Tree, ProceduralTerrain.Current.TerrainTreeData, chunkData);
+    }
+
+    public static void GenerateDetails(ChunkData chunkData) {
+        ObjectGenerator.GenerateObjects(ObjectType.Detail, ProceduralTerrain.Current.TerrainDetailData, chunkData);
     }
 
     //Generate grass using unitys terrain detail
@@ -335,10 +342,13 @@ public class ProceduralTerrain : MonoBehaviour {
         detailPrototype[0].healthyColor = TerrainGrassData.GrassColour;
         detailPrototype[0].dryColor = TerrainGrassData.GrassColourDry;
         detailPrototype[0].renderMode = DetailRenderMode.GrassBillboard;
+        detailPrototype[0].maxHeight = TerrainGrassData.GrassMaxHeight;
+        detailPrototype[0].minHeight = TerrainGrassData.GrassMinHeight;
         terrainData.detailPrototypes = detailPrototype;
 
-        const int grassResolution = TerrainResolution * 2;
-        const int patchDetail = 16;
+        const int resolutionMultipier = 2;
+        const int grassResolution = TerrainResolution * resolutionMultipier;
+        const int patchDetail = 32;
 
         //Set detail and resolution
         terrain.terrainData.SetDetailResolution(grassResolution, patchDetail);
@@ -353,15 +363,26 @@ public class ProceduralTerrain : MonoBehaviour {
         for (int i = 0; i < grassResolution; i += incremement) {
             for (int j = 0; j < grassResolution; j += incremement) {
 
-                float terrainHeight = terrain.terrainData.GetHeight((int)(j / 2), (int)(i / 2)) / (float)ProceduralTerrain.Current.TerrainMapData.TerrainHeight;
+                float terrainHeight = terrain.terrainData.GetHeight((int)(j / resolutionMultipier), (int)(i / resolutionMultipier)) / (float)ProceduralTerrain.Current.TerrainMapData.TerrainHeight;
 
-                //Compare against generated noise
-                if (fGrassMap[i, j] >= TerrainGrassData.GrassSpawnThreshold) {
+                //Get alpha map at this location (inverted)
+                float[,,] localAlphaMap = terrainData.GetAlphamaps(j / resolutionMultipier, i / resolutionMultipier, 1, 1);
+                float grassStrength = localAlphaMap[0, 0, 2]; //2 being the grass texture
+
+                if (grassStrength >= TerrainGrassData.GrassSpawnThreshold) {
                     grassMap[i, j] = 6;
                 }
                 else {
                     grassMap[i, j] = 0;
                 }
+
+                //Compare against generated noise
+                //if (fGrassMap[i, j] >= TerrainGrassData.GrassSpawnThreshold) {
+                //    grassMap[i, j] = 6;
+                //}
+                //else {
+                //    grassMap[i, j] = 0;
+                //}
 
                 //If grass is not within min and max height
                 if (!(terrainHeight >= TerrainGrassData.MinGrassSpawnHeight && terrainHeight <= TerrainGrassData.MaxGrassSpawnHeight)) {

@@ -18,7 +18,19 @@ public class ObjectGenerator : ScriptableObject {
         Vector2 position = chunkData.position;
 
         float[,] noiseMap = NoiseGenerator.GenerateNoiseMap(objectData.ObjectNoiseData, ProceduralTerrain.TerrainResolution, position);
-        bool[,] placableMap = ProceduralTerrain.CalculateFlatTerrain(chunkData.terrainHeightMap, flatSearchRange, flatSens);
+        //Placable map for this object type based off of terrain flatness
+        bool[,] flatPlacableMap = ProceduralTerrain.CalculateFlatTerrain(chunkData.terrainHeightMap, flatSearchRange, flatSens);
+        //Placable map based off of whether the location is valid (if there is another object there)
+        bool[,] validPlacableMap;
+
+        //If not detail type, normal placable map
+        if (objectType != ObjectType.Detail) {
+            validPlacableMap = chunkData.terrainPlacableMap;
+        }
+        //Else detail placable area
+        else {
+            validPlacableMap = chunkData.terrainDetailPlacableMap;
+        }
 
         GameObject parentObject;
         switch (objectType) {
@@ -28,6 +40,10 @@ public class ObjectGenerator : ScriptableObject {
 
             case ObjectType.Tree:
                 parentObject = new GameObject("Trees");
+                break;
+
+            case ObjectType.Detail:
+                parentObject = new GameObject("Details");
                 break;
 
             default:
@@ -52,13 +68,13 @@ public class ObjectGenerator : ScriptableObject {
 
                     bool canPlace = true;
 
-                    //Check around this point to check there is room
+                    //Check around this point to check it is flat
                     for (int i = 0; i <= requiredSpaceX; i++) {
                         for (int j = 0; j <= requiredSpaceZ; j++) {
                             //If canPlace = false, no point checking other areas
                             if (canPlace) {
 
-                                if (placableMap[x + i, y + j]) {
+                                if (flatPlacableMap[x + i, y + j]) {
                                     canPlace = true;
                                 }
                                 else {
@@ -68,7 +84,22 @@ public class ObjectGenerator : ScriptableObject {
                         }
                     }
 
-                    //Randomly decide whether object can be placed
+                    //Check around this point to check there is no other objects
+                    for (int i = 0; i <= requiredSpaceX; i++) {
+                        for (int j = 0; j <= requiredSpaceZ; j++) {
+                            if (canPlace) {
+
+                                if (validPlacableMap[x + i, y + j]) {
+                                    canPlace = true;
+                                }
+                                else {
+                                    canPlace = false;
+                                }
+                            }
+                        }
+                    }
+
+                    //Randomly decide whether object can be placed based off of density
                     if (canPlace) {
                         float number = Random.Range(0f, 1f);
                         //Reduce chance so each object within array has equal chance of being spawned 
@@ -106,10 +137,30 @@ public class ObjectGenerator : ScriptableObject {
                             xToPlace += requiredSpaceX / 2;
                             zToPlace += requiredSpaceZ / 2;
 
-                            //This area is no longer placable
-                            for (int i = 0; i <= requiredSpaceX; i++) {
-                                for (int j = 0; j <= requiredSpaceZ; j++) {
-                                    placableMap[x + i, y + j] = false;
+                            //If not detail
+                            if (objectType != ObjectType.Detail) {
+
+                                //This area is no longer placable
+                                for (int i = 0; i <= requiredSpaceX; i++) {
+                                    for (int j = 0; j <= requiredSpaceZ; j++) {
+                                        validPlacableMap[x + i, y + j] = false;
+                                    }
+                                }
+
+                                //For detail placable map
+                                for (int i = 0; i <= objData.ActualSizeX; i++) {
+                                    for (int j = 0; j <= objData.ActualSizeZ; j++) {
+                                        chunkData.terrainDetailPlacableMap[x + i, y + j] = false;
+                                    }
+                                }
+                            }
+                            //If is detail
+                            else {
+                                for (int i = 0; i <= requiredSpaceX; i++) {
+                                    for (int j = 0; j <= requiredSpaceZ; j++) {
+                                        validPlacableMap[x + i, y + j] = false;
+                                        chunkData.terrainPlacableMap[x + i, y + j] = false;
+                                    }
                                 }
                             }
 

@@ -26,4 +26,6 @@ public class PrefabData {
     public GameObject ObjectPrefab;
     public int RequiredSpaceX;
     public int RequiredSpaceZ;
+    public int ActualSizeX;
+    public int ActualSizeZ;
 }

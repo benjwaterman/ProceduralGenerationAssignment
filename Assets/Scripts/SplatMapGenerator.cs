@@ -13,8 +13,11 @@ public class SplatMapGenerator {
         // Get a reference to the terrain data
         TerrainData terrainData = chunkData.terrainData;
 
+        TextureData[] textureData = ProceduralTerrain.Current.TerrainMapData.TerrainTextures;
+
         float constantWeight = ProceduralTerrain.Current.TerrainMapData.Texture1ConstantWeight;
         float steepnessScale = ProceduralTerrain.Current.TerrainMapData.TextureSteepnessScaleFactor;
+        float textureBlendAmount = ProceduralTerrain.Current.TerrainMapData.TextureBlendAmount;
 
         // Splatmap data is stored internally as a 3d array of floats, so declare a new empty array ready for your custom splatmap data:
         float[,,] splatmapData = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, terrainData.alphamapLayers];
@@ -39,19 +42,44 @@ public class SplatMapGenerator {
 
                 // CHANGE THE RULES BELOW TO SET THE WEIGHTS OF EACH TEXTURE ON WHATEVER RULES YOU WANT
 
+                height = height / ProceduralTerrain.Current.TerrainMapData.TerrainHeight;
+
+                //For steeper terrains, last value in array is always for steepness
+                splatWeights[textureData.Length - 1] = Mathf.Clamp01(steepness * steepness / (terrainData.heightmapHeight / steepnessScale));
+
+                //If is not too steep apply other textures
+                if (splatWeights[textureData.Length - 1] < 0.8f) {
+                    //Go backwards through textures
+                    for (int i = 0; i < textureData.Length; i++) {
+                        if (height > textureData[i].TextureStartHeight) {
+                            //If not last element in array and height value is less than the next textures start height
+                            if (i < textureData.Length - 1 && textureData[i + 1].TextureStartHeight > height) {
+                                splatWeights[i] = 1;
+                            }
+                        }
+                    }
+                }
+
+                //if(height - 0.1f > 0.1f)
+                //for (int i = 0; i < splatWeights.Length - 1; i++) {
+
+                //    splatWeights[i] -= textureBlendAmount;
+                //    splatWeights[i + 1] += textureBlendAmount;
+                //}
+
                 // Texture[0] has constant influence
-                splatWeights[0] = constantWeight;
+                //splatWeights[0] = constantWeight;
 
                 // Texture[1] is stronger at lower altitudes
-                splatWeights[1] = Mathf.Clamp01(1 - height / ProceduralTerrain.Current.TerrainMapData.TerrainHeight);
+                //splatWeights[1] = 1; //Mathf.Clamp01(1 - height / ProceduralTerrain.Current.TerrainMapData.TerrainHeight);
 
                 // Texture[2] stronger on flatter terrain
                 // Note "steepness" is unbounded, so we "normalise" it by dividing by the extent of heightmap height and scale factor
                 // Subtract result from 1.0 to give greater weighting to flat surfaces
-                splatWeights[2] = 1.0f - Mathf.Clamp01(steepness * steepness / (terrainData.heightmapHeight / steepnessScale));
+                //splatWeights[2] = 1.0f - Mathf.Clamp01(steepness * steepness / (terrainData.heightmapHeight / steepnessScale));
 
-                // Texture[3] increases with height but only on surfaces facing positive Z axis 
-                splatWeights[3] = Mathf.Clamp01(height / ProceduralTerrain.Current.TerrainMapData.TerrainHeight); //* Mathf.Clamp01(normal.z);
+                // Texture[3] steeper terrains
+                //splatWeights[3] = Mathf.Clamp01(steepness * steepness / (terrainData.heightmapHeight / steepnessScale));//Mathf.Clamp01(height / ProceduralTerrain.Current.TerrainMapData.TerrainHeight); //* Mathf.Clamp01(normal.z);
 
                 // Sum of all textures weights must add to 1, so calculate normalization factor from sum of weights
                 float z = splatWeights.Sum();

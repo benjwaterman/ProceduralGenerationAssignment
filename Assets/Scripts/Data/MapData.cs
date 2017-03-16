@@ -11,6 +11,7 @@ public class MapData {
     public float TerrainHeightMultiplier = 1;
     public AnimationCurve TerrainHeightCurve;
     public TextureData[] TerrainTextures;
+    public float TextureBlendAmount = 0.1f;
     public float Texture1ConstantWeight = 0.5f;
     public float TextureSteepnessScaleFactor = 5;
 
@@ -27,4 +28,5 @@ public struct TextureData {
     public Texture2D TextureNormal;
     public Vector2 TextureTileSize;
     public Color TextureTint;
+    public float TextureStartHeight;
 }

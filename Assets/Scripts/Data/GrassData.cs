@@ -8,6 +8,8 @@ public class GrassData  {
     public Texture2D GrassTexture;
     public Color GrassColour;
     public Color GrassColourDry;
+    public float GrassMaxHeight = 2f;
+    public float GrassMinHeight = 1f;
     [Range(1, 3)]
     public int GrassFlatSurfaceSearchRange = 1;
     [Range(.00001f, 0.05f)]

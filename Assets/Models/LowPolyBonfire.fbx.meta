@@ -1,37 +1,27 @@
 fileFormatVersion: 2
-guid: b5dd0c85fef6b924796f6a4b8b400428
-timeCreated: 1490206414
+guid: 0541c371a64a18f41ac4061089d13c61
+timeCreated: 1490200425
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Door
-    100002: Feet
-    100004: //RootNode
-    100006: Roof
-    100008: Stairs
-    400000: Door
-    400002: Feet
-    400004: //RootNode
-    400006: Roof
-    400008: Stairs
-    2300000: Door
-    2300002: Feet
-    2300004: //RootNode
-    2300006: Roof
-    2300008: Stairs
-    3300000: Door
-    3300002: Feet
-    3300004: //RootNode
-    3300006: Roof
-    3300008: Stairs
-    4300000: House1
-    4300002: Door
-    4300004: Stairs
-    4300006: Feet
-    4300008: Roof
+    100000: Inner
+    100002: //RootNode
+    100004: RopeTie
+    400000: Inner
+    400002: //RootNode
+    400004: RopeTie
+    2300000: Inner
+    2300002: //RootNode
+    2300004: RopeTie
+    3300000: Inner
+    3300002: //RootNode
+    3300004: RopeTie
+    4300000: Bonfire
+    4300002: Inner
+    4300004: RopeTie
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:

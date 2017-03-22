@@ -4,5 +4,6 @@ using UnityEngine;
 
 [CreateAssetMenu()]
 public class HouseData : ObjectData {
-    
+
+    public PrefabData VillageCenterPrefab;
 }

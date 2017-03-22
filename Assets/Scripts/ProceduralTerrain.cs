@@ -118,10 +118,10 @@ public class ProceduralTerrain : MonoBehaviour {
                     hasAssignedValue = true;
 
                     //Corner
-                    if(y == 1) {
+                    if (y == 1) {
                         tempHeight = tempHeightMap[x - 1, y - 1];
                     }
-                    else if(y == tempHeightMap.GetLength(1) - 1) {
+                    else if (y == tempHeightMap.GetLength(1) - 1) {
                         tempHeight = tempHeightMap[x - 1, y + 1];
                     }
                 }
@@ -323,6 +323,77 @@ public class ProceduralTerrain : MonoBehaviour {
 
     public static void GenerateDetails(ChunkData chunkData) {
         ObjectGenerator.GenerateObjects(ObjectType.Detail, ProceduralTerrain.Current.TerrainDetailData, chunkData);
+    }
+
+    public static void GenerateVillages(ChunkData chunkData) {
+
+        float distanceBetweenVillages = 100;
+        float distanceBetweenHouses = 5;
+        int minHousesPerVillage = 5;
+        bool canReplace = true;
+        List<GameObject> objectsToDelete = new List<GameObject>();
+
+        foreach (GameObject go in chunkData.VillageHouseList) {
+            //Reset variable
+            canReplace = true;
+            //Go through every house, check its not near another village center, then change on of the houses to a village center
+            foreach (GameObject center in chunkData.VillageCenterList) {
+                //If there is another center close by, this object cannot be a center
+                if (Vector3.Distance(go.transform.position, center.transform.position) < distanceBetweenVillages) {
+                    //This object is already near a bonfire
+                    canReplace = false;
+                    break;
+                }
+            }
+
+            if (canReplace) {
+                Vector3 position = go.transform.position;
+                objectsToDelete.Add(go);
+                //Spawn prefab
+                GameObject newCenter = Instantiate(ProceduralTerrain.Current.TerrainHouseData.VillageCenterPrefab.ObjectPrefab, position, Quaternion.identity, go.transform.parent);
+                chunkData.VillageCenterList.Add(newCenter);
+            }
+        }
+
+        //Check there is at least x amount of houses nearby
+        foreach (GameObject baseHouse in chunkData.VillageHouseList) {
+            int nearbyHouses = 0;
+            foreach (GameObject neighbourHouse in chunkData.VillageHouseList) {
+                //If distance between houses is greater than min required distance
+                if (Vector3.Distance(baseHouse.transform.position, neighbourHouse.transform.position) > distanceBetweenHouses) {
+                    nearbyHouses++;
+                }
+            }
+            //If less houses than required
+            if (nearbyHouses < minHousesPerVillage) {
+                //Destroy this house
+                objectsToDelete.Add(baseHouse);
+            }
+        }
+
+        //Rotate houses to nearby village centers
+        foreach (GameObject go in chunkData.VillageHouseList) {
+            //Initialise with self (should always be overwritten)
+            Transform closestCenter = go.transform;
+            float smallestDistance = float.MaxValue;
+
+            foreach (GameObject center in chunkData.VillageCenterList) {
+                //If distance is less than current smallest distance
+                if (Vector3.Distance(go.transform.position, center.transform.position) < smallestDistance) {
+                    closestCenter = center.transform;
+                    smallestDistance = Vector3.Distance(go.transform.position, center.transform.position);
+                }
+            }
+
+            go.transform.LookAt(closestCenter);
+        }
+
+        //Destroy all game objects that have been replaced
+        for (int i = 0; i < objectsToDelete.Count; i++) {
+            Destroy(objectsToDelete[i]);
+        }
+
+        objectsToDelete.Clear();
     }
 
     //Generate grass using unitys terrain detail

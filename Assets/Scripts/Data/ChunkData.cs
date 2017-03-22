@@ -14,6 +14,9 @@ public class ChunkData {
     //The specific size of each object (eg. trunk of a tree, so details can be placed underneath)
     public bool[,] terrainDetailPlacableMap = new bool[ProceduralTerrain.TerrainResolution, ProceduralTerrain.TerrainResolution];
 
+    public List<GameObject> VillageCenterList = new List<GameObject>();
+    public List<GameObject> VillageHouseList = new List<GameObject>();
+
     public ChunkData(Vector2 pos) {
 
         position = pos;
@@ -29,6 +32,7 @@ public class ChunkData {
         terrainHeightMap = terrainHeightMap = ProceduralTerrain.CalculateHeightMap(this);
         ProceduralTerrain.GenerateTerrain(this);
         ProceduralTerrain.GenerateHouses(this);
+        ProceduralTerrain.GenerateVillages(this);
         ProceduralTerrain.GenerateTrees(this);
         ProceduralTerrain.GenerateDetails(this);
         SplatMapGenerator.GenerateSplatMap(this);

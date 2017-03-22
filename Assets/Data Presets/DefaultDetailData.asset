@@ -15,7 +15,7 @@ MonoBehaviour:
   FlatSurfaceSensitivity: 0.0052
   MaxSpawnHeight: 0.5
   MinSpawnHeight: 0.1
-  SpawnDensity: 0.2
+  SpawnDensity: 0.067
   SpawnThreshold: 0
   NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
   PrefabArray:

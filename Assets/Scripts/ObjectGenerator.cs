@@ -24,7 +24,6 @@ public class ObjectGenerator : ScriptableObject {
         List<GameObject> subChunks = new List<GameObject>();
         int objectsPlaced = 0;
         int subChunkIndex = 0;
-        int objectsPerChunk = 80;
 
         //Keep track of vertices so can group as efficiently as possible for combine mesh
         int vertexCount = 0;
@@ -226,7 +225,11 @@ public class ObjectGenerator : ScriptableObject {
                             subChunks[subChunkIndex].AddComponent<MeshRenderer>().sharedMaterial = objectData.ObjectMaterial;
                         }
                         Quaternion randomRotation = Quaternion.Euler(0, rand.Next(0, 360), 0);
-                        Instantiate(prefabData.ObjectPrefab, new Vector3(xToPlace + chunkData.position.x, yToPlace, zToPlace - chunkData.position.y), randomRotation, subChunks[subChunkIndex].transform);
+                        GameObject spawnedObject = (GameObject)Instantiate(prefabData.ObjectPrefab, new Vector3(xToPlace + chunkData.position.x, yToPlace, zToPlace - chunkData.position.y), randomRotation, subChunks[subChunkIndex].transform);
+                        if(objectType == ObjectType.House) {
+                            //Add house to list of houses
+                            chunkData.VillageHouseList.Add(spawnedObject);
+                        }
 
                         vertexCount += localVertices;
                     }
@@ -248,8 +251,8 @@ public class ObjectGenerator : ScriptableObject {
             }
         }
 
-        //If combine meshes is enabled
-        if (ProceduralTerrain.Current.CombineMeshes) {
+        //If combine meshes is enabled and not houses (houses are done later)
+        if (ProceduralTerrain.Current.CombineMeshes && objectType != ObjectType.House) {
             //Combine meshes of objects 
             foreach (GameObject go in subChunks) {
                 go.AddComponent<CombineMeshes>();

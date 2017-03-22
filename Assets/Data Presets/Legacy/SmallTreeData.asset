@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bea0296247588248a9cf6664c954349, type: 3}
+  m_Name: SmallTreeData
+  m_EditorClassIdentifier: 
+  FlatSurfaceSearchRange: 1
+  FlatSurfaceSensitivity: 0.0052
+  MaxSpawnHeight: 1
+  MinSpawnHeight: 0.02
+  SpawnDensity: 0.462
+  SpawnThreshold: 0.205
+  NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
+  PrefabArray:
+  - ObjectPrefab: {fileID: 1238227197146128, guid: 60e78b3448723674db4390a827a65429,
+      type: 2}
+    RequiredSpaceX: 1
+    RequiredSpaceZ: 1
+    ActualSizeX: 1
+    ActualSizeZ: 1
+  - ObjectPrefab: {fileID: 1539890405794828, guid: 200242ecc2cf8354e9c9d21bedf962ab,
+      type: 2}
+    RequiredSpaceX: 1
+    RequiredSpaceZ: 1
+    ActualSizeX: 1
+    ActualSizeZ: 1
+  - ObjectPrefab: {fileID: 1728820581653758, guid: f306682a68bb61f44a24bda2370c8fdf,
+      type: 2}
+    RequiredSpaceX: 2
+    RequiredSpaceZ: 2
+    ActualSizeX: 1
+    ActualSizeZ: 1
+  - ObjectPrefab: {fileID: 1334100362605780, guid: 1d768af1aac80e44d8580b09b3ba1248,
+      type: 2}
+    RequiredSpaceX: 1
+    RequiredSpaceZ: 1
+    ActualSizeX: 1
+    ActualSizeZ: 1
+  - ObjectPrefab: {fileID: 1072523598515338, guid: 59d1c08944ee3bb47b0545df5e7b7425,
+      type: 2}
+    RequiredSpaceX: 2
+    RequiredSpaceZ: 2
+    ActualSizeX: 1
+    ActualSizeZ: 1
+  TreeLeafColour: {r: 0, g: 1, b: 0, a: 1}
+  TreeBarkColour: {r: 139, g: 69, b: 19, a: 1}

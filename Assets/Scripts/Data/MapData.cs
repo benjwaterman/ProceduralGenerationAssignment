@@ -7,7 +7,8 @@ public class MapData : ScriptableObject {
 
     public int TerrainSize = 1000;
     public int TerrainHeight = 20;
-    public NoiseData TerrainNoiseData;
+    public NoiseData TerrainNoiseData { get; private set; } 
+    public NoiseData NoiseData;
     public float TerrainHeightMultiplier = 1;
     public AnimationCurve TerrainHeightCurve;
     public TextureData[] TerrainTextures;
@@ -21,6 +22,10 @@ public class MapData : ScriptableObject {
     public float TerrainPersistance() { return TerrainNoiseData.Persistance; }
     public float TerrainLacunarity() { return TerrainNoiseData.Lacunarity; }
     public float TerrainScale() { return TerrainNoiseData.Scale; }
+
+    void OnEnable() {
+        TerrainNoiseData = NoiseData.CreateClone(NoiseData);
+    }
 }
 
 [System.Serializable]

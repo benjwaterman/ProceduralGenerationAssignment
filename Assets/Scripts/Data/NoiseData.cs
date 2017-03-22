@@ -21,4 +21,20 @@ public class NoiseData : ScriptableObject {
         Persistance = (Persistance <= 0) ? Persistance = 0.001f : Persistance;
         Lacunarity = (Lacunarity <= 0) ? Lacunarity = 0.001f : Lacunarity;
     }
+
+    public void SetParameters(NoiseData noiseData) {
+        Seed = noiseData.Seed;
+        Octaves = noiseData.Octaves;
+        Persistance = noiseData.Persistance;
+        Lacunarity = noiseData.Lacunarity;
+        Scale = noiseData.Scale;
+    }
+
+    public static NoiseData CreateClone(NoiseData noiseData) {
+        NoiseData outputNoiseData = CreateInstance<NoiseData>();
+        outputNoiseData.SetParameters(noiseData);
+
+        return outputNoiseData;
+    }
+
 }

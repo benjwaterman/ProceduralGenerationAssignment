@@ -9,10 +9,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2fa8ecb7f66f6a74ea1d0c244c3f03dc, type: 3}
-  m_Name: DefaultNoiseData
+  m_Name: DefaultNoiseData_Environment
   m_EditorClassIdentifier: 
-  Seed: 557691208
+  Seed: 0
   Octaves: 10
   Persistance: 0.4
   Lacunarity: 1.8
-  Scale: 250
+  Scale: 200

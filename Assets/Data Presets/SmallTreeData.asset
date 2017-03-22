@@ -14,32 +14,43 @@ MonoBehaviour:
   FlatSurfaceSearchRange: 1
   FlatSurfaceSensitivity: 0.0052
   MaxSpawnHeight: 1
-  MinSpawnHeight: 0
-  SpawnDensity: 0.036
-  SpawnThreshold: 0
-  ObjectNoiseData: {fileID: 11400000, guid: 78d76c952478fd9449cab6d4d90ec8c2, type: 2}
+  MinSpawnHeight: 0.02
+  SpawnDensity: 0.462
+  SpawnThreshold: 0.205
+  NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
   PrefabArray:
-  - ObjectPrefab: {fileID: 1238227197146128, guid: 60e78b3448723674db4390a827a65429,
+  - ObjectPrefab: {fileID: 1974117698443076, guid: 29a1a12ca9cb7ff4d9821c81e2a945fa,
       type: 2}
     RequiredSpaceX: 1
     RequiredSpaceZ: 1
     ActualSizeX: 1
     ActualSizeZ: 1
-  - ObjectPrefab: {fileID: 1539890405794828, guid: 200242ecc2cf8354e9c9d21bedf962ab,
+  - ObjectPrefab: {fileID: 1368923072679084, guid: 2e34614d2584fd74795634a643809a34,
       type: 2}
     RequiredSpaceX: 1
     RequiredSpaceZ: 1
     ActualSizeX: 1
     ActualSizeZ: 1
-  - ObjectPrefab: {fileID: 1728820581653758, guid: f306682a68bb61f44a24bda2370c8fdf,
+  - ObjectPrefab: {fileID: 1807062424623776, guid: 1c98b71423e323f4bae1474f89a72de0,
       type: 2}
     RequiredSpaceX: 2
     RequiredSpaceZ: 2
     ActualSizeX: 1
     ActualSizeZ: 1
-  - ObjectPrefab: {fileID: 1334100362605780, guid: 1d768af1aac80e44d8580b09b3ba1248,
+  - ObjectPrefab: {fileID: 1998366506986332, guid: 60f63551e131a11438cc994dd3149361,
       type: 2}
     RequiredSpaceX: 1
     RequiredSpaceZ: 1
     ActualSizeX: 1
     ActualSizeZ: 1
+  - ObjectPrefab: {fileID: 1335568433576300, guid: 8a6a0657235cec440ab0e841325724f9,
+      type: 2}
+    RequiredSpaceX: 2
+    RequiredSpaceZ: 2
+    ActualSizeX: 1
+    ActualSizeZ: 1
+  ObjectMaterial: {fileID: 2100000, guid: af11466e745783840bafdb544125cfcc, type: 2}
+  PrimaryColour: {r: 0.8308824, g: 0, b: 0, a: 0}
+  SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
+  TertiaryColour: {r: 1, g: 1, b: 1, a: 1}
+  QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}

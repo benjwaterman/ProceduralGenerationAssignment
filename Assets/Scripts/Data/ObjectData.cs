@@ -17,8 +17,20 @@ public class ObjectData : ScriptableObject {
     [Range(0, 1)]
     public float SpawnThreshold = 0.2f;
 
-    public NoiseData ObjectNoiseData;
+    public NoiseData ObjectNoiseData { get; private set; }
+    public NoiseData NoiseData;
     public PrefabData[] PrefabArray;
+
+    [Header("Colours")]
+    public Material ObjectMaterial;
+    public Color PrimaryColour = Color.green;
+    public Color SecondaryColour = new Color(139f / 255f, 69f / 255f, 19f / 255f);
+    public Color TertiaryColour = Color.white;
+    public Color QuaternaryColour = Color.black;
+
+    void OnEnable() {
+        ObjectNoiseData = NoiseData.CreateClone(NoiseData);
+    }
 }
 
 [System.Serializable]

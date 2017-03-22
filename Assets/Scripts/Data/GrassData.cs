@@ -19,5 +19,10 @@ public class GrassData : ScriptableObject {
     [Range(0, 1)]
     public float GrassSpawnThreshold = 0.5f;
 
-    public NoiseData GrassNoiseData;
+    public NoiseData GrassNoiseData { get; private set; }
+    public NoiseData NoiseData;
+    
+    void OnEnable() {
+        GrassNoiseData = NoiseData.CreateClone(NoiseData);
+    }
 }

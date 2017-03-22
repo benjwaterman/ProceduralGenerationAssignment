@@ -28,6 +28,7 @@ public class ProceduralTerrain : MonoBehaviour {
 
     [Header("Debug Options")]
     public bool RandomSeeds = false;
+    public bool CombineMeshes = true;
     public Material HeightMat;
     public Material PlacableMat;
     public Material TreeMat;
@@ -49,34 +50,16 @@ public class ProceduralTerrain : MonoBehaviour {
     }
 
     void Start() {
-
+        //Generate random seeds
         if (RandomSeeds) {
             System.Random rand = new System.Random();
-            TerrainGrassData.GrassNoiseData.Seed = rand.Next();
-            TerrainHouseData.ObjectNoiseData.Seed = rand.Next();
             TerrainMapData.TerrainNoiseData.Seed = rand.Next();
+            TerrainHouseData.ObjectNoiseData.Seed = rand.Next();
             foreach (TreeData TerrainTreeData in TerrainTreeDataArray) {
                 TerrainTreeData.ObjectNoiseData.Seed = rand.Next();
             }
+            TerrainGrassData.GrassNoiseData.Seed = rand.Next();
         }
-
-        //Create heightmap
-        //terrainHeightMap = CalculateHeightMap();
-        //Generate terrain
-        //GenerateTerrain();
-
-        //Generate features
-        //GenerateHouses();
-        //GenerateTrees();
-        //GenerateGrass(TerrainGrassData.GrassTexture);
-
-        //For display purposes
-        //defaultPlacableMap = CalculateFlatTerrain();
-
-        //AssignTexture(terrainHeightMap, HeightMat);
-        //AssignTexture(defaultPlacableMap, PlacableMat);
-        //AssignTexture(terrainTreeMap, TreeMat);
-        //AssignTexture(terrainHouseMap, HouseMat);
 
         //Create chunks
         for (int i = 0; i < NumberOfChunks; i++) {
@@ -92,10 +75,21 @@ public class ProceduralTerrain : MonoBehaviour {
             for (int j = 0; j < terrains.GetLength(1); j++) {
                 Terrain left = (i - 1 >= 0) ? terrains[i - 1, j] : null;
                 Terrain right = (i + 1 < terrains.GetLength(0)) ? terrains[i + 1, j] : null;
-                Terrain top = (j + 1 < terrains.GetLength(1)) ? terrains[i, j + 1] : null;
-                Terrain bottom = (j - 1 > 0) ? terrains[i, j - 1]: null;
+                Terrain top = (j - 1 >= 0) ? terrains[i, j - 1] : null;
+                Terrain bottom = (j + 1 < terrains.GetLength(1)) ? terrains[i, j + 1] : null;
 
                 terrains[i, j].SetNeighbors(left, top, right, bottom);
+
+                /*
+                if(left)
+                    Debug.Log("Terrain " + i + j + " Left: " + left.name);
+                if(right)
+                    Debug.Log("Terrain " + i + j + " Right: " + right.name);
+                if(top)
+                    Debug.Log("Terrain " + i + j + " Top: " + top.name);
+                if(bottom)
+                    Debug.Log("Terrain " + i + j + " Bottom: " + bottom.name);
+                    */
             }
         }
     }
@@ -122,39 +116,40 @@ public class ProceduralTerrain : MonoBehaviour {
                     //Assign edge value to average between two points
                     tempHeight += tempHeightMap[x - 1, y];// + tempHeightMap[x, y]) / 2;
                     hasAssignedValue = true;
+
+                    //Corner
+                    if(y == 1) {
+                        tempHeight = tempHeightMap[x - 1, y - 1];
+                    }
+                    else if(y == tempHeightMap.GetLength(1) - 1) {
+                        tempHeight = tempHeightMap[x - 1, y + 1];
+                    }
                 }
 
-                if (y == 1) {
+                else if (y == 1) {
                     tempHeight += tempHeightMap[x, y - 1];// + tempHeightMap[x, y]) / 2;
-
-                    //If already assigned, means its a corner
-                    if (hasAssignedValue) {
-                        tempHeight /= 2;
-                    }
-
                     hasAssignedValue = true;
                 }
 
-                if (x == tempHeightMap.GetLength(0) - 1) {
-                    tempHeight += tempHeightMap[x + 1, y];/// + tempHeightMap[x, y]) / 2;
-
-                    if (hasAssignedValue) {
-                        tempHeight /= 2;
-                    }
-
+                else if (x == tempHeightMap.GetLength(0) - 1) {
+                    tempHeight += tempHeightMap[x + 1, y];// + tempHeightMap[x, y]) / 2;
                     hasAssignedValue = true;
+
+                    //Corner
+                    if (y == 1) {
+                        tempHeight = tempHeightMap[x + 1, y - 1];
+                    }
+                    else if (y == tempHeightMap.GetLength(1) - 1) {
+                        tempHeight = tempHeightMap[x + 1, y + 1];
+                    }
                 }
 
-                if (y == tempHeightMap.GetLength(1) - 1) {
+                else if (y == tempHeightMap.GetLength(1) - 1) {
                     tempHeight += tempHeightMap[x, y + 1];// + tempHeightMap[x, y]) / 2;
-
-                    if (hasAssignedValue) {
-                        tempHeight /= 2;
-                    }
-
                     hasAssignedValue = true;
                 }
 
+                //If value not yet assigned
                 if (!hasAssignedValue) {
                     tempHeight = tempHeightMap[x, y];
                 }

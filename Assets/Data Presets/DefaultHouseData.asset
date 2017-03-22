@@ -13,11 +13,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FlatSurfaceSearchRange: 1
   FlatSurfaceSensitivity: 0.0052
-  MaxSpawnHeight: 0.5
-  MinSpawnHeight: 0.1
-  SpawnDensity: 0.2
-  SpawnThreshold: 0.055
-  ObjectNoiseData: {fileID: 11400000, guid: 78d76c952478fd9449cab6d4d90ec8c2, type: 2}
+  MaxSpawnHeight: 0.643
+  MinSpawnHeight: 0.02
+  SpawnDensity: 0.19
+  SpawnThreshold: 0.431
+  NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
   PrefabArray:
   - ObjectPrefab: {fileID: 1499104740475294, guid: fef0d92e68d640f4e85473b4be7e34e5,
       type: 2}
@@ -25,3 +25,8 @@ MonoBehaviour:
     RequiredSpaceZ: 4
     ActualSizeX: 4
     ActualSizeZ: 4
+  ObjectMaterial: {fileID: 2100000, guid: 34a2e43375c646648a326f331c671a8f, type: 2}
+  PrimaryColour: {r: 0, g: 1, b: 0, a: 1}
+  SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
+  TertiaryColour: {r: 1, g: 1, b: 1, a: 1}
+  QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}

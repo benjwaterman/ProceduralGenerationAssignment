@@ -9,7 +9,7 @@ public class ProceduralTerrain : MonoBehaviour {
     public static ProceduralTerrain Current;
 
     public const int TerrainResolution = 513;
-    public const int NumberOfChunks = 1;
+    public const int NumberOfChunks = 2;
 
     [Header("Terrain")]
     public MapData TerrainMapData;
@@ -45,8 +45,17 @@ public class ProceduralTerrain : MonoBehaviour {
 
     Terrain[,] terrains = new Terrain[NumberOfChunks, NumberOfChunks];
 
+    //Queue for coroutines so they are executed in order
+    CoroutineQueue queue;
+    //Queue specifically for combining meshes
+    public CoroutineQueue combineQueue;
+
     void Awake() {
         Current = this;
+        queue = new CoroutineQueue(this);
+        queue.StartLoop();
+        combineQueue = new CoroutineQueue(this);
+        combineQueue.StartLoop();
     }
 
     void Start() {
@@ -200,7 +209,7 @@ public class ProceduralTerrain : MonoBehaviour {
         return heightMap;
     }
 
-    public static void GenerateTerrain(ChunkData chunkData) {
+    public void GenerateTerrain(ChunkData chunkData) {
 
         TerrainData terrainData = new TerrainData();
         Terrain terrain = new Terrain();
@@ -271,7 +280,7 @@ public class ProceduralTerrain : MonoBehaviour {
     }
 
     //Calculate where in the world objects can be placed
-    public static bool[,] CalculateFlatTerrain(float[,] terrainHeightMap, int range = 1, float sensitivity = 0.0052f) {
+    public bool[,] CalculateFlatTerrain(float[,] terrainHeightMap, int range = 1, float sensitivity = 0.0052f) {
 
         bool[,] placableArea = new bool[TerrainResolution, TerrainResolution];
 
@@ -309,23 +318,30 @@ public class ProceduralTerrain : MonoBehaviour {
         return placableArea;
     }
 
-    public static void GenerateHouses(ChunkData chunkData) {
+    public void GenerateHouses(ChunkData chunkData) {
 
-        ObjectGenerator.GenerateObjects(ObjectType.House, ProceduralTerrain.Current.TerrainHouseData, chunkData);
+        ObjectGenerator objectGenerator = ScriptableObject.CreateInstance<ObjectGenerator>();
+        IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.House, ProceduralTerrain.Current.TerrainHouseData, chunkData);
+        queue.EnqueueAction(gen);
+        queue.EnqueueAction(GenerateVillages(chunkData));
     }
 
-    public static void GenerateTrees(ChunkData chunkData) {
-
+    public void GenerateTrees(ChunkData chunkData) {
+        ObjectGenerator objectGenerator = ScriptableObject.CreateInstance<ObjectGenerator>();
         foreach (TreeData TerrainTreeData in ProceduralTerrain.Current.TerrainTreeDataArray) {
-            ObjectGenerator.GenerateObjects(ObjectType.Tree, TerrainTreeData, chunkData);
+            IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.Tree, TerrainTreeData, chunkData);
+            queue.EnqueueAction(gen);
         }
     }
 
-    public static void GenerateDetails(ChunkData chunkData) {
-        ObjectGenerator.GenerateObjects(ObjectType.Detail, ProceduralTerrain.Current.TerrainDetailData, chunkData);
+    public void GenerateDetails(ChunkData chunkData) {
+
+        ObjectGenerator objectGenerator = ScriptableObject.CreateInstance<ObjectGenerator>();
+        IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.Detail, ProceduralTerrain.Current.TerrainDetailData, chunkData);
+        queue.EnqueueAction(gen);
     }
 
-    public static void GenerateVillages(ChunkData chunkData) {
+    IEnumerator GenerateVillages(ChunkData chunkData) {
 
         float distanceBetweenVillages = 100;
         float distanceBetweenHouses = 5;
@@ -394,10 +410,11 @@ public class ProceduralTerrain : MonoBehaviour {
         }
 
         objectsToDelete.Clear();
+        yield return null;
     }
 
     //Generate grass using unitys terrain detail
-    public static void GenerateGrass(ChunkData chunkData) {
+    public void GenerateGrass(ChunkData chunkData) {
 
         Texture2D grassTexture = ProceduralTerrain.Current.TerrainGrassData.GrassTexture;
         GrassData TerrainGrassData = ProceduralTerrain.Current.TerrainGrassData;

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ObjectData : ScriptableObject {
 
+    [Header("Placement Options")]
     [Range(1, 3)]
     public int FlatSurfaceSearchRange = 1;
     [Range(.00001f, 0.05f)]
@@ -16,9 +17,12 @@ public class ObjectData : ScriptableObject {
     public float SpawnDensity = 0.2f;
     [Range(0, 1)]
     public float SpawnThreshold = 0.2f;
-
-    public NoiseData ObjectNoiseData { get; private set; }
+    
+    [Header("Noise Options")]
     public NoiseData NoiseData;
+
+    [Header("Prefab Options")]
+    public int MaxSpawnsPerFrame = 100;
     public PrefabData[] PrefabArray;
 
     [Header("Colours")]
@@ -28,6 +32,7 @@ public class ObjectData : ScriptableObject {
     public Color TertiaryColour = Color.white;
     public Color QuaternaryColour = Color.black;
 
+    public NoiseData ObjectNoiseData { get; private set; }
     void OnEnable() {
         ObjectNoiseData = NoiseData.CreateClone(NoiseData);
     }

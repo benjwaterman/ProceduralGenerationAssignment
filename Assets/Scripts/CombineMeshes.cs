@@ -8,6 +8,10 @@ using UnityEngine;
 public class CombineMeshes : MonoBehaviour {
 
     void Start() {
+        ProceduralTerrain.Current.combineQueue.EnqueueAction(Combine());
+    }
+
+    IEnumerator Combine() {
         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
         //If there is meshes to combine
         if (meshFilters.Length > 1) {
@@ -30,5 +34,7 @@ public class CombineMeshes : MonoBehaviour {
             GetComponent<Renderer>().materials = meshFilters[0].GetComponent<Renderer>().sharedMaterials;
             transform.gameObject.SetActive(true);
         }
+
+        yield return null;
     }
 }

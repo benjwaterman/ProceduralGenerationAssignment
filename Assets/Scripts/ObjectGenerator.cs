@@ -8,7 +8,11 @@ public class ObjectGenerator : ScriptableObject {
     public static int HouseCounter = -1;
     public static int DetailCounter = -1;
 
-    public static void GenerateObjects(ObjectType objectType, ObjectData objectData, ChunkData chunkData) {
+    public void SpawnObjects(ObjectType objectType, ObjectData objectData, ChunkData chunkData) {
+
+    }
+
+    public IEnumerator GenerateObjects(ObjectType objectType, ObjectData objectData, ChunkData chunkData) {
 
         float[,] map = new float[ProceduralTerrain.TerrainResolution, ProceduralTerrain.TerrainResolution];
         int seed = objectData.ObjectNoiseData.Seed;
@@ -28,9 +32,14 @@ public class ObjectGenerator : ScriptableObject {
         //Keep track of vertices so can group as efficiently as possible for combine mesh
         int vertexCount = 0;
 
+        //Keep track of objects spawned 
+        int objectsSpawned = 0;
+        //Max number of object per frame
+        int maxSpawnsPerFrame = objectData.MaxSpawnsPerFrame;
+
         float[,] noiseMap = NoiseGenerator.GenerateNoiseMap(objectData.ObjectNoiseData, ProceduralTerrain.TerrainResolution, position);
         //Placable map for this object type based off of terrain flatness
-        bool[,] flatPlacableMap = ProceduralTerrain.CalculateFlatTerrain(chunkData.terrainHeightMap, flatSearchRange, flatSens);
+        bool[,] flatPlacableMap = ProceduralTerrain.Current.CalculateFlatTerrain(chunkData.terrainHeightMap, flatSearchRange, flatSens);
         //Placable map based off of whether the location is valid (if there is another object there)
         bool[,] validPlacableMap;
 
@@ -79,6 +88,7 @@ public class ObjectGenerator : ScriptableObject {
         int maxRequiredSpaceX = int.MinValue;
         int maxRequiredSpaceZ = int.MinValue;
 
+        //Get largest for x and z
         foreach (PrefabData prefabData in prefabDataArray) {
             maxRequiredSpaceX = (prefabData.RequiredSpaceX > maxRequiredSpaceX) ? prefabData.RequiredSpaceX : maxRequiredSpaceX;
             maxRequiredSpaceZ = (prefabData.RequiredSpaceZ > maxRequiredSpaceZ) ? prefabData.RequiredSpaceZ : maxRequiredSpaceZ;
@@ -217,6 +227,12 @@ public class ObjectGenerator : ScriptableObject {
                         }
                         //If more vertices than unitys max vertex count
                         if (vertexCount + localVertices >= 64000) {
+                            //Combine mesh for this subchunk before creating next
+                            if (ProceduralTerrain.Current.CombineMeshes && objectType != ObjectType.House) {
+                                subChunks[subChunkIndex].AddComponent<CombineMeshes>();
+                            }
+
+                            //Reset vertexCount
                             vertexCount = 0;
 
                             subChunkIndex++;
@@ -232,6 +248,13 @@ public class ObjectGenerator : ScriptableObject {
                         }
 
                         vertexCount += localVertices;
+
+                        objectsSpawned++;
+                        //If objects spawns is greater than max per frame, wait untill next frame to spawn next
+                        if (objectsSpawned >= maxSpawnsPerFrame) {
+                            objectsSpawned = 0;
+                            yield return null;
+                        }
                     }
                     //Else there is nothing here
                     else {
@@ -248,19 +271,29 @@ public class ObjectGenerator : ScriptableObject {
                         }
                     }
                 }
+
             }
         }
+
+        //Combine meshes for last sub chunk
+        if (ProceduralTerrain.Current.CombineMeshes && objectType != ObjectType.House) {
+            subChunks[subChunkIndex].AddComponent<CombineMeshes>();
+        }
+
+        yield return null;
 
         //If combine meshes is enabled and not houses (houses are done later)
-        if (ProceduralTerrain.Current.CombineMeshes && objectType != ObjectType.House) {
-            //Combine meshes of objects 
-            foreach (GameObject go in subChunks) {
-                go.AddComponent<CombineMeshes>();
-            }
-        }
+        //if (ProceduralTerrain.Current.CombineMeshes && objectType != ObjectType.House) {
+        //    //Combine meshes of objects 
+        //    foreach (GameObject go in subChunks) {
+        //        go.AddComponent<CombineMeshes>();
+        //        //Combine meshes over series of frames rather than in one go
+        //        yield return null;
+        //    }
+        //}
     }
 
-    static void ChangeColourAtlas(Material material, Color primaryColour, Color secondaryColour, Color tertiaryColour, Color quaternaryColour) {//, Color tertiaryColour = Color.black, Color quaternaryColour = new Color()) {
+    void ChangeColourAtlas(Material material, Color primaryColour, Color secondaryColour, Color tertiaryColour, Color quaternaryColour) {//, Color tertiaryColour = Color.black, Color quaternaryColour = new Color()) {
 
         //If no colour atlas is assigned
         if(material.mainTexture == null) {

@@ -30,13 +30,12 @@ public class ChunkData {
         }
 
         terrainHeightMap = terrainHeightMap = ProceduralTerrain.CalculateHeightMap(this);
-        ProceduralTerrain.GenerateTerrain(this);
-        ProceduralTerrain.GenerateHouses(this);
-        ProceduralTerrain.GenerateVillages(this);
-        ProceduralTerrain.GenerateTrees(this);
-        ProceduralTerrain.GenerateDetails(this);
+        ProceduralTerrain.Current.GenerateTerrain(this); 
+        ProceduralTerrain.Current.GenerateHouses(this);
+        ProceduralTerrain.Current.GenerateTrees(this);
+        ProceduralTerrain.Current.GenerateDetails(this);
         SplatMapGenerator.GenerateSplatMap(this);
-        ProceduralTerrain.GenerateGrass(this);
+        ProceduralTerrain.Current.GenerateGrass(this);
 
     }
 

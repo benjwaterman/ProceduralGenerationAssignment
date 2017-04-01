@@ -18,6 +18,7 @@ MonoBehaviour:
   SpawnDensity: 0.424
   SpawnThreshold: 0.22
   NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
+  MaxSpawnsPerFrame: 100
   PrefabArray:
   - ObjectPrefab: {fileID: 1053617469577748, guid: 82478f082d762fd4ea8ff63dd170f845,
       type: 2}

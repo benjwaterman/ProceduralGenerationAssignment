@@ -53,12 +53,12 @@ MonoBehaviour:
   - Texture: {fileID: 2800000, guid: 2e268616c9d1e0941aac999a0c3895b0, type: 3}
     TextureNormal: {fileID: 0}
     TextureTileSize: {x: 5, y: 5}
-    TextureTint: {r: 0.8308824, g: 0, b: 0, a: 0}
+    TextureTint: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
     TextureStartHeight: 0.02
   - Texture: {fileID: 2800000, guid: 14e7d8bf1ec615340b4a52d63dd9418e, type: 3}
     TextureNormal: {fileID: 0}
     TextureTileSize: {x: 5, y: 5}
-    TextureTint: {r: 0.30147058, g: 0.24398936, b: 0.21280275, a: 0}
+    TextureTint: {r: 0.24264705, g: 0.23496896, b: 0.22123702, a: 1}
     TextureStartHeight: 1
   TextureBlendAmount: 0.1
   Texture1ConstantWeight: 0.5

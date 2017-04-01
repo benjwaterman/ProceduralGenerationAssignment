@@ -9,7 +9,7 @@ public class ProceduralTerrain : MonoBehaviour {
     public static ProceduralTerrain Current;
 
     public const int TerrainResolution = 513;
-    public const int NumberOfChunks = 2;
+    public const int NumberOfChunks = 1;
 
     [Header("Terrain")]
     public MapData TerrainMapData;
@@ -29,6 +29,9 @@ public class ProceduralTerrain : MonoBehaviour {
     [Header("Debug Options")]
     public bool RandomSeeds = false;
     public bool CombineMeshes = true;
+    public bool UseMasterColour = false;
+    public Color MasterColour = Color.green;
+
     public Material HeightMat;
     public Material PlacableMat;
     public Material TreeMat;
@@ -46,20 +49,25 @@ public class ProceduralTerrain : MonoBehaviour {
     Terrain[,] terrains = new Terrain[NumberOfChunks, NumberOfChunks];
 
     //Queue for coroutines so they are executed in order
-    CoroutineQueue queue;
+    public CoroutineQueue mainQueue;
     //Queue specifically for combining meshes
     public CoroutineQueue combineQueue;
+    //Queue for misc
+    public CoroutineQueue miscQueue;
 
     ObjectGenerator objectGenerator;
 
     void Awake() {
         Current = this;
 
-        queue = new CoroutineQueue(this);
-        queue.StartLoop();
+        mainQueue = new CoroutineQueue(this);
+        mainQueue.StartLoop();
 
         combineQueue = new CoroutineQueue(this);
         combineQueue.StartLoop();
+
+        miscQueue = new CoroutineQueue(this);
+        miscQueue.StartLoop();
 
         objectGenerator = ScriptableObject.CreateInstance<ObjectGenerator>();
     }
@@ -75,6 +83,26 @@ public class ProceduralTerrain : MonoBehaviour {
             }
             TerrainGrassData.GrassNoiseData.Seed = rand.Next();
         }
+
+        //If using master colour
+        if(UseMasterColour) {
+            ChangeColour(TerrainHouseData, MasterColour);
+            ChangeColour(TerrainDetailData, MasterColour);
+            foreach (ObjectData objectData in TerrainTreeDataArray) {
+                ChangeColour(objectData, MasterColour);
+            }
+            TerrainGrassData.GrassColour = MasterColour;
+            TerrainGrassData.GrassColourDry = MasterColour;
+            TerrainMapData.TerrainTextures[2].TextureTint = MasterColour;
+        }
+
+        //Change texture colours for objects
+        UpdateColourAtlas(TerrainHouseData);
+        UpdateColourAtlas(TerrainDetailData);
+        foreach (ObjectData objectData in TerrainTreeDataArray) {
+            UpdateColourAtlas(objectData);
+        }
+        
 
         //Create chunks
         for (int i = 0; i < NumberOfChunks; i++) {
@@ -106,6 +134,19 @@ public class ProceduralTerrain : MonoBehaviour {
                     Debug.Log("Terrain " + i + j + " Bottom: " + bottom.name);
                     */
             }
+        }
+    }
+
+    //Change material by adding it to coroutine queue
+    void UpdateColourAtlas(ObjectData objectData) {
+        for (int i = 0; i < objectData.PrefabArray.Length; i++) {
+            miscQueue.EnqueueAction(objectGenerator.ChangeColourAtlas(objectData.ObjectMaterial, objectData.PrimaryColour, objectData.SecondaryColour, objectData.TertiaryColour, objectData.QuaternaryColour));
+        }
+    }
+
+    void ChangeColour(ObjectData objectData, Color colour) {
+        for (int i = 0; i < objectData.PrefabArray.Length; i++) {
+            objectData.PrimaryColour = colour;
         }
     }
 
@@ -290,22 +331,22 @@ public class ProceduralTerrain : MonoBehaviour {
     public void GenerateHouses(ChunkData chunkData) {
 
         IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.House, ProceduralTerrain.Current.TerrainHouseData, chunkData);
-        queue.EnqueueAction(gen);
-        queue.EnqueueAction(GenerateVillages(chunkData));
+        mainQueue.EnqueueAction(gen);
+        mainQueue.EnqueueAction(GenerateVillages(chunkData));
     }
 
     public void GenerateTrees(ChunkData chunkData) {
 
         foreach (TreeData TerrainTreeData in ProceduralTerrain.Current.TerrainTreeDataArray) {
             IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.Tree, TerrainTreeData, chunkData);
-            queue.EnqueueAction(gen);
+            mainQueue.EnqueueAction(gen);
         }
     }
 
     public void GenerateDetails(ChunkData chunkData) {
 
         IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.Detail, ProceduralTerrain.Current.TerrainDetailData, chunkData);
-        queue.EnqueueAction(gen);
+        mainQueue.EnqueueAction(gen);
     }
 
     IEnumerator GenerateVillages(ChunkData chunkData) {

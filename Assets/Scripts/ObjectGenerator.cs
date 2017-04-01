@@ -91,19 +91,22 @@ public class ObjectGenerator : ScriptableObject {
         return verts;
     }
 
-    void ChangeColourAtlas(Material material, Color primaryColour, Color secondaryColour, Color tertiaryColour, Color quaternaryColour) {//, Color tertiaryColour = Color.black, Color quaternaryColour = new Color()) {
+    public IEnumerator ChangeColourAtlas(Material material, Color primaryColour, Color secondaryColour, Color tertiaryColour, Color quaternaryColour) {//, Color tertiaryColour = Color.black, Color quaternaryColour = new Color()) {
 
         //If no colour atlas is assigned
         if (material.mainTexture == null) {
-            return;
+            yield break;
         }
 
         //Get texture
         Texture2D texture = (Texture2D)material.mainTexture;
         Color[] pixels = texture.GetPixels();
 
+        int pixelsPerFrame = (texture.width * texture.width) / 8;
+        int pixelsThisFrame = 0;
+
         for (int i = 0; i < texture.width; i++) {
-            for (int j = 0; j < texture.height; j++) {
+            for (int j = 0; j < texture.height; j++) { 
                 //First half
                 if (i < texture.width / 2) {
                     //Top half
@@ -128,10 +131,18 @@ public class ObjectGenerator : ScriptableObject {
                         pixels[i * texture.width + j] = secondaryColour;
                     }
                 }
+
+                pixelsThisFrame++;
+                if (pixelsThisFrame > pixelsPerFrame) {
+                    pixelsThisFrame = 0;
+                    yield return null;
+                }
             }
         }
 
         texture.SetPixels(pixels);
+        yield return null;
+
         texture.Apply();
     }
 
@@ -225,8 +236,6 @@ public class ObjectGenerator : ScriptableObject {
                 parentObject = new GameObject("Other");
                 break;
         }
-        //Change material
-        //ChangeColourAtlas(objectData.ObjectMaterial, objectData.PrimaryColour, objectData.SecondaryColour, objectData.TertiaryColour, objectData.QuaternaryColour);
 
         //Create first sub chunk
         subChunks.Add(new GameObject("Sub chunk " + subChunkIndex));

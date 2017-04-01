@@ -27,7 +27,7 @@ MonoBehaviour:
     ActualSizeX: 4
     ActualSizeZ: 4
   ObjectMaterial: {fileID: 2100000, guid: e0cc032bbb51a4340a11fe8fcca6af84, type: 2}
-  PrimaryColour: {r: 0.9852941, g: 0.14489621, b: 0.14489621, a: 0}
+  PrimaryColour: {r: 0.2033431, g: 0.115971014, b: 0.47794116, a: 1}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
   TertiaryColour: {r: 0.7794118, g: 0.74526316, b: 0.46993947, a: 1}
   QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}

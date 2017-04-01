@@ -50,12 +50,18 @@ public class ProceduralTerrain : MonoBehaviour {
     //Queue specifically for combining meshes
     public CoroutineQueue combineQueue;
 
+    ObjectGenerator objectGenerator;
+
     void Awake() {
         Current = this;
+
         queue = new CoroutineQueue(this);
         queue.StartLoop();
+
         combineQueue = new CoroutineQueue(this);
         combineQueue.StartLoop();
+
+        objectGenerator = ScriptableObject.CreateInstance<ObjectGenerator>();
     }
 
     void Start() {
@@ -105,10 +111,12 @@ public class ProceduralTerrain : MonoBehaviour {
 
     public static float[,] CalculateHeightMap(ChunkData chunkData) {
 
+        MapGenerator mapGenerator = new MapGenerator();
+
         Vector2 noiseOffset = new Vector2(chunkData.position.x / ProceduralTerrain.Current.TerrainMapData.TerrainSize * ProceduralTerrain.TerrainResolution, chunkData.position.y / ProceduralTerrain.Current.TerrainMapData.TerrainSize * ProceduralTerrain.TerrainResolution);
 
         //Store temp heightmap data
-        float[,] tempHeightMap = NoiseGenerator.GenerateNoiseMap(ProceduralTerrain.Current.TerrainMapData.TerrainNoiseData, ProceduralTerrain.TerrainResolution + 2, noiseOffset);
+        float[,] tempHeightMap = mapGenerator.GenerateNoiseMap(ProceduralTerrain.Current.TerrainMapData.TerrainNoiseData, ProceduralTerrain.TerrainResolution + 2, noiseOffset);
 
         //To avoid seams between terrain, edge vertices have to be = to edge + 1
         float[,] heightMap = new float[ProceduralTerrain.TerrainResolution, ProceduralTerrain.TerrainResolution];
@@ -279,55 +287,15 @@ public class ProceduralTerrain : MonoBehaviour {
         chunkData.AssignTerrainGameObject(terrainGameObject);
     }
 
-    //Calculate where in the world objects can be placed
-    public bool[,] CalculateFlatTerrain(float[,] terrainHeightMap, int range = 1, float sensitivity = 0.0052f) {
-
-        bool[,] placableArea = new bool[TerrainResolution, TerrainResolution];
-
-        for (int x = range; x < TerrainResolution - range; x++) {
-            for (int y = range; y < TerrainResolution - range; y++) {
-                float terrainHeight = terrainHeightMap[x, y];
-
-                int ctr = 0;
-                bool[] placableLocations = new bool[(2 * range + 1) * (2 * range + 1)];
-                for (int i = -range; i <= range; i++) {
-                    for (int j = -range; j <= range; j++) {
-                        if (Mathf.Abs(terrainHeight - terrainHeightMap[x + i, y + j]) < sensitivity) {
-                            placableLocations[ctr++] = true;
-                        }
-                        else {
-                            placableLocations[ctr++] = false;
-                        }
-                    }
-                }
-
-                //If all values in placable locations are true, then it can be placed
-                bool canPlace = true;
-                for (int i = 0; i < placableLocations.Length; i++) {
-                    if (canPlace) {
-                        canPlace = placableLocations[i];
-                    }
-                }
-
-                if (canPlace) {
-                    placableArea[x, y] = true;
-                }
-            }
-        }
-
-        return placableArea;
-    }
-
     public void GenerateHouses(ChunkData chunkData) {
 
-        ObjectGenerator objectGenerator = ScriptableObject.CreateInstance<ObjectGenerator>();
         IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.House, ProceduralTerrain.Current.TerrainHouseData, chunkData);
         queue.EnqueueAction(gen);
         queue.EnqueueAction(GenerateVillages(chunkData));
     }
 
     public void GenerateTrees(ChunkData chunkData) {
-        ObjectGenerator objectGenerator = ScriptableObject.CreateInstance<ObjectGenerator>();
+
         foreach (TreeData TerrainTreeData in ProceduralTerrain.Current.TerrainTreeDataArray) {
             IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.Tree, TerrainTreeData, chunkData);
             queue.EnqueueAction(gen);
@@ -336,7 +304,6 @@ public class ProceduralTerrain : MonoBehaviour {
 
     public void GenerateDetails(ChunkData chunkData) {
 
-        ObjectGenerator objectGenerator = ScriptableObject.CreateInstance<ObjectGenerator>();
         IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.Detail, ProceduralTerrain.Current.TerrainDetailData, chunkData);
         queue.EnqueueAction(gen);
     }
@@ -416,6 +383,8 @@ public class ProceduralTerrain : MonoBehaviour {
     //Generate grass using unitys terrain detail
     public void GenerateGrass(ChunkData chunkData) {
 
+        MapGenerator mapGenerator = new MapGenerator();
+
         Texture2D grassTexture = ProceduralTerrain.Current.TerrainGrassData.GrassTexture;
         GrassData TerrainGrassData = ProceduralTerrain.Current.TerrainGrassData;
         TerrainData terrainData = chunkData.terrainData;
@@ -443,7 +412,7 @@ public class ProceduralTerrain : MonoBehaviour {
         terrain.detailObjectDistance = 250;
 
         int[,] grassMap = new int[grassResolution, grassResolution];
-        float[,] fGrassMap = NoiseGenerator.GenerateNoiseMap(TerrainGrassData.GrassNoiseData, grassResolution, chunkData.position);
+        float[,] fGrassMap = mapGenerator.GenerateNoiseMap(TerrainGrassData.GrassNoiseData, grassResolution, chunkData.position);
 
         int incremement = (int)(1 / TerrainGrassData.GrassSpawnDensity);
 

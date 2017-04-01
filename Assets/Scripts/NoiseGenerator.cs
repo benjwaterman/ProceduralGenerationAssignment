@@ -1,10 +1,52 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
+using System;
 
-public class NoiseGenerator  {
+public class NoiseGenerator {
 
-    public static float[,] GenerateNoiseMap(NoiseData noiseData, int res = ProceduralTerrain.TerrainResolution, Vector2 position = default(Vector2)) {
+    Queue<NoiseMapThreadInfo<float[,]>> noiseMapThreadInfoQueue = new Queue<NoiseMapThreadInfo<float[,]>>();
+
+    struct NoiseMapThreadInfo<T> {
+        public readonly Action<T> callback;
+        public readonly T parameter;
+
+        public NoiseMapThreadInfo(Action<T> callback, T parameter) {
+            this.callback = callback;
+            this.parameter = parameter;
+        }
+    }
+
+    //For multithreading
+    public void RequestNoiseMap(NoiseData noiseData, int res, Vector2 position, Action<float[,]> callback) {
+        ThreadStart threadStart = delegate {
+            NoiseMapDataThread(noiseData, res, position, callback);
+        };
+
+        new Thread(threadStart).Start();
+    }
+
+    void NoiseMapDataThread(NoiseData noiseData, int res, Vector2 position, Action<float[,]> callback) {
+        float[,] noiseMap = GenerateNoiseMap(noiseData, res, position);
+
+        //Lock means while thread is executing this code, no other thread can access it
+        lock (noiseMapThreadInfoQueue) {
+            noiseMapThreadInfoQueue.Enqueue(new NoiseMapThreadInfo<float[,]>(callback, noiseMap));
+        }
+    }
+
+    public void UpdateCallbacks() {
+        //Go through callbacks 
+        if (noiseMapThreadInfoQueue.Count > 0) {
+            for (int i = 0; i < noiseMapThreadInfoQueue.Count; i++) {
+                NoiseMapThreadInfo<float[,]> threadInfo = noiseMapThreadInfoQueue.Dequeue();
+                threadInfo.callback(threadInfo.parameter);
+            }
+        }
+    }
+
+    public float[,] GenerateNoiseMap(NoiseData noiseData, int res = ProceduralTerrain.TerrainResolution, Vector2 position = default(Vector2)) {
 
         int seed = noiseData.Seed;
         float scale = noiseData.Scale;

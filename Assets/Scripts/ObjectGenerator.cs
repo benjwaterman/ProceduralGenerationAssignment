@@ -106,7 +106,7 @@ public class ObjectGenerator : ScriptableObject {
         int pixelsThisFrame = 0;
 
         for (int i = 0; i < texture.width; i++) {
-            for (int j = 0; j < texture.height; j++) { 
+            for (int j = 0; j < texture.height; j++) {
                 //First half
                 if (i < texture.width / 2) {
                     //Top half
@@ -291,7 +291,7 @@ public class ObjectGenerator : ScriptableObject {
                 if (canPlace) canPlace = CheckIfPlacableFromDensity(density, prefabDataArray.Length);
                 //Check against min and max height
                 if (canPlace) canPlace = CheckIfPlacableFromHeight(terrainHeight, minSpawnHeight, maxSpawnHeight);
-                
+
                 if (canPlace) {
                     //Update map
                     map[x, y] = 1f;
@@ -351,9 +351,9 @@ public class ObjectGenerator : ScriptableObject {
                         //If a house, add to the chunkData's house list (used for village generation)
                         if (objectType == ObjectType.House) {
                             //Add house to list of houses
-                            chunkData.VillageHouseList.Add(spawnedObject);
+                            chunkData.VillageHouseList.Add(spawnedObject.AddComponent<VillageHouseData>());
                         }
-                        
+
                         //Update the verticies for this subchunk 
                         vertexCount += localVertices;
 

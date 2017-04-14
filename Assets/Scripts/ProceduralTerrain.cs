@@ -351,99 +351,147 @@ public class ProceduralTerrain : MonoBehaviour {
 
     IEnumerator GenerateVillages(ChunkData chunkData) {
 
-        float distanceBetweenVillages = 100;
-        float distanceBetweenHouses = 5;
+        float distanceBetweenVillages = 500;
+        float maxVillageDistance = 150;
         int minHousesPerVillage = 5;
-        bool canReplace = true;
+        int maxHousesPerVillage = 20;
 
         //List to store individual villages
         List<VillageData> villageList = new List<VillageData>();
         //List to store objects that need deleting
-        List<GameObject> objectsToDelete = new List<GameObject>();
+        List<VillageData> villagesToDelete = new List<VillageData>();
 
-        //Go through all houses and make make them into villages based upon there proximity
-        VillageData thisVillage = new VillageData();
+        //Go through house, check through all other houses, if within maxVillageDistance, add them to village
         foreach (VillageHouseData house1 in chunkData.VillageHouseList) {
-
-            //CREATE NEW VILLAGE IF NOT ASSIGNED TO ONE AND NEIGHBOUR ISN'T IN ONE, CREATE A NEW VILLAGE TO ADD IT TO, IF ANY OF NEIGHBOURS HAVE VILLAGE, MAKE IT JOIN THERE VILLAGE INSTEAD
-
-            //If house does NOT already have a village
-            if (house1.Village == null) {
-                thisVillage = new VillageData();
-                thisVillage.AddHouse(house1);
+            //If already has a village, move to next house
+            if (house1.Village != null) {
+                continue;
             }
 
             foreach (VillageHouseData house2 in chunkData.VillageHouseList) {
-                //Make sure not comparing against self
-                if (house1 == house2) continue;
+                //Make sure not comparing to self
+                if (house1 == house2) {
+                    continue;
+                }
 
-                if(Vector3.Distance(house1.transform.position, house2.transform.position) < distanceBetweenHouses) {
-                    thisVillage.AddHouse(house2);
+                //House2 should not already have a village
+                if (house2.Village != null) {
+                    continue;
+                }
+
+                //If house1 doesnt have a village, create one
+                if (house1.Village == null) {
+                    VillageData thisVillage = new VillageData();
+                    thisVillage.AddHouse(house1);
+                    villageList.Add(thisVillage);
+                }
+
+                //If distance been house1 and house2 is less than the max village distance
+                if (Vector3.Distance(house1.transform.position, house2.transform.position) < maxVillageDistance) {
+                    //Assign house2 to village
+                    house1.Village.AddHouse(house2);
                 }
             }
         }
 
-        foreach (GameObject go in chunkData.VillageHouseList) {
-            //Reset variable
-            canReplace = true;
-            //Go through every house, check its not near another village center, then change on of the houses to a village center
-            foreach (GameObject center in chunkData.VillageCenterList) {
-                //If there is another center close by, this object cannot be a center
-                if (Vector3.Distance(go.transform.position, center.transform.position) < distanceBetweenVillages) {
-                    //This object is already near a bonfire
-                    canReplace = false;
-                    break;
+        //Assign village list to chunk
+        chunkData.VillageList = villageList;
+
+        //If village has less than required houses, delete it
+        foreach (VillageData village in chunkData.VillageList) {
+            if (village.VillageSize < minHousesPerVillage) {
+                villagesToDelete.Add(village);
+            }
+        }
+
+        for (int i = 0; i < villagesToDelete.Count; i++) {
+            villageList.Remove(villagesToDelete[i]);
+            villagesToDelete[i].DestroyVillage();
+        }
+        villagesToDelete.Clear();
+
+        //Get middle point of villages
+        Vector3 center = Vector3.zero;
+        foreach (VillageData village in chunkData.VillageList) {
+            foreach (VillageHouseData house in village.VillageHouses) {
+                center += house.transform.position;
+            }
+
+            //Find average of all house positions
+            center /= village.VillageSize;
+
+            village.CenterPosition = center;
+        }
+
+        //If village has more than max number of houses, reduce amount of houses by removing the houses furthest from the center
+        foreach (VillageData village in chunkData.VillageList) {
+            //Keep removing houses until there is less than the max amount
+            while (village.VillageSize > maxHousesPerVillage) {
+
+                VillageHouseData furthestHouse = village.VillageHouses[0];
+                float furthestDistance = float.MinValue;
+
+                foreach (VillageHouseData house in village.VillageHouses) {
+                    if (Vector3.Distance(house.transform.position, village.CenterPosition) > furthestDistance) {
+                        furthestDistance = Vector3.Distance(house.transform.position, village.CenterPosition);
+                        furthestHouse = house;
+                    }
+                }
+
+                village.RemoveHouse(furthestHouse);
+            }
+        }
+
+        //Find closest house to middle point of village and replace it
+        foreach (VillageData village in chunkData.VillageList) {
+            //Initialise
+            VillageHouseData closestHouse = village.VillageHouses[0];
+            float closestDistance = float.MaxValue;
+            foreach (VillageHouseData house in village.VillageHouses) {
+                if (Vector3.Distance(house.transform.position, village.CenterPosition) < closestDistance) {
+                    closestDistance = Vector3.Distance(house.transform.position, village.CenterPosition);
+                    closestHouse = house;
                 }
             }
 
-            if (canReplace) {
-                Vector3 position = go.transform.position;
-                objectsToDelete.Add(go);
-                //Spawn prefab
-                GameObject newCenter = Instantiate(ProceduralTerrain.Current.TerrainHouseData.VillageCenterPrefab.ObjectPrefab, position, Quaternion.identity, go.transform.parent);
-                chunkData.VillageCenterList.Add(newCenter);
+            village.RemoveHouse(closestHouse);
+            //Spawn prefab
+            GameObject newCenter = Instantiate(ProceduralTerrain.Current.TerrainHouseData.VillageCenterPrefab.ObjectPrefab, closestHouse.transform.position, Quaternion.identity, closestHouse.transform.parent);
+            village.VillageCenter = newCenter;
+            chunkData.VillageCenterList.Add(newCenter);
+
+            //Parent objects
+            GameObject villageParent = new GameObject();
+            villageParent.transform.SetParent(village.VillageCenter.transform.parent);
+            villageParent.name = "Village";
+            foreach (VillageHouseData house in village.VillageHouses) {
+                house.transform.SetParent(villageParent.transform);
+            }
+            village.VillageCenter.transform.SetParent(villageParent.transform);
+        }
+
+        //Rotate houses to face village center
+        foreach (VillageData village in chunkData.VillageList) {
+            foreach (VillageHouseData house in village.VillageHouses) {
+                house.transform.LookAt(village.VillageCenter.transform);
             }
         }
 
-        //Check there is at least x amount of houses nearby
-        foreach (GameObject baseHouse in chunkData.VillageHouseList) {
-            int nearbyHouses = 0;
-            foreach (GameObject neighbourHouse in chunkData.VillageHouseList) {
-                //If distance between houses is greater than min required distance
-                if (Vector3.Distance(baseHouse.transform.position, neighbourHouse.transform.position) > distanceBetweenHouses) {
-                    nearbyHouses++;
+        //Make sure trees arent placed in village area
+        foreach (VillageData village in chunkData.VillageList) {
+            Vector2 centerPosition = new Vector2((int)village.CenterPosition.x, (int)village.CenterPosition.z);
+            for (int x = (int)(-maxVillageDistance / 2); x < (int)(maxVillageDistance / 2); x++) {
+                for (int y = (int)(-maxVillageDistance / 2); y < (int)(maxVillageDistance / 2); y++) {
+                    Vector2 positionToMark = new Vector2(centerPosition.y + y, centerPosition.x + x);
+
+                    //If is in range
+                    if (positionToMark.x >= 0 && positionToMark.x < chunkData.terrainPlacableMap.GetLength(0) && positionToMark.y >= 0 && positionToMark.y < chunkData.terrainPlacableMap.GetLength(1)) {
+                        chunkData.terrainPlacableMap[(int)positionToMark.x, (int)positionToMark.y] = false;
+                    }
                 }
             }
-            //If less houses than required
-            if (nearbyHouses < minHousesPerVillage) {
-                //Destroy this house
-                objectsToDelete.Add(baseHouse);
-            }
         }
 
-        //Rotate houses to nearby village centers
-        foreach (GameObject go in chunkData.VillageHouseList) {
-            //Initialise with self (should always be overwritten)
-            Transform closestCenter = go.transform;
-            float smallestDistance = float.MaxValue;
-
-            foreach (GameObject center in chunkData.VillageCenterList) {
-                //If distance is less than current smallest distance
-                if (Vector3.Distance(go.transform.position, center.transform.position) < smallestDistance) {
-                    closestCenter = center.transform;
-                    smallestDistance = Vector3.Distance(go.transform.position, center.transform.position);
-                }
-            }
-
-            go.transform.LookAt(closestCenter);
-        }
-
-        //Destroy all game objects that have been replaced
-        for (int i = 0; i < objectsToDelete.Count; i++) {
-            Destroy(objectsToDelete[i]);
-        }
-
-        objectsToDelete.Clear();
         yield return null;
     }
 

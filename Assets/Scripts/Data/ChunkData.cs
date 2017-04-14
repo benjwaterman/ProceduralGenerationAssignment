@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ChunkData {
 
-    public Vector2 position;
+    public Vector2 position { get; private set; }
     public Terrain terrain { get; private set; }
     public GameObject terrainGameObject { get; private set; }
     public TerrainData terrainData { get; private set; }
@@ -30,8 +30,8 @@ public class ChunkData {
             }
         }
 
-        terrainHeightMap = terrainHeightMap = ProceduralTerrain.CalculateHeightMap(this);
-        ProceduralTerrain.Current.GenerateTerrain(this); 
+        terrainHeightMap = ProceduralTerrain.CalculateHeightMap(this);
+        ProceduralTerrain.Current.GenerateTerrain(this);
         ProceduralTerrain.Current.GenerateHouses(this);
         ProceduralTerrain.Current.GenerateTrees(this);
         ProceduralTerrain.Current.GenerateDetails(this);

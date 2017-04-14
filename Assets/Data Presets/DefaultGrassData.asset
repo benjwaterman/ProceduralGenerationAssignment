@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: DefaultGrassData
   m_EditorClassIdentifier: 
   GrassTexture: {fileID: 2800000, guid: 31441b208a838434ab98a946ff906230, type: 3}
-  GrassColour: {r: 0.2033431, g: 0.115971014, b: 0.47794116, a: 1}
-  GrassColourDry: {r: 0.2033431, g: 0.115971014, b: 0.47794116, a: 1}
+  GrassColour: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
+  GrassColourDry: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
   GrassMaxHeight: 1.1
   GrassMinHeight: 0.7
   MaxGrassSpawnHeight: 1

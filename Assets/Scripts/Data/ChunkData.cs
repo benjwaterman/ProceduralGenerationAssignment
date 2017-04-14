@@ -15,7 +15,8 @@ public class ChunkData {
     public bool[,] terrainDetailPlacableMap = new bool[ProceduralTerrain.TerrainResolution, ProceduralTerrain.TerrainResolution];
 
     public List<GameObject> VillageCenterList = new List<GameObject>();
-    public List<GameObject> VillageHouseList = new List<GameObject>();
+    public List<VillageData> VillageList = new List<VillageData>();
+    public List<VillageHouseData> VillageHouseList = new List<VillageHouseData>();
 
     public ChunkData(Vector2 pos) {
 

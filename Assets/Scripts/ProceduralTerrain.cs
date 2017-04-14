@@ -85,7 +85,7 @@ public class ProceduralTerrain : MonoBehaviour {
         }
 
         //If using master colour
-        if(UseMasterColour) {
+        if (UseMasterColour) {
             ChangeColour(TerrainHouseData, MasterColour);
             ChangeColour(TerrainDetailData, MasterColour);
             foreach (ObjectData objectData in TerrainTreeDataArray) {
@@ -102,7 +102,7 @@ public class ProceduralTerrain : MonoBehaviour {
         foreach (ObjectData objectData in TerrainTreeDataArray) {
             UpdateColourAtlas(objectData);
         }
-        
+
 
         //Create chunks
         for (int i = 0; i < NumberOfChunks; i++) {
@@ -355,7 +355,33 @@ public class ProceduralTerrain : MonoBehaviour {
         float distanceBetweenHouses = 5;
         int minHousesPerVillage = 5;
         bool canReplace = true;
+
+        //List to store individual villages
+        List<VillageData> villageList = new List<VillageData>();
+        //List to store objects that need deleting
         List<GameObject> objectsToDelete = new List<GameObject>();
+
+        //Go through all houses and make make them into villages based upon there proximity
+        VillageData thisVillage = new VillageData();
+        foreach (VillageHouseData house1 in chunkData.VillageHouseList) {
+
+            //CREATE NEW VILLAGE IF NOT ASSIGNED TO ONE AND NEIGHBOUR ISN'T IN ONE, CREATE A NEW VILLAGE TO ADD IT TO, IF ANY OF NEIGHBOURS HAVE VILLAGE, MAKE IT JOIN THERE VILLAGE INSTEAD
+
+            //If house does NOT already have a village
+            if (house1.Village == null) {
+                thisVillage = new VillageData();
+                thisVillage.AddHouse(house1);
+            }
+
+            foreach (VillageHouseData house2 in chunkData.VillageHouseList) {
+                //Make sure not comparing against self
+                if (house1 == house2) continue;
+
+                if(Vector3.Distance(house1.transform.position, house2.transform.position) < distanceBetweenHouses) {
+                    thisVillage.AddHouse(house2);
+                }
+            }
+        }
 
         foreach (GameObject go in chunkData.VillageHouseList) {
             //Reset variable

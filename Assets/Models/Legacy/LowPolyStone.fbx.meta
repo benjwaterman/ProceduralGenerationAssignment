@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: d62f200587b74554dae1d9fe69722e4b
-timeCreated: 1491390689
+guid: 9bf462dfec688f84a8860cf7fbb1e688
+timeCreated: 1489595844
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,9 +9,9 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Rock
+    4300000: Icosphere
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:

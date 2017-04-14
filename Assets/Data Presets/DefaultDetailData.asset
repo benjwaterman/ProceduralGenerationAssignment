@@ -20,14 +20,20 @@ MonoBehaviour:
   NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
   MaxSpawnsPerFrame: 100
   PrefabArray:
-  - ObjectPrefab: {fileID: 1720383979214186, guid: cebb6a8bb302dbf4a9b5a8bd7745a4b6,
+  - ObjectPrefab: {fileID: 1098788538939258, guid: 364dc45c887889646bac7cf66f06327d,
       type: 2}
     RequiredSpaceX: 1
     RequiredSpaceZ: 1
     ActualSizeX: 1
     ActualSizeZ: 1
-  ObjectMaterial: {fileID: 2100000, guid: c19adfac32b1a444985dcbdd4e81f013, type: 2}
-  PrimaryColour: {r: 0, g: 1, b: 0, a: 1}
+  - ObjectPrefab: {fileID: 1998366506986332, guid: 60f63551e131a11438cc994dd3149361,
+      type: 2}
+    RequiredSpaceX: 1
+    RequiredSpaceZ: 1
+    ActualSizeX: 1
+    ActualSizeZ: 1
+  ObjectMaterial: {fileID: 2100000, guid: a9867e2e7f56c5b4c948227927ed77de, type: 2}
+  PrimaryColour: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
-  TertiaryColour: {r: 1, g: 1, b: 1, a: 1}
+  TertiaryColour: {r: 0.37574846, g: 0.37574846, b: 0.37574846, a: 1}
   QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}

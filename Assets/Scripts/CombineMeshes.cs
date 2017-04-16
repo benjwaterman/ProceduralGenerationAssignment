@@ -11,6 +11,10 @@ public class CombineMeshes : MonoBehaviour {
         ProceduralTerrain.Current.combineQueue.EnqueueAction(Combine());
     }
 
+    public void SetTag(string tag) {
+        gameObject.tag = tag;
+    }
+
     IEnumerator Combine() {
         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
         //If there is meshes to combine
@@ -34,6 +38,12 @@ public class CombineMeshes : MonoBehaviour {
             GetComponent<Renderer>().materials = meshFilters[0].GetComponent<Renderer>().sharedMaterials;
             transform.gameObject.SetActive(true);
         }
+
+        yield return null;
+
+        //Assign mesh collider
+        MeshCollider meshColl = gameObject.AddComponent<MeshCollider>();
+        meshColl.sharedMesh = GetComponent<MeshFilter>().mesh;
 
         yield return null;
     }

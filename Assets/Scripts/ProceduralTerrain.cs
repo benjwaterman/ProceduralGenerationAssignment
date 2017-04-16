@@ -311,6 +311,8 @@ public class ProceduralTerrain : MonoBehaviour {
 
         //Create object
         GameObject terrainGameObject = Terrain.CreateTerrainGameObject(terrainData);
+        //Set terrain Tag
+        terrainGameObject.tag = "Terrain";
 
         //Set position 
         terrainGameObject.transform.position = new Vector3(chunkData.position.x, 0, -chunkData.position.y);
@@ -333,6 +335,9 @@ public class ProceduralTerrain : MonoBehaviour {
         IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.House, ProceduralTerrain.Current.TerrainHouseData, chunkData);
         mainQueue.EnqueueAction(gen);
         mainQueue.EnqueueAction(GenerateVillages(chunkData));
+    }
+
+    public void GenerateVillageConnections(ChunkData chunkData) {
         mainQueue.EnqueueAction(ConnectVillages(chunkData));
     }
 
@@ -355,7 +360,7 @@ public class ProceduralTerrain : MonoBehaviour {
         float distanceBetweenVillages = 500;
         float maxVillageDistance = 150;
         int minHousesPerVillage = 5;
-        int maxHousesPerVillage = 20;
+        int maxHousesPerVillage = 10;
 
         //List to store individual villages
         List<VillageData> villageList = new List<VillageData>();
@@ -519,7 +524,8 @@ public class ProceduralTerrain : MonoBehaviour {
 
     IEnumerator ConnectVillages(ChunkData chunkData) {
 
-        float distanceBetweenPoints = 300;
+        float maxDistanceBetweenPoints = 300;
+        int maxNumberOfConnections = 3;
 
         //Foreach village center in this chunk
         foreach (GameObject villageCenter in chunkData.VillageCenterList) {
@@ -530,14 +536,37 @@ public class ProceduralTerrain : MonoBehaviour {
                 continue;
             }
 
-            foreach(GameObject otherVillageCenter in chunkData.VillageCenterList) {
+            VillageConnectionData connectionData1 = connectionPoint1.GetComponent<VillageConnectionData>();
+            
+            //Check there is less than max number of connections
+            if (connectionData1.NumberOfConnections >= maxNumberOfConnections) {
+                continue;
+            }
+
+            foreach (GameObject otherVillageCenter in chunkData.VillageCenterList) {
                 //Make sure not comparing to self
                 if (villageCenter == otherVillageCenter) {
                     continue;
                 }
 
+                //If connection1 has reached its max number, break out of this loops
+                if (connectionData1.NumberOfConnections >= maxNumberOfConnections) {
+                    break;
+                }
+
                 GameObject connectionPoint2 = otherVillageCenter.transform.FindChild("ConnectionPoint").gameObject;
                 if (!connectionPoint2) {
+                    continue;
+                }
+
+                VillageConnectionData connectionData2 = connectionPoint2.GetComponent<VillageConnectionData>();
+
+                if (connectionData2.NumberOfConnections >= maxNumberOfConnections) {
+                    continue;
+                }
+
+                //Check these aren't already paired
+                if (connectionData2.Connections.Contains(connectionPoint1)) {
                     continue;
                 }
 
@@ -547,15 +576,36 @@ public class ProceduralTerrain : MonoBehaviour {
                 float distance = (pointA - pointB).magnitude;
 
                 //If the distance between the points is too large, go to next comparison
-                if(distance > distanceBetweenPoints) {
+                if(distance > maxDistanceBetweenPoints) {
                     continue;
                 }
 
+                //Check for collisions in the bridge area
+                bool canPlace = true;
+                Collider[] colliders = Physics.OverlapCapsule(pointA, pointB, 2);
+                foreach(Collider coll in colliders) {
+                    if (coll.CompareTag("Terrain") || coll.CompareTag("Tree")) {
+                        canPlace = false;
+                        break;
+                    }
+                }
+
+                //If can't place, go to next connection point
+                if(!canPlace) {
+                    continue;
+                }
+
+                //Create bridge
                 GameObject bridge = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 bridge.name = "Bridge";
                 bridge.transform.localScale = new Vector3(2, 0.5f, distance);
                 bridge.transform.position = halfwayPoint;
                 bridge.transform.LookAt(pointB);
+                bridge.transform.SetParent(villageCenter.transform);
+
+                //Update connections on connection points
+                connectionData1.AddConnection(connectionPoint2);
+                connectionData2.AddConnection(connectionPoint1);
             }
         }
 

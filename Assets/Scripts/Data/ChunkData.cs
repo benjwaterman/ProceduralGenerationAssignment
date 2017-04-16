@@ -34,6 +34,7 @@ public class ChunkData {
         ProceduralTerrain.Current.GenerateTerrain(this);
         ProceduralTerrain.Current.GenerateHouses(this);
         ProceduralTerrain.Current.GenerateTrees(this);
+        ProceduralTerrain.Current.GenerateVillageConnections(this); //Must be called after trees to avoid clipping
         ProceduralTerrain.Current.GenerateDetails(this);
         SplatMapGenerator.GenerateSplatMap(this);
         ProceduralTerrain.Current.GenerateGrass(this);

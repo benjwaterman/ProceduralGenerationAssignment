@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4215854823345734}
+  - component: {fileID: 114503733356626150}
   m_Layer: 0
   m_Name: ConnectionPoint
   m_TagString: Untagged
@@ -385,6 +386,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1527252024546352}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114503733356626150
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1396259656356754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 884701e1d54b31e4b8aa1aad8087641b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NumberOfConnections: 0
+  Connections: []
 --- !u!136 &136127116624279400
 CapsuleCollider:
   m_ObjectHideFlags: 1

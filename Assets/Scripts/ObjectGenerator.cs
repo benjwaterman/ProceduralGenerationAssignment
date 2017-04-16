@@ -182,6 +182,9 @@ public class ObjectGenerator : ScriptableObject {
         //Max number of object per frame
         int maxSpawnsPerFrame = objectData.MaxSpawnsPerFrame;
 
+        //Tag to tag objects with
+        string tag;
+
         //Stop programming from running until thread has returned noisemap
         canContinue = false;
 
@@ -220,20 +223,24 @@ public class ObjectGenerator : ScriptableObject {
             case ObjectType.House:
                 HouseCounter++;
                 parentObject = new GameObject("Houses " + HouseCounter);
+                tag = "House";
                 break;
 
             case ObjectType.Tree:
                 TreeCounter++;
                 parentObject = new GameObject("Trees " + TreeCounter);
+                tag = "Tree";
                 break;
 
             case ObjectType.Detail:
                 DetailCounter++;
                 parentObject = new GameObject("Details " + DetailCounter);
+                tag = "Detail";
                 break;
 
             default:
                 parentObject = new GameObject("Other");
+                tag = "Default";
                 break;
         }
 
@@ -331,7 +338,7 @@ public class ObjectGenerator : ScriptableObject {
                         if (vertexCount + localVertices >= 64000) {
                             //Combine mesh for this subchunk before creating next
                             if (ProceduralTerrain.Current.CombineMeshes && objectType != ObjectType.House) {
-                                subChunks[subChunkIndex].AddComponent<CombineMeshes>();
+                                subChunks[subChunkIndex].AddComponent<CombineMeshes>().SetTag(tag);
                             }
 
                             //Reset vertexCount
@@ -387,7 +394,7 @@ public class ObjectGenerator : ScriptableObject {
 
         //Combine meshes for last sub chunk
         if (ProceduralTerrain.Current.CombineMeshes && objectType != ObjectType.House) {
-            subChunks[subChunkIndex].AddComponent<CombineMeshes>();
+            subChunks[subChunkIndex].AddComponent<CombineMeshes>().SetTag(tag);
         }
 
         yield return null;

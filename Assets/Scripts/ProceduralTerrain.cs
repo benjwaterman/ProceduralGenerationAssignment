@@ -333,6 +333,7 @@ public class ProceduralTerrain : MonoBehaviour {
         IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.House, ProceduralTerrain.Current.TerrainHouseData, chunkData);
         mainQueue.EnqueueAction(gen);
         mainQueue.EnqueueAction(GenerateVillages(chunkData));
+        mainQueue.EnqueueAction(ConnectVillages(chunkData));
     }
 
     public void GenerateTrees(ChunkData chunkData) {
@@ -453,9 +454,11 @@ public class ProceduralTerrain : MonoBehaviour {
                     closestHouse = house;
                 }
             }
-
+            //Set center position for vilalge for this chunk
+            village.LocalChunkCenterPosition = closestHouse.ChunkLocalPosition;
+            //Delete closest house
             village.RemoveHouse(closestHouse);
-            //Spawn prefab
+            //Spawn village center prefab at location of closest house
             GameObject newCenter = Instantiate(ProceduralTerrain.Current.TerrainHouseData.VillageCenterPrefab.ObjectPrefab, closestHouse.transform.position, Quaternion.identity, closestHouse.transform.parent);
             village.VillageCenter = newCenter;
             chunkData.VillageCenterList.Add(newCenter);
@@ -474,21 +477,85 @@ public class ProceduralTerrain : MonoBehaviour {
         foreach (VillageData village in chunkData.VillageList) {
             foreach (VillageHouseData house in village.VillageHouses) {
                 house.transform.LookAt(village.VillageCenter.transform);
+                //Make house flat, rather than tilted
+                house.transform.localEulerAngles = new Vector3(0, house.transform.localEulerAngles.y, house.transform.localEulerAngles.z);
             }
         }
 
         //Make sure trees arent placed in village area
+        int clearAreaRadius = 20;
         foreach (VillageData village in chunkData.VillageList) {
-            Vector2 centerPosition = new Vector2((int)village.CenterPosition.x, (int)village.CenterPosition.z);
-            for (int x = (int)(-maxVillageDistance / 2); x < (int)(maxVillageDistance / 2); x++) {
-                for (int y = (int)(-maxVillageDistance / 2); y < (int)(maxVillageDistance / 2); y++) {
-                    Vector2 positionToMark = new Vector2(centerPosition.y + y, centerPosition.x + x);
-
-                    //If is in range
-                    if (positionToMark.x >= 0 && positionToMark.x < chunkData.terrainPlacableMap.GetLength(0) && positionToMark.y >= 0 && positionToMark.y < chunkData.terrainPlacableMap.GetLength(1)) {
-                        chunkData.terrainPlacableMap[(int)positionToMark.x, (int)positionToMark.y] = false;
-                    }
+            bool hasClearedAroundCenter = false;
+            foreach (VillageHouseData house in village.VillageHouses) {
+                Vector2 centerPosition = house.ChunkLocalPosition;
+                //If the area around the village center hasnt been cleared yet, clear it
+                if(!hasClearedAroundCenter) {
+                    centerPosition = village.LocalChunkCenterPosition;
+                    PreventSpawningInArea(chunkData, centerPosition, clearAreaRadius);
+                    //Set centerPosition back to this houses position
+                    centerPosition = house.ChunkLocalPosition;
                 }
+                //Prevent spawning of trees around this house
+                PreventSpawningInArea(chunkData, centerPosition, clearAreaRadius);
+            }
+        }
+
+        yield return null;
+    }
+
+    //Prevents trees spawning around given position
+    void PreventSpawningInArea(ChunkData chunkData, Vector2 centerPosition, int clearAreaRadius) {
+        for (int x = (int)(-clearAreaRadius / 2); x < (int)(clearAreaRadius / 2); x++) {
+            for (int y = (int)(-clearAreaRadius / 2); y < (int)(clearAreaRadius / 2); y++) {
+                Vector2 positionToMark = new Vector2(centerPosition.x + x, centerPosition.y + y);
+
+                //If is in range
+                if (positionToMark.x >= 0 && positionToMark.x < chunkData.terrainPlacableMap.GetLength(0) && positionToMark.y >= 0 && positionToMark.y < chunkData.terrainPlacableMap.GetLength(1)) {
+                    chunkData.terrainPlacableMap[(int)positionToMark.x, (int)positionToMark.y] = false;
+                }
+            }
+        }
+    }
+
+    IEnumerator ConnectVillages(ChunkData chunkData) {
+
+        float distanceBetweenPoints = 300;
+
+        //Foreach village center in this chunk
+        foreach (GameObject villageCenter in chunkData.VillageCenterList) {
+            //Get connection point
+            GameObject connectionPoint1 = villageCenter.transform.FindChild("ConnectionPoint").gameObject;
+            //If connection point can't be found, exit
+            if (!connectionPoint1) {
+                continue;
+            }
+
+            foreach(GameObject otherVillageCenter in chunkData.VillageCenterList) {
+                //Make sure not comparing to self
+                if (villageCenter == otherVillageCenter) {
+                    continue;
+                }
+
+                GameObject connectionPoint2 = otherVillageCenter.transform.FindChild("ConnectionPoint").gameObject;
+                if (!connectionPoint2) {
+                    continue;
+                }
+
+                Vector3 pointA = connectionPoint1.transform.position;
+                Vector3 pointB = connectionPoint2.transform.position;
+                Vector3 halfwayPoint = (pointA + pointB) / 2;
+                float distance = (pointA - pointB).magnitude;
+
+                //If the distance between the points is too large, go to next comparison
+                if(distance > distanceBetweenPoints) {
+                    continue;
+                }
+
+                GameObject bridge = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                bridge.name = "Bridge";
+                bridge.transform.localScale = new Vector3(2, 0.5f, distance);
+                bridge.transform.position = halfwayPoint;
+                bridge.transform.LookAt(pointB);
             }
         }
 

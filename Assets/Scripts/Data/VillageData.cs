@@ -8,6 +8,7 @@ public class VillageData {
     public int VillageSize { get; private set; }
     public GameObject VillageCenter;
     public Vector3 CenterPosition;
+    public Vector2 LocalChunkCenterPosition;
 
     public VillageData() {
         VillageSize = 0;

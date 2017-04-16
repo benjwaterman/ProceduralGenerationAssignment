@@ -352,6 +352,7 @@ public class ObjectGenerator : ScriptableObject {
                         if (objectType == ObjectType.House) {
                             //Add house to list of houses
                             chunkData.VillageHouseList.Add(spawnedObject.AddComponent<VillageHouseData>());
+                            spawnedObject.GetComponent<VillageHouseData>().SetChunkLocalPosition(new Vector2(x, y));
                         }
 
                         //Update the verticies for this subchunk 

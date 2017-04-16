@@ -16,7 +16,7 @@ MonoBehaviour:
   MaxSpawnHeight: 0.643
   MinSpawnHeight: 0.02
   SpawnDensity: 0.19
-  SpawnThreshold: 0.431
+  SpawnThreshold: 0.39
   NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
   MaxSpawnsPerFrame: 20
   PrefabArray:
@@ -27,12 +27,12 @@ MonoBehaviour:
     ActualSizeX: 4
     ActualSizeZ: 4
   ObjectMaterial: {fileID: 2100000, guid: e0cc032bbb51a4340a11fe8fcca6af84, type: 2}
-  PrimaryColour: {r: 0.2033431, g: 0.115971014, b: 0.47794116, a: 1}
+  PrimaryColour: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
   TertiaryColour: {r: 0.7794118, g: 0.74526316, b: 0.46993947, a: 1}
   QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}
   VillageCenterPrefab:
-    ObjectPrefab: {fileID: 1305451959797234, guid: 18a3b2b219b2cb04daad527fd5d280b2,
+    ObjectPrefab: {fileID: 1614280293787672, guid: 4f76ac1559585ed409c38dd2e12f19d4,
       type: 2}
     RequiredSpaceX: 4
     RequiredSpaceZ: 4

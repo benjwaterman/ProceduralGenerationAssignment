@@ -6,10 +6,15 @@ public class VillageHouseData : MonoBehaviour {
 
     public GameObject HouseObject { get; private set; }
     public VillageData Village { get; private set; }
+    public Vector2 ChunkLocalPosition { get; private set; }
 
     void Awake() {
         //Assign this house object to the object the script is attached to
         HouseObject = this.gameObject;
+    }
+
+    public void SetChunkLocalPosition(Vector2 pos) {
+        ChunkLocalPosition = pos;
     }
 
     public void AssignHouseObject(GameObject house) {

@@ -36,8 +36,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4519224262821788}
   - component: {fileID: 33970797163713162}
-  - component: {fileID: 136127116624279400}
   - component: {fileID: 23794614468384660}
+  - component: {fileID: 65883334137918662}
   m_Layer: 0
   m_Name: TreeHouse
   m_TagString: Untagged
@@ -172,7 +172,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1614280293787672}
   m_LocalRotation: {x: 6.609636e-12, y: 1, z: -0.0000018099951, w: 0.0000036517763}
-  m_LocalPosition: {x: 776.1235, y: 122.26278, z: 270.73456}
+  m_LocalPosition: {x: 722.16785, y: 52.77777, z: 429.56354}
   m_LocalScale: {x: 313.44977, y: 313.44977, z: 313.44977}
   m_Children:
   - {fileID: 4634125431220842}
@@ -386,6 +386,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1527252024546352}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &65883334137918662
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1527252024546352}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0000002, y: 2, z: 1.0000004}
+  m_Center: {x: 0.00000005960465, y: 2.6020786e-18, z: -0.0000019967556}
 --- !u!114 &114503733356626150
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -399,16 +411,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NumberOfConnections: 0
   Connections: []
---- !u!136 &136127116624279400
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1527252024546352}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}

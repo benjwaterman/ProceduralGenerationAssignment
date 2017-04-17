@@ -7,6 +7,8 @@ public class HouseData : ObjectData {
 
     [Header("Village Options")]
     public PrefabData VillageCenterPrefab;
+    public float VillageCenterRadius = 2;
+    public GameObject BridgePrefab;
     public float MaxDistanceBetweenConnectionPoints = 300;
     public int MaxNumberOfConnectionsPerVillage = 2;
     public int ClearAreaRadiusAroundBuildings = 20;

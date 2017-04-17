@@ -38,3 +38,12 @@ MonoBehaviour:
     RequiredSpaceZ: 4
     ActualSizeX: 4
     ActualSizeZ: 4
+  VillageCenterRadius: 10
+  BridgePrefab: {fileID: 1790918385679706, guid: 0df41c7c2135efd43b73e7bb67aa188d,
+    type: 2}
+  MaxDistanceBetweenConnectionPoints: 300
+  MaxNumberOfConnectionsPerVillage: 2
+  ClearAreaRadiusAroundBuildings: 20
+  MaxDistanceOfVillage: 150
+  MinHousesPerVillage: 5
+  MaxHousesPerVillage: 10

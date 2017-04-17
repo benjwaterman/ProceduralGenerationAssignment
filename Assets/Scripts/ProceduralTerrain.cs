@@ -568,6 +568,7 @@ public class ProceduralTerrain : MonoBehaviour {
                 Vector3 pointB = connectionPoint2.transform.position;
                 Vector3 halfwayPoint = (pointA + pointB) / 2;
                 float distance = (pointA - pointB).magnitude;
+                float treeHouseRadius = ProceduralTerrain.Current.TerrainHouseData.VillageCenterRadius; //From center point of tree house so bridge connects to outer edge not trunk
 
                 //If the distance between the points is too large, go to next comparison
                 if(distance > maxDistanceBetweenPoints) {
@@ -578,9 +579,19 @@ public class ProceduralTerrain : MonoBehaviour {
                 bool canPlace = true;
                 Collider[] colliders = Physics.OverlapCapsule(pointA, pointB, 2);
                 foreach(Collider coll in colliders) {
+                    //If colliding with terrain or a tree, don't build a bridge here
                     if (coll.CompareTag("Terrain") || coll.CompareTag("Tree")) {
                         canPlace = false;
                         break;
+                    }
+
+                    //If colliding with a house
+                    if(coll.CompareTag("House")) {
+                        //If not colliding with a connection point's house, don't build a bridge
+                        if(coll.gameObject != connectionPoint1.transform.parent.gameObject && coll.gameObject != connectionPoint2.transform.parent.gameObject) {
+                            canPlace = false;
+                            break;
+                        }
                     }
                 }
 
@@ -590,9 +601,9 @@ public class ProceduralTerrain : MonoBehaviour {
                 }
 
                 //Create bridge
-                GameObject bridge = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                GameObject bridge = Instantiate(ProceduralTerrain.Current.TerrainHouseData.BridgePrefab);//GameObject.CreatePrimitive(PrimitiveType.Cube);
                 bridge.name = "Bridge";
-                bridge.transform.localScale = new Vector3(2, 0.5f, distance);
+                bridge.transform.localScale = new Vector3(1, 1, distance - treeHouseRadius * 2);
                 bridge.transform.position = halfwayPoint;
                 bridge.transform.LookAt(pointB);
                 bridge.transform.SetParent(villageCenter.transform);

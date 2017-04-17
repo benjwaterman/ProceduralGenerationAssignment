@@ -730,10 +730,13 @@ MonoBehaviour:
   CombineMeshes: 1
   UseMasterColour: 1
   MasterColour: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
-  HeightMat: {fileID: 0}
-  PlacableMat: {fileID: 0}
-  TreeMat: {fileID: 0}
-  HouseMat: {fileID: 0}
+  UseRandomMasterColour: 1
+  MasterColourArray:
+  - {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
+  - {r: 0.058931667, g: 0.43276176, b: 0.8014706, a: 0}
+  - {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
+  - {r: 0.8014706, g: 0.41227773, b: 0.058931667, a: 0}
+  - {r: 0.7912288, g: 0.058931667, b: 0.8014706, a: 0}
 --- !u!4 &1831409900
 Transform:
   m_ObjectHideFlags: 0

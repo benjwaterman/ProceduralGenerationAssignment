@@ -31,20 +31,8 @@ public class ProceduralTerrain : MonoBehaviour {
     public bool CombineMeshes = true;
     public bool UseMasterColour = false;
     public Color MasterColour = Color.green;
-
-    public Material HeightMat;
-    public Material PlacableMat;
-    public Material TreeMat;
-    public Material HouseMat;
-
-    //[System.NonSerialized]
-    //public float[,] terrainHeightMap = new float[TerrainResolution, TerrainResolution];
-    //[System.NonSerialized]
-    //public float[,] terrainTreeMap = new float[TerrainResolution, TerrainResolution];
-    //[System.NonSerialized]
-    //public float[,] terrainHouseMap = new float[TerrainResolution, TerrainResolution];
-
-    public bool[,] defaultPlacableMap;
+    public bool UseRandomMasterColour = false;
+    public Color[] MasterColourArray;
 
     Terrain[,] terrains = new Terrain[NumberOfChunks, NumberOfChunks];
 
@@ -86,6 +74,13 @@ public class ProceduralTerrain : MonoBehaviour {
 
         //If using master colour
         if (UseMasterColour) {
+
+            if(UseRandomMasterColour) {
+                System.Random rand = new System.Random();
+                int randNum = rand.Next(0, MasterColourArray.Length);
+                MasterColour = MasterColourArray[randNum];
+            }
+
             ChangeColour(TerrainHouseData, MasterColour);
             ChangeColour(TerrainDetailData, MasterColour);
             foreach (ObjectData objectData in TerrainTreeDataArray) {
@@ -102,7 +97,6 @@ public class ProceduralTerrain : MonoBehaviour {
         foreach (ObjectData objectData in TerrainTreeDataArray) {
             UpdateColourAtlas(objectData);
         }
-
 
         //Create chunks
         for (int i = 0; i < NumberOfChunks; i++) {
@@ -357,10 +351,9 @@ public class ProceduralTerrain : MonoBehaviour {
 
     IEnumerator GenerateVillages(ChunkData chunkData) {
 
-        float distanceBetweenVillages = 500;
-        float maxVillageDistance = 150;
-        int minHousesPerVillage = 5;
-        int maxHousesPerVillage = 10;
+        float maxVillageDistance = ProceduralTerrain.Current.TerrainHouseData.MaxDistanceOfVillage;
+        int minHousesPerVillage = ProceduralTerrain.Current.TerrainHouseData.MaxHousesPerVillage;
+        int maxHousesPerVillage = ProceduralTerrain.Current.TerrainHouseData.MinHousesPerVillage;
 
         //List to store individual villages
         List<VillageData> villageList = new List<VillageData>();
@@ -488,7 +481,7 @@ public class ProceduralTerrain : MonoBehaviour {
         }
 
         //Make sure trees arent placed in village area
-        int clearAreaRadius = 20;
+        int clearAreaRadius = ProceduralTerrain.Current.TerrainHouseData.ClearAreaRadiusAroundBuildings;
         foreach (VillageData village in chunkData.VillageList) {
             bool hasClearedAroundCenter = false;
             foreach (VillageHouseData house in village.VillageHouses) {
@@ -524,8 +517,8 @@ public class ProceduralTerrain : MonoBehaviour {
 
     IEnumerator ConnectVillages(ChunkData chunkData) {
 
-        float maxDistanceBetweenPoints = 300;
-        int maxNumberOfConnections = 3;
+        float maxDistanceBetweenPoints = ProceduralTerrain.Current.TerrainHouseData.MaxDistanceBetweenConnectionPoints;
+        int maxNumberOfConnections = ProceduralTerrain.Current.TerrainHouseData.MaxNumberOfConnectionsPerVillage;
 
         //Foreach village center in this chunk
         foreach (GameObject villageCenter in chunkData.VillageCenterList) {
@@ -561,7 +554,8 @@ public class ProceduralTerrain : MonoBehaviour {
 
                 VillageConnectionData connectionData2 = connectionPoint2.GetComponent<VillageConnectionData>();
 
-                if (connectionData2.NumberOfConnections >= maxNumberOfConnections) {
+                //Less than max number of connections and connection 1 has 1+ connection, prevents centers having no connections when close enough to other centers
+                if (connectionData2.NumberOfConnections >= maxNumberOfConnections && connectionData1.NumberOfConnections != 0) {
                     continue;
                 }
 

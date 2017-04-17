@@ -40,20 +40,20 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   TerrainTextures:
-  - Texture: {fileID: 2800000, guid: 46aaaeabada44944081975f836f024ea, type: 3}
+  - Texture: {fileID: 2800000, guid: 14e7d8bf1ec615340b4a52d63dd9418e, type: 3}
     TextureNormal: {fileID: 0}
     TextureTileSize: {x: 5, y: 5}
-    TextureTint: {r: 0.0647167, g: 0.5244782, b: 0.97794116, a: 0}
+    TextureTint: {r: 0.9058824, g: 0.90196085, b: 0.70980394, a: 0}
     TextureStartHeight: -1
-  - Texture: {fileID: 2800000, guid: 7c831beaa19764c44bfb344da4a8a514, type: 3}
+  - Texture: {fileID: 2800000, guid: 14e7d8bf1ec615340b4a52d63dd9418e, type: 3}
     TextureNormal: {fileID: 0}
-    TextureTileSize: {x: 10, y: 10}
-    TextureTint: {r: 0.85294116, g: 0.85294116, b: 0.85294116, a: 0}
+    TextureTileSize: {x: 5, y: 5}
+    TextureTint: {r: 0.9058824, g: 0.90196085, b: 0.70980394, a: 0}
     TextureStartHeight: 0.01
   - Texture: {fileID: 2800000, guid: 2e268616c9d1e0941aac999a0c3895b0, type: 3}
     TextureNormal: {fileID: 0}
     TextureTileSize: {x: 5, y: 5}
-    TextureTint: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
+    TextureTint: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
     TextureStartHeight: 0.02
   - Texture: {fileID: 2800000, guid: 14e7d8bf1ec615340b4a52d63dd9418e, type: 3}
     TextureNormal: {fileID: 0}

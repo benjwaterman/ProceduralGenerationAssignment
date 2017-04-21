@@ -9,7 +9,7 @@ public class ProceduralTerrain : MonoBehaviour {
     public static ProceduralTerrain Current;
 
     public const int TerrainResolution = 513;
-    public const int NumberOfChunks = 1;
+    //public const int NumberOfChunks = 1;
 
     [Header("Terrain")]
     public MapData TerrainMapData;
@@ -34,7 +34,8 @@ public class ProceduralTerrain : MonoBehaviour {
     public bool UseRandomMasterColour = false;
     public Color[] MasterColourArray;
 
-    Terrain[,] terrains = new Terrain[NumberOfChunks, NumberOfChunks];
+    //Terrain[,] terrains = new Terrain[NumberOfChunks, NumberOfChunks];
+    public List<ChunkData> ChunkList { get; private set; }
 
     //Queue for coroutines so they are executed in order
     public CoroutineQueue mainQueue;
@@ -58,6 +59,8 @@ public class ProceduralTerrain : MonoBehaviour {
         miscQueue.StartLoop();
 
         objectGenerator = ScriptableObject.CreateInstance<ObjectGenerator>();
+
+        ChunkList = new List<ChunkData>();
     }
 
     void Start() {
@@ -98,36 +101,167 @@ public class ProceduralTerrain : MonoBehaviour {
             UpdateColourAtlas(objectData);
         }
 
-        //Create chunks
-        for (int i = 0; i < NumberOfChunks; i++) {
-            for (int j = 0; j < NumberOfChunks; j++) {
-                ChunkData chunk = new ChunkData(new Vector2(TerrainMapData.TerrainSize * i, TerrainMapData.TerrainSize * j));
-                //Assign terrain
-                terrains[i, j] = chunk.terrain;
+        //Create initial chunk
+        CreateChunk(0, 0);
+        //CreateChunk(1000, 0);
+        //CreateChunk(-1000, 0);
+
+        //CreateChunk(0, 1000);
+        //CreateChunk(1000, 1000);
+        //CreateChunk(-1000, 1000);
+
+        //CreateChunk(0, -1000);
+        //CreateChunk(-1000, -1000);
+        //CreateChunk(1000, -1000);
+
+        ////Create chunks
+        //for (int i = 0; i < NumberOfChunks; i++) {
+        //    for (int j = 0; j < NumberOfChunks; j++) {
+        //        ChunkData chunk = new ChunkData(new Vector2(TerrainMapData.TerrainSize * i, TerrainMapData.TerrainSize * j));
+        //        //Assign terrain
+        //        terrains[i, j] = chunk.terrain;
+        //    }
+        //}
+
+        ////Assign terrain neighbours
+        //for (int i = 0; i < terrains.GetLength(0); i++) {
+        //    for (int j = 0; j < terrains.GetLength(1); j++) {
+        //        Terrain left = (i - 1 >= 0) ? terrains[i - 1, j] : null;
+        //        Terrain right = (i + 1 < terrains.GetLength(0)) ? terrains[i + 1, j] : null;
+        //        Terrain top = (j - 1 >= 0) ? terrains[i, j - 1] : null;
+        //        Terrain bottom = (j + 1 < terrains.GetLength(1)) ? terrains[i, j + 1] : null;
+
+        //        terrains[i, j].SetNeighbors(left, top, right, bottom);
+
+        //        /*
+        //        if(left)
+        //            Debug.Log("Terrain " + i + j + " Left: " + left.name);
+        //        if(right)
+        //            Debug.Log("Terrain " + i + j + " Right: " + right.name);
+        //        if(top)
+        //            Debug.Log("Terrain " + i + j + " Top: " + top.name);
+        //        if(bottom)
+        //            Debug.Log("Terrain " + i + j + " Bottom: " + bottom.name);
+        //            */
+        //    }
+        //}
+    }
+
+    void CreateChunk(int x, int y) {
+        ChunkData chunk = new ChunkData(new Vector2(x, y));
+        //Assign chunk to master list
+        ChunkList.Add(chunk);
+        //Recalculate terrain neighbours
+        RecalculateTerrainNeighbours();
+    }
+
+    public void CreateNeighbourChunks(ChunkData chunk) {
+
+        int terrainSize = ProceduralTerrain.Current.TerrainMapData.TerrainSize;
+
+        if (chunk.BottomNeighbour == null) {
+            CreateChunk((int)chunk.position.x, (int)chunk.position.y + terrainSize);
+        }
+
+        if (chunk.TopNeighbour == null) {
+            CreateChunk((int)chunk.position.x, (int)chunk.position.y - terrainSize);
+        }
+
+        if (chunk.LeftNeighbour == null) {
+            CreateChunk((int)chunk.position.x - terrainSize, (int)chunk.position.y);
+        }
+
+        if (chunk.RightNeighbour == null) {
+            CreateChunk((int)chunk.position.x + terrainSize, (int)chunk.position.y);
+        }
+
+        //Diagonals
+        bool topLeft, topRight, bottomLeft, bottomRight;
+        topLeft = topRight = bottomLeft = bottomRight = false;
+
+        //Go through every chunk to see if any match the positions of chunks we want to create
+        foreach (ChunkData chunk2 in ChunkList) {
+            Vector2 position = chunk2.position;
+
+            //Upper left
+            if((int)chunk.position.x - terrainSize == (int)position.x && (int)chunk.position.y - terrainSize == (int)position.y) {
+                topLeft = true;
+            }
+
+            //Upper right
+            if ((int)chunk.position.x + terrainSize == (int)position.x && (int)chunk.position.y - terrainSize == (int)position.y) {
+                topRight = true;
+            }
+
+            //Bottom left
+            if ((int)chunk.position.x - terrainSize == (int)position.x && (int)chunk.position.y + terrainSize == (int)position.y) {
+                bottomLeft = true;
+            }
+
+            //Bottom right
+            if ((int)chunk.position.x + terrainSize == (int)position.x && (int)chunk.position.y + terrainSize == (int)position.y) {
+                bottomRight = true;
             }
         }
 
-        //Assign terrain neighbours
-        for (int i = 0; i < terrains.GetLength(0); i++) {
-            for (int j = 0; j < terrains.GetLength(1); j++) {
-                Terrain left = (i - 1 >= 0) ? terrains[i - 1, j] : null;
-                Terrain right = (i + 1 < terrains.GetLength(0)) ? terrains[i + 1, j] : null;
-                Terrain top = (j - 1 >= 0) ? terrains[i, j - 1] : null;
-                Terrain bottom = (j + 1 < terrains.GetLength(1)) ? terrains[i, j + 1] : null;
+        //If these chunks don't exist, create them
+        if(!topLeft) {
+            CreateChunk((int)chunk.position.x - terrainSize, (int)chunk.position.y - terrainSize);
+        }
 
-                terrains[i, j].SetNeighbors(left, top, right, bottom);
+        if (!topRight) {
+            CreateChunk((int)chunk.position.x + terrainSize, (int)chunk.position.y - terrainSize);
+        }
 
-                /*
-                if(left)
-                    Debug.Log("Terrain " + i + j + " Left: " + left.name);
-                if(right)
-                    Debug.Log("Terrain " + i + j + " Right: " + right.name);
-                if(top)
-                    Debug.Log("Terrain " + i + j + " Top: " + top.name);
-                if(bottom)
-                    Debug.Log("Terrain " + i + j + " Bottom: " + bottom.name);
-                    */
+        if (!bottomLeft) {
+            CreateChunk((int)chunk.position.x - terrainSize, (int)chunk.position.y + terrainSize);
+        }
+
+        if (!bottomRight) {
+            CreateChunk((int)chunk.position.x + terrainSize, (int)chunk.position.y + terrainSize);
+        }
+    }
+
+    void RecalculateTerrainNeighbours() {
+        int terrainSize = ProceduralTerrain.Current.TerrainMapData.TerrainSize;
+
+        foreach (ChunkData chunk1 in ChunkList) {
+            Terrain right, left, above, below;
+            right = left = above = below = null;
+
+            foreach (ChunkData chunk2 in ChunkList) {
+                //Make sure not comparing against self
+                if (chunk1 == chunk2) {
+                    continue;
+                }
+
+                //Right
+                if((int)(chunk1.position.x - chunk2.position.x) == -terrainSize && chunk1.position.y == chunk2.position.y) {
+                    right = chunk2.terrain;
+                }
+
+                //Left
+                if ((int)(chunk1.position.x - chunk2.position.x) == terrainSize && chunk1.position.y == chunk2.position.y) {
+                    left = chunk2.terrain;
+                }
+
+                //Below
+                if ((int)(chunk1.position.y - chunk2.position.y) == -terrainSize && chunk1.position.x == chunk2.position.x) {
+                    below = chunk2.terrain;
+                }
+
+                //Above
+                if ((int)(chunk1.position.y - chunk2.position.y) == terrainSize && chunk1.position.x == chunk2.position.x) {
+                    above = chunk2.terrain;
+                }
+
             }
+
+            chunk1.terrain.SetNeighbors(left, above, right, below);
+            chunk1.LeftNeighbour = left;
+            chunk1.RightNeighbour = right;
+            chunk1.TopNeighbour = above;
+            chunk1.BottomNeighbour = below;
         }
     }
 
@@ -236,10 +370,10 @@ public class ProceduralTerrain : MonoBehaviour {
             }
         }
 
-        if (ProceduralTerrain.NumberOfChunks != 1) {
+        //if (ProceduralTerrain.NumberOfChunks != 1) {
             maxLocalHeight = 1.3f;
             minLocalHeight = 0.4f;
-        }
+        //}
 
         //Normalise heightmap and apply height curve
         for (int x = 0; x < TerrainResolution; x++) {

@@ -606,6 +606,10 @@ Prefab:
       propertyPath: m_MouseLook.lockCursor
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
   m_IsPrefabParent: 0
@@ -692,6 +696,21 @@ Transform:
   m_Father: {fileID: 1973384717}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!1 &1783331891 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
+  m_PrefabInternal: {fileID: 1404890447}
+--- !u!114 &1783331897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1783331891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f0513a8d220fa94c989b8739a51613b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1831409898
 GameObject:
   m_ObjectHideFlags: 0
@@ -729,14 +748,14 @@ MonoBehaviour:
   RandomSeeds: 1
   CombineMeshes: 1
   UseMasterColour: 1
-  MasterColour: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
+  MasterColour: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
   UseRandomMasterColour: 1
   MasterColourArray:
   - {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
   - {r: 0.058931667, g: 0.43276176, b: 0.8014706, a: 0}
   - {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
   - {r: 0.8014706, g: 0.41227773, b: 0.058931667, a: 0}
-  - {r: 0.7912288, g: 0.058931667, b: 0.8014706, a: 0}
+  - {r: 0.058931667, g: 0.8014706, b: 0.77074474, a: 0}
 --- !u!4 &1831409900
 Transform:
   m_ObjectHideFlags: 0

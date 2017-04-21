@@ -8,6 +8,7 @@ public class ChunkData {
     public Terrain terrain { get; private set; }
     public GameObject terrainGameObject { get; private set; }
     public TerrainData terrainData { get; private set; }
+    public Terrain LeftNeighbour, RightNeighbour, TopNeighbour, BottomNeighbour;
     public float[,] terrainHeightMap { get; private set; }
     //General area around each object
     public bool[,] terrainPlacableMap = new bool[ProceduralTerrain.TerrainResolution, ProceduralTerrain.TerrainResolution];

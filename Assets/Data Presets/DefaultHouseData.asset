@@ -27,7 +27,7 @@ MonoBehaviour:
     ActualSizeX: 4
     ActualSizeZ: 4
   ObjectMaterial: {fileID: 2100000, guid: e0cc032bbb51a4340a11fe8fcca6af84, type: 2}
-  PrimaryColour: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
+  PrimaryColour: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
   TertiaryColour: {r: 0.7794118, g: 0.74526316, b: 0.46993947, a: 1}
   QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}
@@ -38,7 +38,7 @@ MonoBehaviour:
     RequiredSpaceZ: 4
     ActualSizeX: 4
     ActualSizeZ: 4
-  VillageCenterRadius: 10
+  VillageCenterRadius: 14
   BridgePrefab: {fileID: 1790918385679706, guid: 0df41c7c2135efd43b73e7bb67aa188d,
     type: 2}
   MaxDistanceBetweenConnectionPoints: 300

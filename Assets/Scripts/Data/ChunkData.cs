@@ -48,7 +48,7 @@ public class ChunkData {
 
     public void AssignTerrain(Terrain terrain) {
         this.terrain = terrain;
-        this.terrain.name = "Terrain chunk (" + position.x + ", " + position.y + ")";
+        this.terrain.name = "Terrain chunk (X = " + position.x + ", Y = " + position.y + ")";
     }
 
     public void AssignTerrainGameObject(GameObject terrainGameObject) {

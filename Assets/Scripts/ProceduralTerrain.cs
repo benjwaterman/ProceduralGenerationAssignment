@@ -160,11 +160,11 @@ public class ProceduralTerrain : MonoBehaviour {
         int terrainSize = ProceduralTerrain.Current.TerrainMapData.TerrainSize;
 
         if (chunk.BottomNeighbour == null) {
-            CreateChunk((int)chunk.position.x, (int)chunk.position.y + terrainSize);
+            CreateChunk((int)chunk.position.x, (int)chunk.position.y - terrainSize);
         }
 
         if (chunk.TopNeighbour == null) {
-            CreateChunk((int)chunk.position.x, (int)chunk.position.y - terrainSize);
+            CreateChunk((int)chunk.position.x, (int)chunk.position.y + terrainSize);
         }
 
         if (chunk.LeftNeighbour == null) {
@@ -175,7 +175,7 @@ public class ProceduralTerrain : MonoBehaviour {
             CreateChunk((int)chunk.position.x + terrainSize, (int)chunk.position.y);
         }
 
-        //Diagonals
+        //Diaganols
         bool topLeft, topRight, bottomLeft, bottomRight;
         topLeft = topRight = bottomLeft = bottomRight = false;
 
@@ -245,14 +245,14 @@ public class ProceduralTerrain : MonoBehaviour {
                     left = chunk2.terrain;
                 }
 
-                //Below
+                //Above
                 if ((int)(chunk1.position.y - chunk2.position.y) == -terrainSize && chunk1.position.x == chunk2.position.x) {
-                    below = chunk2.terrain;
+                    above = chunk2.terrain;
                 }
 
-                //Above
+                //Below
                 if ((int)(chunk1.position.y - chunk2.position.y) == terrainSize && chunk1.position.x == chunk2.position.x) {
-                    above = chunk2.terrain;
+                    below = chunk2.terrain;
                 }
 
             }
@@ -282,7 +282,7 @@ public class ProceduralTerrain : MonoBehaviour {
 
         MapGenerator mapGenerator = new MapGenerator();
 
-        Vector2 noiseOffset = new Vector2(chunkData.position.x / ProceduralTerrain.Current.TerrainMapData.TerrainSize * ProceduralTerrain.TerrainResolution, chunkData.position.y / ProceduralTerrain.Current.TerrainMapData.TerrainSize * ProceduralTerrain.TerrainResolution);
+        Vector2 noiseOffset = new Vector2(chunkData.position.x / ProceduralTerrain.Current.TerrainMapData.TerrainSize * ProceduralTerrain.TerrainResolution, -chunkData.position.y / ProceduralTerrain.Current.TerrainMapData.TerrainSize * ProceduralTerrain.TerrainResolution);
 
         //Store temp heightmap data
         float[,] tempHeightMap = mapGenerator.GenerateNoiseMap(ProceduralTerrain.Current.TerrainMapData.TerrainNoiseData, ProceduralTerrain.TerrainResolution + 2, noiseOffset);
@@ -443,7 +443,7 @@ public class ProceduralTerrain : MonoBehaviour {
         terrainGameObject.tag = "Terrain";
 
         //Set position 
-        terrainGameObject.transform.position = new Vector3(chunkData.position.x, 0, -chunkData.position.y);
+        terrainGameObject.transform.position = new Vector3(chunkData.position.x, 0, chunkData.position.y);
 
         terrain = terrainGameObject.GetComponent<Terrain>();
         terrain.heightmapPixelError = 8;

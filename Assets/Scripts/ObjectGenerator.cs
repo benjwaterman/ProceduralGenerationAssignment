@@ -353,7 +353,7 @@ public class ObjectGenerator : ScriptableObject {
                         //Randomly rotate the object to make less uniform
                         Quaternion randomRotation = Quaternion.Euler(0, rand.Next(0, 360), 0);
                         //Instantiate object
-                        GameObject spawnedObject = (GameObject)Instantiate(prefabData.ObjectPrefab, new Vector3(xToPlace + chunkData.position.x, yToPlace, zToPlace - chunkData.position.y), randomRotation, subChunks[subChunkIndex].transform);
+                        GameObject spawnedObject = (GameObject)Instantiate(prefabData.ObjectPrefab, new Vector3(xToPlace + chunkData.position.x, yToPlace, zToPlace + chunkData.position.y), randomRotation, subChunks[subChunkIndex].transform);
 
                         //If a house, add to the chunkData's house list (used for village generation)
                         if (objectType == ObjectType.House) {

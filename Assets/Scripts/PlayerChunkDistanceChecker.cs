@@ -10,12 +10,17 @@ public class PlayerChunkDistanceChecker : MonoBehaviour {
         StartCoroutine(CheckDistanceToChunks());
     }
 
-    //Check distance every .1s 
+    //Check distance every .2s 
     IEnumerator CheckDistanceToChunks() {
         while (true) {
 
             foreach (ChunkData chunk in ProceduralTerrain.Current.ChunkList) {
                 if (Vector3.Distance(GetPlayerPosition(), new Vector3(chunk.position.x, 0, chunk.position.y)) <= 500) {
+                    //If we're still in the same chunk, don't do anything
+                    if (currentChunk == chunk) {
+                        break;
+                    }
+
                     currentChunk = chunk;
 
                     ProceduralTerrain.Current.CreateNeighbourChunks(chunk);

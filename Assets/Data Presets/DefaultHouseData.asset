@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: DefaultHouseData
   m_EditorClassIdentifier: 
   FlatSurfaceSearchRange: 1
-  FlatSurfaceSensitivity: 0.0042
+  FlatSurfaceSensitivity: 0.003
   MaxSpawnHeight: 0.643
   MinSpawnHeight: 0.02
   SpawnDensity: 0.19
@@ -20,25 +20,31 @@ MonoBehaviour:
   NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
   MaxSpawnsPerFrame: 20
   PrefabArray:
-  - ObjectPrefab: {fileID: 1573524291805708, guid: baf14758e1d643b45ad655ff08a427e0,
+  - ObjectPrefab: {fileID: 1913576801540096, guid: baf14758e1d643b45ad655ff08a427e0,
       type: 2}
     RequiredSpaceX: 6
     RequiredSpaceZ: 6
     ActualSizeX: 4
     ActualSizeZ: 4
+  - ObjectPrefab: {fileID: 1605073756390906, guid: 84e9cacb9cef4494099e4fcfc7d46cea,
+      type: 2}
+    RequiredSpaceX: 6
+    RequiredSpaceZ: 6
+    ActualSizeX: 3
+    ActualSizeZ: 3
   ObjectMaterial: {fileID: 2100000, guid: e0cc032bbb51a4340a11fe8fcca6af84, type: 2}
-  PrimaryColour: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
+  PrimaryColour: {r: 0.058931667, g: 0.8014706, b: 0.77074474, a: 0}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
   TertiaryColour: {r: 0.7794118, g: 0.74526316, b: 0.46993947, a: 1}
   QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}
   VillageCenterPrefab:
-    ObjectPrefab: {fileID: 1614280293787672, guid: 4f76ac1559585ed409c38dd2e12f19d4,
+    ObjectPrefab: {fileID: 1290876580982590, guid: b6b09c8738c492840961c6ff202e5447,
       type: 2}
-    RequiredSpaceX: 4
-    RequiredSpaceZ: 4
-    ActualSizeX: 4
-    ActualSizeZ: 4
-  VillageCenterRadius: 14
+    RequiredSpaceX: 8
+    RequiredSpaceZ: 8
+    ActualSizeX: 5
+    ActualSizeZ: 5
+  VillageCenterRadius: 18
   BridgePrefab: {fileID: 1790918385679706, guid: 0df41c7c2135efd43b73e7bb67aa188d,
     type: 2}
   MaxDistanceBetweenConnectionPoints: 300

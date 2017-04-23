@@ -45,6 +45,8 @@ public class CombineMeshes : MonoBehaviour {
         MeshCollider meshColl = gameObject.AddComponent<MeshCollider>();
         meshColl.sharedMesh = GetComponent<MeshFilter>().mesh;
 
+        gameObject.isStatic = true;
+
         yield return null;
     }
 }

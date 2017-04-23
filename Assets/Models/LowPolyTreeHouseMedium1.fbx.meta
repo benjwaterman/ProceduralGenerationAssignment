@@ -1,36 +1,57 @@
 fileFormatVersion: 2
-guid: abc236f5b70a30e48a048d6c050c8381
-timeCreated: 1490208263
+guid: 289aac8355a2fe543994cef4a7fed355
+timeCreated: 1492953693
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: Door
-    100002: //RootNode
-    100004: Roof
-    100006: House1
+    100002: Frame
+    100004: Handle
+    100006: House
     100008: Ladder
+    100010: Leaves
+    100012: //RootNode
+    100014: Roof
+    100016: Window
     400000: Door
-    400002: //RootNode
-    400004: Roof
-    400006: House1
+    400002: Frame
+    400004: Handle
+    400006: House
     400008: Ladder
+    400010: Leaves
+    400012: //RootNode
+    400014: Roof
+    400016: Window
     2300000: Door
-    2300002: //RootNode
-    2300004: Roof
-    2300006: House1
+    2300002: Frame
+    2300004: Handle
+    2300006: House
     2300008: Ladder
+    2300010: Leaves
+    2300012: //RootNode
+    2300014: Roof
+    2300016: Window
     3300000: Door
-    3300002: //RootNode
-    3300004: Roof
-    3300006: House1
+    3300002: Frame
+    3300004: Handle
+    3300006: House
     3300008: Ladder
-    4300000: House1
-    4300002: Roof
-    4300004: Door
-    4300006: Ladder
+    3300010: Leaves
+    3300012: //RootNode
+    3300014: Roof
+    3300016: Window
+    4300000: TreeHouse
+    4300002: Window
+    4300004: Frame
+    4300006: House
+    4300008: Door
+    4300010: Handle
+    4300012: Roof
+    4300014: Ladder
+    4300016: Leaves
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
@@ -72,7 +93,7 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2

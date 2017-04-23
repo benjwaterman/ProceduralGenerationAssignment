@@ -23,7 +23,7 @@ public class ChunkData {
 
         position = pos;
 
-        //Initialise all to true
+        //Initialise arrays
         for (int i = 0; i < ProceduralTerrain.TerrainResolution; i++) {
             for (int j = 0; j < ProceduralTerrain.TerrainResolution; j++) {
                 terrainPlacableMap[i, j] = true;
@@ -31,6 +31,10 @@ public class ChunkData {
             }
         }
 
+        GenerateChunk();
+    }
+
+    void GenerateChunk() {
         terrainHeightMap = ProceduralTerrain.CalculateHeightMap(this);
         ProceduralTerrain.Current.GenerateTerrain(this);
         ProceduralTerrain.Current.GenerateHouses(this);
@@ -39,7 +43,6 @@ public class ChunkData {
         ProceduralTerrain.Current.GenerateDetails(this);
         SplatMapGenerator.GenerateSplatMap(this);
         ProceduralTerrain.Current.GenerateGrass(this);
-
     }
 
     public void AssignTerrainData(TerrainData terrainData) {

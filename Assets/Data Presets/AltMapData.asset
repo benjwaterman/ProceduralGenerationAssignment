@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0036d10762b3bb4288930f7f2f6d9a2, type: 3}
+  m_Name: AltMapData
+  m_EditorClassIdentifier: 
+  TerrainSize: 1000
+  TerrainHeight: 200
+  NoiseData: {fileID: 11400000, guid: 78d76c952478fd9449cab6d4d90ec8c2, type: 2}
+  TerrainHeightMultiplier: 1
+  TerrainHeightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.9977827
+      value: 0.28192782
+      inSlope: 0.20921406
+      outSlope: 0.20921406
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  TerrainTextures:
+  - Texture: {fileID: 2800000, guid: 14e7d8bf1ec615340b4a52d63dd9418e, type: 3}
+    TextureNormal: {fileID: 0}
+    TextureTileSize: {x: 5, y: 5}
+    TextureTint: {r: 0.9058824, g: 0.90196085, b: 0.70980394, a: 0}
+    TextureStartHeight: -1
+  - Texture: {fileID: 2800000, guid: 14e7d8bf1ec615340b4a52d63dd9418e, type: 3}
+    TextureNormal: {fileID: 0}
+    TextureTileSize: {x: 5, y: 5}
+    TextureTint: {r: 0.9058824, g: 0.90196085, b: 0.70980394, a: 0}
+    TextureStartHeight: 0.01
+  - Texture: {fileID: 2800000, guid: 2e268616c9d1e0941aac999a0c3895b0, type: 3}
+    TextureNormal: {fileID: 0}
+    TextureTileSize: {x: 5, y: 5}
+    TextureTint: {r: 0.058931667, g: 0.8014706, b: 0.77074474, a: 0}
+    TextureStartHeight: 0.02
+  - Texture: {fileID: 2800000, guid: 14e7d8bf1ec615340b4a52d63dd9418e, type: 3}
+    TextureNormal: {fileID: 0}
+    TextureTileSize: {x: 5, y: 5}
+    TextureTint: {r: 0.24264705, g: 0.23496896, b: 0.22123702, a: 1}
+    TextureStartHeight: 1
+  TextureBlendAmount: 0.1
+  Texture1ConstantWeight: 0.5
+  TextureSteepnessScaleFactor: 0.5

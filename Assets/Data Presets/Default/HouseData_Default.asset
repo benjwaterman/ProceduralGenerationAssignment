@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86c709f68df5f7647be52d5dc7fc01f5, type: 3}
-  m_Name: DefaultHouseData
+  m_Name: HouseData_Default
   m_EditorClassIdentifier: 
   FlatSurfaceSearchRange: 1
   FlatSurfaceSensitivity: 0.003
@@ -33,15 +33,15 @@ MonoBehaviour:
     ActualSizeX: 3
     ActualSizeZ: 3
   ObjectMaterial: {fileID: 2100000, guid: e0cc032bbb51a4340a11fe8fcca6af84, type: 2}
-  PrimaryColour: {r: 0.058931667, g: 0.8014706, b: 0.77074474, a: 0}
+  PrimaryColour: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
   TertiaryColour: {r: 0.7794118, g: 0.74526316, b: 0.46993947, a: 1}
   QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}
   VillageCenterPrefab:
     ObjectPrefab: {fileID: 1290876580982590, guid: b6b09c8738c492840961c6ff202e5447,
       type: 2}
-    RequiredSpaceX: 8
-    RequiredSpaceZ: 8
+    RequiredSpaceX: 16
+    RequiredSpaceZ: 16
     ActualSizeX: 5
     ActualSizeZ: 5
   VillageCenterRadius: 18

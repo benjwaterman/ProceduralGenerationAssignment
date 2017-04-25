@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bea0296247588248a9cf6664c954349, type: 3}
-  m_Name: SmallTreeData
+  m_Name: SmallTreeData_Default
   m_EditorClassIdentifier: 
   FlatSurfaceSearchRange: 1
   FlatSurfaceSensitivity: 0.0052
@@ -51,7 +51,7 @@ MonoBehaviour:
     ActualSizeX: 1
     ActualSizeZ: 1
   ObjectMaterial: {fileID: 2100000, guid: af11466e745783840bafdb544125cfcc, type: 2}
-  PrimaryColour: {r: 0.2033431, g: 0.115971014, b: 0.47794116, a: 1}
+  PrimaryColour: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
   TertiaryColour: {r: 1, g: 1, b: 1, a: 1}
   QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}

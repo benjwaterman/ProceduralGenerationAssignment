@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eda21a8bd74d87941a42bdd6af713f67, type: 3}
-  m_Name: DefaultDetailData
+  m_Name: DetailData_Default
   m_EditorClassIdentifier: 
   FlatSurfaceSearchRange: 1
   FlatSurfaceSensitivity: 0.0052

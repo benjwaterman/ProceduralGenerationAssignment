@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bee7966ebb3f17459e82fd8e374580f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TerrainMapData: {fileID: 11400000, guid: b687a31bd5e798847a9d13ab5c86ab94, type: 2}
+  TerrainMapData: {fileID: 11400000, guid: 2f3c70b30e4f9ad419a51307ddfda237, type: 2}
   TerrainTreeDataArray:
   - {fileID: 11400000, guid: c8ebab77a7b55e347a1b920e998b034e, type: 2}
   - {fileID: 11400000, guid: 11bfba1a1d0cc934b8b60aab2d934c9a, type: 2}

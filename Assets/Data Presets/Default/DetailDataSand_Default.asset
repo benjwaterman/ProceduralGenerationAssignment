@@ -9,30 +9,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eda21a8bd74d87941a42bdd6af713f67, type: 3}
-  m_Name: DetailData_Default
+  m_Name: DetailDataSand_Default
   m_EditorClassIdentifier: 
   FlatSurfaceSearchRange: 1
   FlatSurfaceSensitivity: 0.0052
-  MaxSpawnHeight: 0.8
-  MinSpawnHeight: 0.02
-  SpawnDensity: 0.04
+  MaxSpawnHeight: 0.02
+  MinSpawnHeight: 0
+  SpawnDensity: 0.01
   SpawnThreshold: 0.147
   NoiseData: {fileID: 11400000, guid: 763a914ce8ccdf14fa2278d571cbdac0, type: 2}
   MaxSpawnsPerFrame: 100
   PrefabArray:
+  - ObjectPrefab: {fileID: 1064395477866806, guid: 54031a16b7cc26a4cac3d1fc543b220f,
+      type: 2}
+    RequiredSpaceX: 1
+    RequiredSpaceZ: 1
+    ActualSizeX: 1
+    ActualSizeZ: 1
   - ObjectPrefab: {fileID: 1098788538939258, guid: 364dc45c887889646bac7cf66f06327d,
-      type: 2}
-    RequiredSpaceX: 1
-    RequiredSpaceZ: 1
-    ActualSizeX: 1
-    ActualSizeZ: 1
-  - ObjectPrefab: {fileID: 1998366506986332, guid: 60f63551e131a11438cc994dd3149361,
-      type: 2}
-    RequiredSpaceX: 1
-    RequiredSpaceZ: 1
-    ActualSizeX: 1
-    ActualSizeZ: 1
-  - ObjectPrefab: {fileID: 1935479822074342, guid: 945c16c94c0ba4c43998e674afd904d8,
       type: 2}
     RequiredSpaceX: 1
     RequiredSpaceZ: 1

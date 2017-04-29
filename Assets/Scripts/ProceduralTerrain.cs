@@ -21,7 +21,7 @@ public class ProceduralTerrain : MonoBehaviour {
     public HouseData TerrainHouseData;
 
     [Header("Details")]
-    public DetailData TerrainDetailData;
+    public DetailData[] TerrainDetailDataArray;
 
     [Header("Grass")]
     public GrassData[] TerrainGrassDataArray;
@@ -87,7 +87,10 @@ public class ProceduralTerrain : MonoBehaviour {
             }
 
             ChangeColour(TerrainHouseData, MasterColour);
-            ChangeColour(TerrainDetailData, MasterColour);
+            
+            foreach (ObjectData TerrainDetailData in TerrainDetailDataArray) {
+                ChangeColour(TerrainDetailData, MasterColour);
+            }
             foreach (ObjectData objectData in TerrainTreeDataArray) {
                 ChangeColour(objectData, MasterColour);
             }
@@ -99,12 +102,14 @@ public class ProceduralTerrain : MonoBehaviour {
                 }
             }
 
-            TerrainMapData.TerrainTextures[2].TextureTint = MasterColour;
+            TerrainMapData.TerrainTextures[2].TextureTint = MasterColour + new Color(0.1f, 0.1f, 0.1f);
         }
 
         //Change texture colours for objects
         UpdateColourAtlas(TerrainHouseData);
-        UpdateColourAtlas(TerrainDetailData);
+        foreach (ObjectData TerrainDetailData in TerrainDetailDataArray) {
+            UpdateColourAtlas(TerrainDetailData);
+        }
         foreach (ObjectData objectData in TerrainTreeDataArray) {
             UpdateColourAtlas(objectData);
         }
@@ -445,8 +450,10 @@ public class ProceduralTerrain : MonoBehaviour {
 
     public void GenerateDetails(ChunkData chunkData) {
 
-        IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.Detail, ProceduralTerrain.Current.TerrainDetailData, chunkData);
-        mainQueue.EnqueueAction(gen);
+        foreach (DetailData TerrainDetailData in ProceduralTerrain.Current.TerrainDetailDataArray) {
+            IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.Detail, TerrainDetailData, chunkData);
+            mainQueue.EnqueueAction(gen);
+        }
     }
 
     IEnumerator GenerateVillages(ChunkData chunkData) {
@@ -754,6 +761,8 @@ public class ProceduralTerrain : MonoBehaviour {
         detailPrototype[detailLayer].renderMode = DetailRenderMode.GrassBillboard;
         detailPrototype[detailLayer].maxHeight = TerrainGrassData.GrassMaxHeight;
         detailPrototype[detailLayer].minHeight = TerrainGrassData.GrassMinHeight;
+        detailPrototype[detailLayer].maxWidth = TerrainGrassData.GrassMaxWidth;
+        detailPrototype[detailLayer].minWidth = TerrainGrassData.GrassMinWidth;
     }
 
     void SpawnGrass(GrassData TerrainGrassData, ChunkData chunkData, int detailLayer) {
@@ -768,7 +777,9 @@ public class ProceduralTerrain : MonoBehaviour {
         int[,] grassMap = new int[grassResolution, grassResolution];
         float[,] fGrassMap = mapGenerator.GenerateNoiseMap(TerrainGrassData.GrassNoiseData, grassResolution, chunkData.position);
 
-        int incremement = (int)(1 / TerrainGrassData.GrassSpawnDensity);
+        int incremement = 1;// (int)(1 / TerrainGrassData.GrassSpawnDensity);
+        System.Random rand = new System.Random();
+        int spawnDensity = TerrainGrassData.GrassSpawnDensity;
 
         for (int i = 0; i < grassResolution; i += incremement) {
             for (int j = 0; j < grassResolution; j += incremement) {
@@ -781,7 +792,7 @@ public class ProceduralTerrain : MonoBehaviour {
                 float grassStrength = localAlphaMap[0, 0, 2]; //2 being the grass texture on the terrain
 
                 if (grassStrength >= TerrainGrassData.GrassSpawnGroundTextureThreshold) {
-                    grassMap[i, j] = 6;
+                    grassMap[i, j] = spawnDensity;
                 }
                 else {
                     grassMap[i, j] = 0;
@@ -790,11 +801,22 @@ public class ProceduralTerrain : MonoBehaviour {
 
                 //Compare against generated noise
                 if (fGrassMap[i, j] >= TerrainGrassData.GrassSpawnNoiseThreshold) {
-                    grassMap[i, j] = 6;
+                    grassMap[i, j] = spawnDensity;
                 }
                 else {
                     grassMap[i, j] = 0;
                     continue;
+                }
+
+                //Compare against spawn rate chance, skip if grass spawn chance is 1 as it will always spawn
+                if (TerrainGrassData.GrassSpawnChance < 1) {
+                    if (rand.Next(0, 100) <= TerrainGrassData.GrassSpawnChance * 100) {
+                        grassMap[i, j] = spawnDensity;
+                    }
+                    else {
+                        grassMap[i, j] = 0;
+                        continue;
+                    }
                 }
 
                 //If grass is not within min and max height
@@ -824,7 +846,6 @@ public class ProceduralTerrain : MonoBehaviour {
             }
             //Assign updated temp grass map back to terrain
             terrain.terrainData.SetDetailLayer(0, 0, detailLayer - i, tempGrassMap);
-            terrain.Flush();
         }
 
         terrain.terrainData.SetDetailLayer(0, 0, detailLayer, grassMap);

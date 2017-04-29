@@ -14,7 +14,7 @@ MonoBehaviour:
   FlatSurfaceSearchRange: 1
   FlatSurfaceSensitivity: 0.003
   MaxSpawnHeight: 0.643
-  MinSpawnHeight: 0.02
+  MinSpawnHeight: 0.025
   SpawnDensity: 0.19
   SpawnThreshold: 0.39
   NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
@@ -33,7 +33,7 @@ MonoBehaviour:
     ActualSizeX: 3
     ActualSizeZ: 3
   ObjectMaterial: {fileID: 2100000, guid: e0cc032bbb51a4340a11fe8fcca6af84, type: 2}
-  PrimaryColour: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
+  PrimaryColour: {r: 0.8014706, g: 0.41227773, b: 0.058931667, a: 0}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
   TertiaryColour: {r: 0.7794118, g: 0.74526316, b: 0.46993947, a: 1}
   QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}

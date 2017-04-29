@@ -9,12 +9,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bea0296247588248a9cf6664c954349, type: 3}
-  m_Name: LargeTreeData_Default
+  m_Name: TreeDataLarge_Default
   m_EditorClassIdentifier: 
   FlatSurfaceSearchRange: 1
   FlatSurfaceSensitivity: 0.0052
   MaxSpawnHeight: 1
-  MinSpawnHeight: 0.02
+  MinSpawnHeight: 0.025
   SpawnDensity: 0.424
   SpawnThreshold: 0.22
   NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
@@ -45,7 +45,7 @@ MonoBehaviour:
     ActualSizeX: 2
     ActualSizeZ: 2
   ObjectMaterial: {fileID: 2100000, guid: 34a2e43375c646648a326f331c671a8f, type: 2}
-  PrimaryColour: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
+  PrimaryColour: {r: 0.8014706, g: 0.41227773, b: 0.058931667, a: 0}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
   TertiaryColour: {r: 1, g: 1, b: 1, a: 1}
   QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}

@@ -9,17 +9,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ceed6926950e814a8f0730a416d8df8, type: 3}
-  m_Name: GrassDataTall1_Default
+  m_Name: GrassDataTall_Default
   m_EditorClassIdentifier: 
   GrassTexture: {fileID: 2800000, guid: 5fd3e5edf7433da489798b25fa4bd94b, type: 3}
-  GrassColour: {r: 0.058931667, g: 0.43276176, b: 0.8014706, a: 0}
-  GrassColourDry: {r: 0.058931667, g: 0.43276176, b: 0.8014706, a: 0}
+  GrassColour: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
+  GrassColourDry: {r: 0.66176474, g: 0.15084343, b: 0.22483881, a: 1}
   AllowColourOverride: 1
   GrassMaxHeight: 3
   GrassMinHeight: 2
+  GrassMaxWidth: 2
+  GrassMinWidth: 1
   MaxGrassSpawnHeight: 1
   MinGrassSpawnHeight: 0
-  GrassSpawnDensity: 1
+  GrassSpawnDensity: 3
+  GrassSpawnChance: 0.52
   GrassSpawnNoiseThreshold: 0.98
   GrassSpawnGroundTextureThreshold: 0.5
-  NoiseData: {fileID: 11400000, guid: 544437801325f2b4db6bb144662eb309, type: 2}
+  NoiseData: {fileID: 11400000, guid: 763a914ce8ccdf14fa2278d571cbdac0, type: 2}

@@ -19,6 +19,9 @@ public class ChunkData {
     public List<VillageData> VillageList = new List<VillageData>();
     public List<VillageHouseData> VillageHouseList = new List<VillageHouseData>();
 
+    //For grass
+    public DetailPrototype[] detailPrototype;
+
     public ChunkData(Vector2 pos) {
 
         position = pos;

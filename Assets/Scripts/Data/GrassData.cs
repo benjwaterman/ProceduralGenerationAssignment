@@ -8,6 +8,7 @@ public class GrassData : ScriptableObject {
     public Texture2D GrassTexture;
     public Color GrassColour;
     public Color GrassColourDry;
+    public bool AllowColourOverride = false;
     public float GrassMaxHeight = 2f;
     public float GrassMinHeight = 1f;
     [Range(0, 1)]
@@ -17,7 +18,9 @@ public class GrassData : ScriptableObject {
     [Range(0, 1)]
     public float GrassSpawnDensity = 1f;
     [Range(0, 1)]
-    public float GrassSpawnThreshold = 0.5f;
+    public float GrassSpawnNoiseThreshold = 0.5f;
+    [Range(0, 1)]
+    public float GrassSpawnGroundTextureThreshold = 0.5f;
 
     public NoiseData GrassNoiseData { get; private set; }
     public NoiseData NoiseData;

@@ -32,6 +32,18 @@ MonoBehaviour:
     RequiredSpaceZ: 1
     ActualSizeX: 1
     ActualSizeZ: 1
+  - ObjectPrefab: {fileID: 1935479822074342, guid: 945c16c94c0ba4c43998e674afd904d8,
+      type: 2}
+    RequiredSpaceX: 1
+    RequiredSpaceZ: 1
+    ActualSizeX: 1
+    ActualSizeZ: 1
+  - ObjectPrefab: {fileID: 1064395477866806, guid: 54031a16b7cc26a4cac3d1fc543b220f,
+      type: 2}
+    RequiredSpaceX: 1
+    RequiredSpaceZ: 1
+    ActualSizeX: 1
+    ActualSizeZ: 1
   ObjectMaterial: {fileID: 2100000, guid: a9867e2e7f56c5b4c948227927ed77de, type: 2}
   PrimaryColour: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}

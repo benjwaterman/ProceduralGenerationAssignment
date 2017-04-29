@@ -234,7 +234,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 11bfba1a1d0cc934b8b60aab2d934c9a, type: 2}
   TerrainHouseData: {fileID: 11400000, guid: 496e8cd92a21bb04b99a74529433155c, type: 2}
   TerrainDetailData: {fileID: 11400000, guid: cba5d1aab9aea7c449bcde4450835917, type: 2}
-  TerrainGrassData: {fileID: 11400000, guid: 1d9744a1739f0334cb4f866e25a00b7d, type: 2}
+  TerrainGrassDataArray:
+  - {fileID: 11400000, guid: 1d9744a1739f0334cb4f866e25a00b7d, type: 2}
+  - {fileID: 11400000, guid: ad46fd3497b73844fb01a73bc743b345, type: 2}
+  - {fileID: 11400000, guid: d39f0e33b1c8c0843820130523e2ebf3, type: 2}
   RandomSeeds: 1
   CombineMeshes: 1
   UseMasterColour: 1

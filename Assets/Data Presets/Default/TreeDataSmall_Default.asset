@@ -38,12 +38,6 @@ MonoBehaviour:
     RequiredSpaceZ: 2
     ActualSizeX: 1
     ActualSizeZ: 1
-  - ObjectPrefab: {fileID: 1998366506986332, guid: 60f63551e131a11438cc994dd3149361,
-      type: 2}
-    RequiredSpaceX: 1
-    RequiredSpaceZ: 1
-    ActualSizeX: 1
-    ActualSizeZ: 1
   - ObjectPrefab: {fileID: 1335568433576300, guid: 8a6a0657235cec440ab0e841325724f9,
       type: 2}
     RequiredSpaceX: 2
@@ -57,7 +51,7 @@ MonoBehaviour:
     ActualSizeX: 2
     ActualSizeZ: 2
   ObjectMaterial: {fileID: 2100000, guid: af11466e745783840bafdb544125cfcc, type: 2}
-  PrimaryColour: {r: 0.8014706, g: 0.41227773, b: 0.058931667, a: 0}
+  PrimaryColour: {r: 0.45324543, g: 0.058931667, b: 0.8014706, a: 0}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
   TertiaryColour: {r: 1, g: 1, b: 1, a: 1}
   QuaternaryColour: {r: 0, g: 0, b: 0, a: 1}

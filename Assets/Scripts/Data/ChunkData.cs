@@ -26,6 +26,35 @@ public class ChunkData {
 
         position = pos;
 
+
+
+        ProceduralTerrain.Current.StartCoroutine(GenerateChunk());
+    }
+
+    IEnumerator GenerateChunk() {
+        //Continue after loading message has been displayed
+        yield return ProceduralTerrain.Current.StartCoroutine(ProceduralTerrain.Current.DisplayChunkLoadMessage());
+
+        InitialiseArrays();
+        terrainHeightMap = ProceduralTerrain.CalculateHeightMap(this);
+        ProceduralTerrain.Current.GenerateTerrain(this);
+
+        //Generate rest of chunk
+        ProceduralTerrain.Current.GenerateHouses(this);
+        ProceduralTerrain.Current.GenerateTrees(this);
+        ProceduralTerrain.Current.GenerateVillageConnections(this); //Must be called after trees to avoid clipping
+        ProceduralTerrain.Current.GenerateDetails(this);
+        SplatMapGenerator.GenerateSplatMap(this);
+        ProceduralTerrain.Current.GenerateGrass(this);
+
+        //Continue after loading message has been hidden
+        yield return ProceduralTerrain.Current.StartCoroutine(ProceduralTerrain.Current.HideChunkLoadMessage());
+
+        //Alert ProceduralTerrain that chunk has been created
+        ProceduralTerrain.Current.OnChunkCreated(this);
+    }
+
+    void InitialiseArrays() {
         //Initialise arrays
         for (int i = 0; i < ProceduralTerrain.TerrainResolution; i++) {
             for (int j = 0; j < ProceduralTerrain.TerrainResolution; j++) {
@@ -33,19 +62,6 @@ public class ChunkData {
                 terrainDetailPlacableMap[i, j] = true;
             }
         }
-
-        GenerateChunk();
-    }
-
-    void GenerateChunk() {
-        terrainHeightMap = ProceduralTerrain.CalculateHeightMap(this);
-        ProceduralTerrain.Current.GenerateTerrain(this);
-        ProceduralTerrain.Current.GenerateHouses(this);
-        ProceduralTerrain.Current.GenerateTrees(this);
-        ProceduralTerrain.Current.GenerateVillageConnections(this); //Must be called after trees to avoid clipping
-        ProceduralTerrain.Current.GenerateDetails(this);
-        SplatMapGenerator.GenerateSplatMap(this);
-        ProceduralTerrain.Current.GenerateGrass(this);
     }
 
     public void AssignTerrainData(TerrainData terrainData) {

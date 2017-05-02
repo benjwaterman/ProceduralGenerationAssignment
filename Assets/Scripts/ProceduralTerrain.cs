@@ -34,6 +34,9 @@ public class ProceduralTerrain : MonoBehaviour {
     public bool UseRandomMasterColour = false;
     public Color[] MasterColourArray;
 
+    [Header("UI")]
+    public GameObject ChunkLoadingScreen;
+
     //Terrain[,] terrains = new Terrain[NumberOfChunks, NumberOfChunks];
     public List<ChunkData> ChunkList { get; private set; }
 
@@ -118,8 +121,21 @@ public class ProceduralTerrain : MonoBehaviour {
         CreateChunk(0, 0);
     }
 
+    public IEnumerator DisplayChunkLoadMessage() {
+        ChunkLoadingScreen.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    public IEnumerator HideChunkLoadMessage() {
+        ChunkLoadingScreen.SetActive(false);
+        yield return new WaitForSeconds(0.1f);
+    }
+
     void CreateChunk(int x, int y) {
         ChunkData chunk = new ChunkData(new Vector2(x, y));
+    }
+
+    public void OnChunkCreated(ChunkData chunk) {
         //Assign chunk to master list
         ChunkList.Add(chunk);
         //Recalculate terrain neighbours

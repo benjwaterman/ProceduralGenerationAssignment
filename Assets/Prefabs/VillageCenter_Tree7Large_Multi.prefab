@@ -79,6 +79,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1160370725314498
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4305928776848528}
+  m_Layer: 0
+  m_Name: HouseSpawnPoint (1)
+  m_TagString: HouseSpawnPoint
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1237109974406160
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,6 +107,21 @@ GameObject:
   m_Layer: 0
   m_Name: Ladder (2)
   m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1290035269130210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4418195391183924}
+  m_Layer: 0
+  m_Name: HouseSpawnPoint (2)
+  m_TagString: HouseSpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -159,6 +189,21 @@ GameObject:
   m_Layer: 0
   m_Name: Leaves.001
   m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1719681196546676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4361887709663496}
+  m_Layer: 0
+  m_Name: HouseSpawnPoint
+  m_TagString: HouseSpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -323,7 +368,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1290876580982590}
   m_LocalRotation: {x: 6.609636e-12, y: 1, z: -0.0000018099951, w: 0.0000036517763}
-  m_LocalPosition: {x: 588.3259, y: 74.70441, z: 913.9869}
+  m_LocalPosition: {x: 20.282585, y: 47.597046, z: -11.835768}
   m_LocalScale: {x: 313.44977, y: 313.44977, z: 313.44977}
   m_Children:
   - {fileID: 4383307991403950}
@@ -334,9 +379,38 @@ Transform:
   - {fileID: 4091503457571610}
   - {fileID: 4732919784789030}
   - {fileID: 4827267814286486}
+  - {fileID: 4361887709663496}
+  - {fileID: 4305928776848528}
+  - {fileID: 4418195391183924}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4305928776848528
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1160370725314498}
+  m_LocalRotation: {x: 0.000003052182, y: -0.537687, z: 0.0000019464135, w: -0.84314454}
+  m_LocalPosition: {x: -0.0361, y: 0.09777, z: -0.01678}
+  m_LocalScale: {x: 1.0000006, y: 1, z: 1.0000006}
+  m_Children: []
+  m_Father: {fileID: 4282689536524488}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: -294.947, z: 0}
+--- !u!4 &4361887709663496
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1719681196546676}
+  m_LocalRotation: {x: 0.0000036075428, y: 0.08285806, z: -0.0000002999562, w: -0.9965614}
+  m_LocalPosition: {x: 0.00755, y: 0.09778, z: -0.03798}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4282689536524488}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: -369.506, z: 0}
 --- !u!4 &4383307991403950
 Transform:
   m_ObjectHideFlags: 1
@@ -363,6 +437,19 @@ Transform:
   m_Father: {fileID: 4162190925426726}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4418195391183924
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1290035269130210}
+  m_LocalRotation: {x: 0.00000017900777, y: -0.9987768, z: 0.0000036155632, w: -0.049446892}
+  m_LocalPosition: {x: -0.0005, y: 0.09777, z: 0.037}
+  m_LocalScale: {x: 1.0000012, y: 1, z: 1.0000012}
+  m_Children: []
+  m_Father: {fileID: 4282689536524488}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: -185.66899, z: 0}
 --- !u!4 &4440816393181216
 Transform:
   m_ObjectHideFlags: 1

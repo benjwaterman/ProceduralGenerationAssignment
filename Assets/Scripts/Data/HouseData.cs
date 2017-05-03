@@ -15,4 +15,7 @@ public class HouseData : ObjectData {
     public float MaxDistanceOfVillage = 150;
     public int MinHousesPerVillage = 5;
     public int MaxHousesPerVillage = 10;
+
+    [Header("HouseSpawnPoint Options")]
+    public GameObject[] HouseSpawnPointPrefabs;
 }

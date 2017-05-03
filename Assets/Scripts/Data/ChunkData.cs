@@ -26,8 +26,6 @@ public class ChunkData {
 
         position = pos;
 
-
-
         ProceduralTerrain.Current.StartCoroutine(GenerateChunk());
     }
 

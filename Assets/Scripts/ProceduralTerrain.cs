@@ -450,10 +450,13 @@ public class ProceduralTerrain : MonoBehaviour {
         IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.House, ProceduralTerrain.Current.TerrainHouseData, chunkData);
         mainQueue.EnqueueAction(gen);
         mainQueue.EnqueueAction(GenerateVillages(chunkData));
+        mainQueue.EnqueueAction(GenerateTreeHouseHouses(chunkData));
     }
 
     public void GenerateVillageConnections(ChunkData chunkData) {
         mainQueue.EnqueueAction(ConnectVillages(chunkData));
+        //Unlike other combining, this must happen after bridges have been generated and so must go in the main queue
+        mainQueue.EnqueueAction(CombineHouseMeshes(chunkData));
     }
 
     public void GenerateTrees(ChunkData chunkData) {
@@ -470,6 +473,40 @@ public class ProceduralTerrain : MonoBehaviour {
             IEnumerator gen = objectGenerator.GenerateObjects(ObjectType.Detail, TerrainDetailData, chunkData);
             mainQueue.EnqueueAction(gen);
         }
+    }
+
+    IEnumerator CombineHouseMeshes(ChunkData chunkData) {
+
+        foreach(GameObject villageCenter in chunkData.VillageCenterList) {
+            GameObject subChunk = villageCenter.transform.parent.parent.gameObject;
+            //If subchunk hasn't had meshes combined, combine them
+            if (!subChunk.GetComponent<CombineMeshes>()) {
+                subChunk.AddComponent<CombineMeshes>();
+            }
+        }
+
+        yield return null;
+    }
+
+    IEnumerator GenerateTreeHouseHouses(ChunkData chunkData) {
+
+        System.Random rand = new System.Random();
+
+        foreach (GameObject villageCenter in chunkData.VillageCenterList) {
+            //For every child
+            for (int i = 0; i < villageCenter.transform.childCount; i++) {
+                GameObject houseSpawnPoint = villageCenter.transform.GetChild(i).gameObject;
+                //If child has HouseSpawnPoint tag
+                if (houseSpawnPoint.CompareTag("HouseSpawnPoint")) {
+                    int randInt = rand.Next(0, TerrainHouseData.HouseSpawnPointPrefabs.Length);
+
+                    GameObject newHouse = Instantiate(TerrainHouseData.HouseSpawnPointPrefabs[randInt], houseSpawnPoint.transform.position, houseSpawnPoint.transform.rotation);
+                    newHouse.transform.SetParent(houseSpawnPoint.transform);
+                }
+            }
+        }
+
+        yield return null;
     }
 
     IEnumerator GenerateVillages(ChunkData chunkData) {
@@ -639,6 +676,10 @@ public class ProceduralTerrain : MonoBehaviour {
     }
 
     IEnumerator ConnectVillages(ChunkData chunkData) {
+        //Cannot connect villages until all trees have been combined
+        while (combineQueue.GetQueueSize() > 0) {
+            yield return null;
+        }
 
         float maxDistanceBetweenPoints = ProceduralTerrain.Current.TerrainHouseData.MaxDistanceBetweenConnectionPoints;
         int maxNumberOfConnections = ProceduralTerrain.Current.TerrainHouseData.MaxNumberOfConnectionsPerVillage;

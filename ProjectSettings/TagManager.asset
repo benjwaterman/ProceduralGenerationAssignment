@@ -9,6 +9,7 @@ TagManager:
   - House
   - Detail
   - Default
+  - HouseSpawnPoint
   layers:
   - Default
   - TransparentFX

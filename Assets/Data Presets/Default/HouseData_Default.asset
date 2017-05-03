@@ -32,6 +32,24 @@ MonoBehaviour:
     RequiredSpaceZ: 6
     ActualSizeX: 3
     ActualSizeZ: 3
+  - ObjectPrefab: {fileID: 1510823654795828, guid: 2e24fffa243d1a34eb5321a9b45be598,
+      type: 2}
+    RequiredSpaceX: 6
+    RequiredSpaceZ: 6
+    ActualSizeX: 4
+    ActualSizeZ: 4
+  - ObjectPrefab: {fileID: 1305451959797234, guid: 18a3b2b219b2cb04daad527fd5d280b2,
+      type: 2}
+    RequiredSpaceX: 6
+    RequiredSpaceZ: 6
+    ActualSizeX: 6
+    ActualSizeZ: 6
+  - ObjectPrefab: {fileID: 1786567409001082, guid: 8e5f08dd182f19843a22d4f09d029aa1,
+      type: 2}
+    RequiredSpaceX: 6
+    RequiredSpaceZ: 6
+    ActualSizeX: 3
+    ActualSizeZ: 3
   ObjectMaterial: {fileID: 2100000, guid: e0cc032bbb51a4340a11fe8fcca6af84, type: 2}
   PrimaryColour: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
   SecondaryColour: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
@@ -53,3 +71,8 @@ MonoBehaviour:
   MaxDistanceOfVillage: 150
   MinHousesPerVillage: 5
   MaxHousesPerVillage: 10
+  HouseSpawnPointPrefabs:
+  - {fileID: 1645288151713220, guid: b777905d4872726469274e9cc8088299, type: 2}
+  - {fileID: 1909422132856246, guid: f03e925b2817b3c4bb2125986913e2b7, type: 2}
+  - {fileID: 1157441385473386, guid: d68e6e38843e80e45a03e47a5e05b370, type: 2}
+  - {fileID: 1544386046785146, guid: ce011c1135accc449a27ae2e48fe1bea, type: 2}

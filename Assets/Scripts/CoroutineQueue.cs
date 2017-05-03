@@ -8,6 +8,10 @@ public class CoroutineQueue {
     Coroutine m_InternalCoroutine = null;
     Queue<IEnumerator> actions = new Queue<IEnumerator>();
 
+    public int GetQueueSize() {
+        return actions.Count;
+    }
+
     public CoroutineQueue(MonoBehaviour aCoroutineOwner) {
         m_Owner = aCoroutineOwner;
     }

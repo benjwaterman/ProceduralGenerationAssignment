@@ -9,11 +9,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0036d10762b3bb4288930f7f2f6d9a2, type: 3}
-  m_Name: MapData
+  m_Name: MapData_PlataeuMountains
   m_EditorClassIdentifier: 
   TerrainSize: 1000
-  TerrainHeight: 500
-  NoiseData: {fileID: 11400000, guid: e9b955cd73e55284caa7c32d1f20bef4, type: 2}
+  TerrainHeight: 400
+  NoiseData: {fileID: 11400000, guid: 91d1657dff3520d4fa924cca482238c5, type: 2}
   TerrainHeightMultiplier: 1
   TerrainHeightCurve:
     serializedVersion: 2
@@ -25,22 +25,46 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.20500736
-      value: 0.10227188
-      inSlope: 0.031675562
-      outSlope: 0.031675562
+      time: 0.20509425
+      value: 0.009087771
+      inSlope: 0.04812809
+      outSlope: 0.04812809
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.29627448
-      value: 0.10545447
-      inSlope: 0.0551146
-      outSlope: 0.0551146
+      time: 0.27696988
+      value: 0.088253886
+      inSlope: 1.3542746
+      outSlope: 1.3542746
       tangentMode: 0
     - serializedVersion: 2
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
+      time: 0.33239552
+      value: 0.40393576
+      inSlope: 0.04162172
+      outSlope: 0.04162172
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5128635
+      value: 0.42795575
+      inSlope: 0.054080885
+      outSlope: 0.054080885
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.6430373
+      value: 0.59203345
+      inSlope: 0.29701582
+      outSlope: 0.29701582
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.7280129
+      value: 0.9031635
+      inSlope: 0.34460476
+      outSlope: 0.34460476
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.9920305
+      value: 0.9313013
+      inSlope: 0.1522991
+      outSlope: 0.1522991
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -59,7 +83,7 @@ MonoBehaviour:
   - Texture: {fileID: 2800000, guid: 2e268616c9d1e0941aac999a0c3895b0, type: 3}
     TextureNormal: {fileID: 0}
     TextureTileSize: {x: 5, y: 5}
-    TextureTint: {r: 0.058931667, g: 0.8014706, b: 0.34058437, a: 0}
+    TextureTint: {r: 0.15893167, g: 0.9014706, b: 0.44058436, a: 1}
     TextureStartHeight: 0.02
   - Texture: {fileID: 2800000, guid: 14e7d8bf1ec615340b4a52d63dd9418e, type: 3}
     TextureNormal: {fileID: 0}

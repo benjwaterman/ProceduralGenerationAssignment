@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Threading;
 using System;
 
+//Incorporates some edited code from https://www.youtube.com/playlist?list=PLFt_AvWsXl0eBW2EiBtl_sxmDtSgZBxB3
 public class NoiseGenerator {
 
     Queue<NoiseMapThreadInfo<float[,]>> noiseMapThreadInfoQueue = new Queue<NoiseMapThreadInfo<float[,]>>();
